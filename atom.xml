@@ -1,0 +1,438 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title><![CDATA[Minotaur story]]></title>
+  
+  <link href="/atom.xml" rel="self"/>
+  <link href="http://minotaursu.com/"/>
+  <updated>2015-09-21T03:31:45.000Z</updated>
+  <id>http://minotaursu.com/</id>
+  
+  <author>
+    <name><![CDATA[minotaur]]></name>
+    
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[小明的魔法调度框架之旅]]></title>
+    <link href="http://minotaursu.com/2015/12/12/%E5%B0%8F%E6%98%8E%E7%9A%84%E9%AD%94%E6%B3%95%E8%B0%83%E5%BA%A6%E6%A1%86%E6%9E%B6%E4%B9%8B%E6%97%85/"/>
+    <id>http://minotaursu.com/2015/12/12/小明的魔法调度框架之旅/</id>
+    <published>2015-12-12T04:01:24.000Z</published>
+    <updated>2015-09-21T03:31:45.000Z</updated>
+    <content type="html"><![CDATA[<p><em>据说每个程序员上辈子都是法力高深的魔法师</em></p>
+<blockquote>
+<p>crontab</p>
+</blockquote>
+<p>话说小明11年从新手村毕业，拿着一把等级为灰色的木剑就开始了打怪升级之路。小明发现怪并不好打，怪物都是在凌晨4点才出现的，好在小明在新手村的时候学会了一个叫crontab的静态魔法，该魔法虽然等级低但是不需要吟唱时间，小明将crontab附魔在自己的木剑上，木剑就可以每天凌晨4点定时去打怪了。</p>
+<blockquote>
+<p>quartz</p>
+</blockquote>
+<p>虽然crontab这个静态魔法很NB，无奈小明的装备换的太频繁，每次更新装备都需要重新将crontab附魔到武器上才行；这个时候小明已经学会了一个叫quartz的中级魔法，相对不需要吟唱的crontab，quartz需要按照Job，JobDetail，Tigger，Scheduler的顺序进行吟唱才行，虽然过程是<br>复杂了一些，但是好处是显而易见的，魔法再也不需要和装备进行绑定，Scheduler是一个完全独立结界，Scheduler可以容纳多个JobDetail和Tigger,内部的固有魔法线程池可以并行调度多个任务。</p>
+<blockquote>
+<p>quartz集群</p>
+</blockquote>
+<p>在使用了quartz这个中级魔法之后，小明轻松了很长一段时间，再也不必为换装备导致魔法失效而苦恼。在成为了一个合格的中级魔法师之后，学会了无限剑制这种BT魔法之后，小明决定向着中级副本进发，为了应付副本危险的环境，小明利用无限剑制将每个装备都附上了quartz这个魔法，现在问题来了，如果所有的quartz都发动，会产生魔法混乱现象，导致反噬；小明打开了《哈利波特》上面说需要使用魔法石进行魔法加持，例如红魔石mysql，绿魔石redis，蓝魔石zookeeper，只要魔石具有原子性锁操作机制就可以了，在红魔石mysql和quartz配合下，顺序的杀掉了怪物。</p>
+<blockquote>
+<p>ttd/tbschedule</p>
+</blockquote>
+<p>在中级副本打怪升级一段时间后，小明购买了高级魔法ttd和tbschedule，相对于静态魔法crontab和中级魔法quartz，高级魔法的功能真是-碉堡了。</p>
+<ul>
+<li>支持剑系武器java，弓系武器shell等多种武器；</li>
+<li>支持对吟唱依赖，上一个魔法吟唱成功后才会出现下一个魔法；</li>
+<li>支持大规模魔法分拆，合并</li>
+<li>有着路由规则指定这种高级魔法；</li>
+<li>由蓝宝石zookeeper进行加持和魔法心跳检测，保证不会出现魔法阵的混乱；</li>
+<li>通过魔物netty进行大规模魔法阵的触发；</li>
+<li>通过魔法镜面可以看到魔法执行的效果，当遇到大boss导致魔法失效时还有魔法消息监控功能；</li>
+</ul>
+<blockquote>
+<p>future</p>
+</blockquote>
+<p>在小明使用了购买的高级魔法TTD后，小明再也没有见过洛杉鸡凌晨4点的天空（其实是从来好么）。小明听说在山的那边海的那边有一群蓝精灵，他们快速又瞬移，他们筑墙又监禁，他们喽啰无敌生活在那绿色的大森林，他们亵渎溶火漩涡又结群……<br>不过小明并不惧怕，因为芝士就是力量。</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p><em>据说每个程序员上辈子都是法力高深的魔法师</em></p>
+<blockquote>
+<p>crontab</p>
+</blockquote>
+<p>话说小明11年从新手村毕业，拿着一把等级为灰色的木剑就开始了打怪升级之路。小明发现怪并不好打，怪物都是在凌晨4点才出]]>
+    </summary>
+    
+      <category term="java" scheme="http://minotaursu.com/tags/java/"/>
+    
+      <category term="quartz" scheme="http://minotaursu.com/tags/quartz/"/>
+    
+      <category term="调度" scheme="http://minotaursu.com/tags/%E8%B0%83%E5%BA%A6/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[我设计的12306]]></title>
+    <link href="http://minotaursu.com/2015/04/13/%E6%88%91%E8%AE%BE%E8%AE%A1%E7%9A%8412306/"/>
+    <id>http://minotaursu.com/2015/04/13/我设计的12306/</id>
+    <published>2015-04-13T14:49:30.000Z</published>
+    <updated>2015-07-08T06:47:51.000Z</updated>
+    <content type="html"><![CDATA[<p>feed系统和火车票售卖系统是2个高访问高并发情况下具体很大挑战的系统。<br>在低访问，低并发的情况下feed系统会变的非常简单，数据模型和业务功能都比较容易设计和实现，主要的挑战就剩如何面对层出不穷的敏感词和花样百出的广告语。相比之下，火车票售卖系统在低并发时也很有趣，假设我是12306的架构师，我会如何设计12306那。</p>
+<blockquote>
+<p>数据模型  </p>
+</blockquote>
+<p>先将系统进行拆分，独立成用户，车票，下单3个系统，每个系统内部封闭成多个服务，运行在独立的集群上面。这里只对车票系统进行数据模型设计。</p>
+<p>先上ER图 <img src="http://hexo-tuchuan.qiniudn.com/tickets.jpg" alt="数据模型"></p>
+<p>数据分成动静2部分，车次，站点，座位的数据都是静态的基本不会变，可以通过运营系统提前进行录入生成；车票则根据以上三张表每天动态生成，每条车票记录一个车次上的一个座位号，初始化的始发站，终点站为该车次的始发站和终点站，数据在下单时进行更新。确定了数据模型后进行数据库的垂直和水平拆分，首先按照车次进行分库，将不同的车次hash到几个数据库中，减少每个数据库的负载；然后车票表按天拆分，提前生成3个月的车票表，每张车票表只存储当天发车的车票。</p>
+<blockquote>
+<p>用例  </p>
+</blockquote>
+<ul>
+<li>case1：查询<br>假设有一列从北京到深圳的火车D911，途经共20站。用户查询北京到杭州的列车，从cache中取出符合用户查询条件的车次（车次类型，始发站，终点站，始发时间，到站时间），按照车次从cache中取出北京和杭州的站点id和站序，北京站序为0，杭州站序为11。车票表中用<br>‘始发站序&lt;=0 and 终点站序&gt;=11 and 车次=D911 group by 座位类型’<br>的查询条件即可得到每种座位的剩余票数，可以将查询的结果做一个10s的缓存，如果前端展示的不是具体的剩余票量，而是有无票，可以使用一个更长时间的缓存，缓存的失效由服务端控制。</li>
+<li>case2：车票分拆<br>假设有一列从北京到深圳的火车D911，用户购买了一张从北京到杭州的车票，按照规则优先级随机取出一张车票，车票数据为 北京-深圳，始发站序0，终点站序20，将该车票状态置为无效，插入一张数据为杭州-深圳，始发站序11，终点站序20的车票，向下单系统发起请求，写入一张北京-杭州的订单。</li>
+<li>case3：车票合并<br>假设有一列从北京到深圳的火车D911，用户预订了北京-杭州的车票，从下单系统收到该订单失败或者超时或者退票的消息，取出其中和车票相关的信息，车次D911，北京-杭州，始发站序0，终点站序11，和车票表中该车次该座位的数据进行关联，合并数据，重新生成一条北京-深圳的车票。</li>
+</ul>
+<blockquote>
+<p>队列·流控·异步·无锁实现  </p>
+</blockquote>
+<p>系统的抗压能力和是吞吐量成正比的，这也就是为什么静态页面可以支持超高的QPS，查询的性能优化也比较容易，事务处理的性能提升最困难，系统处理时会保持tcp链接，占用系统资源，最终导致系统的崩溃，响应时间越快，资源的占用时间越短，吞吐能力也就越强，系统的可用性也就越高。<br>在某宝某猫做话费充值系统的思路完全可以用来做火车售票系统，将下单请求持久化，系统间通过消息解耦，通过多线程队列异步处理请求。具体的实现可以在收到下单购票请求后持久化，返回给用户一个排队中的提示(1-x分钟处理完成)，按照车次放到不同的队列中进行排队(期间可以做过滤/去重/合并处理），系统从队列中取数据进行处理。最终一致性就可以满足业务需求的地方，服务尽量减少事务和锁的使用，提高并发处理能力。</p>
+<blockquote>
+<p>降级  </p>
+</blockquote>
+<p>为啥要把降级单独拉出来说，我觉得本质上讲降级并不是由于架构设计上的充分考虑带来的可用性和伸缩性的提高，而是牺牲一部分的用户体验换来的系统的可用性，是对峰值事件的应对策略。基本实现就是在系统埋好各种开关，可以由人工控制也可以由系统触发，保证最基本的核心功能可用，其他的非核心功能和部分用户体验可以暂时舍弃。</p>
+<p>数据模型和业务功能就是这样，不论实现的多扭曲基本上大家都可以做出来，功能实现之后无bug是一个挑战，能够满足未来变化是一个挑战，在某个量级之后依然可用又是一个挑战。</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>feed系统和火车票售卖系统是2个高访问高并发情况下具体很大挑战的系统。<br>在低访问，低并发的情况下feed系统会变的非常简单，数据模型和业务功能都比较容易设计和实现，主要的挑战就剩如何面对层出不穷的敏感词和花样百出的广告语。相比之下，火车票售卖系统在低并发时也很有趣，]]>
+    </summary>
+    
+      <category term="分布式" scheme="http://minotaursu.com/tags/%E5%88%86%E5%B8%83%E5%BC%8F/"/>
+    
+      <category term="开发" scheme="http://minotaursu.com/tags/%E5%BC%80%E5%8F%91/"/>
+    
+      <category term="码农" scheme="http://minotaursu.com/tags/%E7%A0%81%E5%86%9C/"/>
+    
+      <category term="缓存" scheme="http://minotaursu.com/tags/%E7%BC%93%E5%AD%98/"/>
+    
+      <category term="锁" scheme="http://minotaursu.com/tags/%E9%94%81/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[缓存的使用]]></title>
+    <link href="http://minotaursu.com/2015/01/09/%E7%BC%93%E5%AD%98%E7%9A%84%E4%BD%BF%E7%94%A8/"/>
+    <id>http://minotaursu.com/2015/01/09/缓存的使用/</id>
+    <published>2015-01-09T10:07:37.000Z</published>
+    <updated>2015-09-21T03:54:20.000Z</updated>
+    <content type="html"><![CDATA[<p><img src="http://7jpo4q.com1.z0.glb.clouddn.com/speed.jpg?imageView/1/w/670/h/450" alt=""><br>缓存一直是web2.0应用的性能核心，缓存大幅提高了应用QPS，减少了数据库的压力，降低了RT，让应用能够飞起来。缓存具有易于上手，难于精通的特点，缓存失效的设计是整个缓存应用的难点，在某些复杂情况，不适合的缓存设计增加了系统出错的可能。下面对缓存使用的几种典型情况做下分析。</p>
+<blockquote>
+<p>本地缓存</p>
+</blockquote>
+<ol>
+<li>用于缓存复杂算法的不可变计算结果。</li>
+<li>在单机或者数据变化率极低的情况下，本地缓存是一个良好的策略，因为本地缓存的效率最高，相比于分布式缓存，具有更少的网络开销，响应时间也更短，使用更加的灵活。例如邮政编码，报表数据，或者离线处理后的中奖用户名单等场景非常适合使用本地缓存。</li>
+<li>在某些场景，本地缓存作为分布式缓存的前置缓存使用，可以设置一个过期时间较长的分布式缓存，同时设置一个过期时间较短的本地缓存。</li>
+<li>数据变化率极低的情况下（例如按天更新）；往往也使用定时任务或者对象内置一个定时器从数据库获取最新的数据更新过期数据，相比按时间过期这种失效策略，这种定时更新的策略具有更好的性能。</li>
+</ol>
+<blockquote>
+<p>分布式缓存</p>
+</blockquote>
+<ol>
+<li>分布式缓存是应用开发中最常见的技术，分布式缓存解决了本地缓存的不一致问题，也避免了本地缓存可能带来的内存泄露问题。通常使用annotation的方式指定CRUD操作如何进行缓存，在annotation中指定key，过期时间，缓存策略（ehcache，memcache，分级缓存），在缓存具有高命中率的情况下可以极大的减少数据库压力，大大提高了系统的吞吐量。</li>
+<li>当缓存失效，请求不能从缓存中取出数据时，一般查询数据库获取，当并发量很高的时候，会给数据库带来极高的压力甚至雪崩，导致服务不可用。一般有几种做法，1）增加一个锁，缓存失效时获取锁，只有获取锁的请求才去查询数据库。2）增加一个存活缓存，当存活缓存为空时，重置存活缓存，然后获取数据，这样只有第一个检查到存活缓存为空的请求会访问数据库。<br>3） 优雅降级，对于某些不重要的数据（例如文章浏览量），当缓存失效时，可以直接返回空，前端不做展示。</li>
+</ol>
+<blockquote>
+<p>缓存分页数据</p>
+</blockquote>
+<p>在某些条件下，获取到的数据是list，并且需要（必然）进行分页展示。缓存在几种情况下不适合使用，其中一种就是缓存大对象，大对象会导致缓存的性能降低，网络开销和计算开销也比较大。按照每页的Key缓存数据也是不合适的，当有写操作时需要失效所有的key。对于需要缓存分页数据的需求，视情况可以 1）只缓存前2页数据，绝大部分的流量都集中在前2页。2）只缓存id的list，获取到id的list后进行分页，然后通过service获取每个id的缓存数据。</p>
+<blockquote>
+<p>缓存写操作</p>
+</blockquote>
+<p>在某些场景，具有高频的写操作（例如记录浏览数，游戏领域）如果对数据的准确性要求不高，可以通过缓存写操作，定时存盘的方式大幅提高性能。例如所有的浏览数都记录在缓存中，每分钟更新一次数据库，在某些关键操作后（例如击杀BOSS），可以强制更新数据库一次，保证数据不因为宕机而丢失。</p>
+<blockquote>
+<p>分布式缓存计数器</p>
+</blockquote>
+<p>分布式缓存提供了统一的存储和原子操作，便于集群环境下的使用。库存计算是分布式缓存的一个典型应用场景，在用户购买商品前会进行减库存，虽然在高并发时会将库存减为负数，但只要保证缓存中的数值大于等于0时才能购买就能防止超卖。<br>在秒杀的场景中可以本地缓存配合分布式缓存使用，因为秒杀的时间太短，用户并不关心秒杀过程中的库存数，例如秒杀商品只有5件，可以在每台服务器做一个库存数等于5的原子计数器，这样将极大减少分布式缓存的请求数。甚至在秒杀的场景中，可以完全使用内存缓存，通过zookeeper提前指定一台机器的内存库存数等于5，其他机器都设置为0。</p>
+<p>参考：<br><a href="http://www.dcshi.com/?p=26" target="_blank" rel="external">浅谈微博后台架构</a><br><a href="http://book.douban.com/subject/10756899/" target="_blank" rel="external">高扩展性网站的50条原则</a><br><a href="http://book.douban.com/subject/3924175/" target="_blank" rel="external">构建高性能web站点</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p><img src="http://7jpo4q.com1.z0.glb.clouddn.com/speed.jpg?imageView/1/w/670/h/450" alt=""><br>缓存一直是web2.0应用的性能核心，缓存大幅提高了应用QPS，减少了数据库的压力，降]]>
+    </summary>
+    
+      <category term="java" scheme="http://minotaursu.com/tags/java/"/>
+    
+      <category term="并发" scheme="http://minotaursu.com/tags/%E5%B9%B6%E5%8F%91/"/>
+    
+      <category term="缓存" scheme="http://minotaursu.com/tags/%E7%BC%93%E5%AD%98/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[2014年终总结]]></title>
+    <link href="http://minotaursu.com/2014/12/30/2014%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/"/>
+    <id>http://minotaursu.com/2014/12/30/2014年终总结/</id>
+    <published>2014-12-30T06:59:27.000Z</published>
+    <updated>2015-07-08T06:47:51.000Z</updated>
+    <content type="html"><![CDATA[<p>这算是工作以后第一次做年终总结。距离2011年末已经整整3年，距离毕业已经3.5年。毕业（前）后，一直过着随遇而安的生活，白天码代码，下班看书，动漫，电影，游戏。今年多了一个陪妹子的活动，实事求是的说陪妹子这个优先级太高抢占了不少资源。<br>过去的2011,2012,2013年就不说了，往事已矣。今年是变化很大的一年，4月初在厦门拍了婚纱照，月末和妹子领了证；十一回家办了婚礼；12月去巴厘岛度了蜜月。今年和妹子一起去了些周边的城市，期待明年去更远的地方。有妹纸照顾还是很幸福的，至少和妹子在一起之后就没有碰过洗衣机。。。<br>工作上今年申请了转岗，从阿里妈妈去了天猫，最开始是在天猫无线，师兄是一个有10年经验的架构师，做过多种不同的业务，由于在天猫无线的时间很短，基本没写什么代码，倒是参加了几次需求讨论，师兄也请了好几杯星巴克；后来开始做话费充值业务，架构和数据量上还是很NB的，打酱油的做了几个日常。比较下来，天猫是业务和市场驱动的部门，在天猫半年接触的运营比在阿里妈妈3年接触的还多（天猫的运营也更强势）；天猫一些系统的架构，稳定性，性能做的很不错，工作上是有收获和成长的；阿里妈妈则是产品驱动的部门，就我接触到的情况，代码细节和code review方面做的相对好一些。<br>今年也面了几家公司，拿到了几个offer，有的每月base要比现在高不少。这些都得益于TMT行业的高速发展，一个新兴，成长期的行业要比成熟，稳定的行业具有更多的机会。后面也没有离职，倒是选择了一次转岗。对于转岗这件事，我的想法是如果不喜欢现在的工作（例如工作没前途，内容没意思，同事合不来，不能实现自我价值，得不到尊重），转岗离职都没问题，同时对于未来也不要抱有太多的期待，毕竟问题在那里都会遇到，都需要解决，但解决问题的方式，时间，地点都可以由自己决定。<br>年中的时候预测了股市会上涨，可惜并没有行动。今后在业余时间更有行动力，做更多更有意义的事情。不能总是玩啊玩的了。  </p>
+<p>2015·wishlist</p>
+<ol>
+<li>欧洲/日本行一次，目的地视财力而定</li>
+<li>驾照</li>
+<li>车</li>
+<li>完成 <a href="http://book.douban.com/people/49806902/wish" target="_blank" rel="external">豆瓣阅读列表</a></li>
+<li>参加3次同城活动(segmentfault/豆瓣)</li>
+<li>为开源项目贡献一次代码</li>
+<li>2015年总结时，列出一件自己觉得NB的事情</li>
+<li>不使用工资收入，更换用了3年的mac pro</li>
+</ol>
+<p><img src="http://hexo-tuchuan.qiniudn.com/saber.jpg?imageView/1/w/670/h/900" alt="不因别人的好恶而改变自己的内心，这种性格其实也蛮好的。"></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>这算是工作以后第一次做年终总结。距离2011年末已经整整3年，距离毕业已经3.5年。毕业（前）后，一直过着随遇而安的生活，白天码代码，下班看书，动漫，电影，游戏。今年多了一个陪妹子的活动，实事求是的说陪妹子这个优先级太高抢占了不少资源。<br>过去的2011,2012,20]]>
+    </summary>
+    
+      <category term="2014" scheme="http://minotaursu.com/tags/2014/"/>
+    
+      <category term="工作" scheme="http://minotaursu.com/tags/%E5%B7%A5%E4%BD%9C/"/>
+    
+      <category term="码农" scheme="http://minotaursu.com/tags/%E7%A0%81%E5%86%9C/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[jar包冲突与inode]]></title>
+    <link href="http://minotaursu.com/2014/12/24/jar%E5%8C%85%E5%86%B2%E7%AA%81%E4%B8%8Einode/"/>
+    <id>http://minotaursu.com/2014/12/24/jar包冲突与inode/</id>
+    <published>2014-12-24T06:20:40.000Z</published>
+    <updated>2015-09-21T09:49:49.000Z</updated>
+    <content type="html"><![CDATA[<blockquote>
+<p>包冲突</p>
+</blockquote>
+<p>几乎上点规模的java系统就会遇到jar冲突，不负责任的讲排除依赖成了每次发布上线前必做的工作。虽然问题的本质都是jar冲突，但是表现上却有很多不同，从NoSuchMethodError,ClassNotFoundException到field找不到,作用域错误；并且触发冲突条件也不相同，最好并且最常见的是在应用启动时抛出异常，比较恶心的是运行时是某些特殊的边界条件下抛出异常特别。<br>在某些领域，某些境界提出问题，发现问题比解决问题具有更高的价值，但应用开发显然不属于这种高端领域，对于一般的jar冲突我的做法如下。</p>
+<ol>
+<li>查看log中的异常堆栈信息，在idea中CTRL+N，一般会发现多个类。</li>
+<li>如果1搞不定，可以加入jvm参数-verbose:class，log里会打印出类的加载信息。</li>
+<li>确定jar包名，执行mvn dependency:tree&gt;tree.log。</li>
+<li>如果是lib中的包冲突就排除相应的jar。</li>
+<li>如果不能exclusion，声明一个路径最短，最靠前的dependency。告诉maven，畜生！用这个版本的jar。</li>
+<li>如果是容器||中间件的包和应用lib包冲突，就升级容器||中间件。</li>
+</ol>
+<blockquote>
+<p>inode</p>
+</blockquote>
+<p>在jar冲突中有一种情况就是开发/日常是没问题的，生产环境存在冲突，甚至是生产环境中一部分机器存在冲突，这个是因为tomcat等容器的classLoader加载顺序是不排序的，依赖于底层文件系统的顺序，具体到*nix中就是inode的顺序，每个inode中保存了文件系统的一个文件对象的元信息存储，简单的将就是文件在扇区中的索引值。</p>
+<p>可以使用 ls -li 和 stat查看inode，鉴于安全等原因以免引起不必要的麻烦，就不截图了。</p>
+<blockquote>
+<p>finally</p>
+</blockquote>
+<p>实际上大部分的jar都是向后兼容的，如果maven能够按照最高版本依赖（其实也是有问题的），而不是最短路径依赖，相信这个问题会好很多。实际开发中，可以使用maven的依赖冲突检测插件进行事先排除；也可以在部署的lib中查找下进行事后处理；有些发布系统会提前告知本次发布相比与上次新增了那些jar，删除了那些jar，这是一个比较好的策略，毕竟更简单的方法具有更好的执行性。</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<blockquote>
+<p>包冲突</p>
+</blockquote>
+<p>几乎上点规模的java系统就会遇到jar冲突，不负责任的讲排除依赖成了每次发布上线前必做的工作。虽然问题的本质都是jar冲突，但是表现上却有很多不同，从NoSuchMethodError,Class]]>
+    </summary>
+    
+      <category term="java" scheme="http://minotaursu.com/tags/java/"/>
+    
+      <category term="开发" scheme="http://minotaursu.com/tags/%E5%BC%80%E5%8F%91/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[CAS]]></title>
+    <link href="http://minotaursu.com/2014/11/05/CAS/"/>
+    <id>http://minotaursu.com/2014/11/05/CAS/</id>
+    <published>2014-11-05T07:06:24.000Z</published>
+    <updated>2015-07-08T06:47:51.000Z</updated>
+    <content type="html"><![CDATA[<blockquote>
+<p>CAS 是什么</p>
+</blockquote>
+<p>CAS是单词compare and set的缩写，意思是指在set之前先比较该值有没有变化，只有在没变的情况下才对其赋值。在java.util.concurrent包中，CAS提供了一种不同于互斥锁，读写锁的乐观锁机制，CAS和volatile一起构成了整个concurrent包的基石。</p>
+<blockquote>
+<p>CAS 原理</p>
+</blockquote>
+<p>我们都知道，在java语言之前，并发就已经广泛存在并在服务器领域得到了大量的应用。所以硬件厂商老早就在芯片中加入了大量直至并发操作的原语，从而在硬件层面提升效率。在intel的CPU中，使用cmpxchg指令,程序会根据当前处理器的类型来决定是否为cmpxchg指令添加lock前缀。如果程序是在多处理器上运行，就为cmpxchg指令加上lock前缀（lock cmpxchg）。反之，如果程序是在单处理器上运行，就省略lock前缀（单处理器自身会维护单处理器内的顺序一致性，不需要lock前缀提供的内存屏障效果）。<br>CAS 操作包含三个操作数 —— 内存位置（V）、预期原值（A）和新值(B)。 如果内存位置的值与预期原值相匹配，那么处理器会自动将该位置值更新为新值 。否则，处理器不做任何操作。无论哪种情况，它都会在 CAS 指令之前返回该 位置的值。（在 CAS 的一些特殊情况下将仅返回 CAS 是否成功，而不提取当前 值。）CAS 有效地说明了“我认为位置 V 应该包含值 A；如果包含该值，则将 B 放到这个位置；否则，不要更改该位置，只告诉我这个位置现在的值即可。”<br>通常将 CAS 用于同步的方式是从地址 V 读取值 A，执行多步计算来获得新 值 B，然后使用 CAS 将 V 的值从 A 改为 B。如果 V 处的值尚未同时更改，则 CAS 操作成功。<br>类似于 CAS 的指令允许算法执行读-修改-写操作，而无需害怕其他线程同时 修改变量，因为如果其他线程修改变量，那么 CAS 会检测它（并失败），算法可以对该操作重新计算。</p>
+<blockquote>
+<p>CAS缺点</p>
+</blockquote>
+<ol>
+<li>ABA问题<br>因为CAS需要在操作值的时候检查下值有没有发生变化，如果没有发生变化则更新，但是如果一个值原来是A，变成了B，又变成了A，那么使用CAS进行检查时会发现它的值没有发生变化，但是实际上却变化了。ABA问题的解决思路就是使用版本号。在变量前面追加上版本号，每次变量更新的时候把版本号加一，那么A－B－A 就会变成1A-2B－3A。</li>
+<li>CPU开销大<br>自旋CAS如果长时间不成功，会给CPU带来非常大的执行开销。</li>
+</ol>
+]]></content>
+    <summary type="html">
+    <![CDATA[<blockquote>
+<p>CAS 是什么</p>
+</blockquote>
+<p>CAS是单词compare and set的缩写，意思是指在set之前先比较该值有没有变化，只有在没变的情况下才对其赋值。在java.util.concurrent包中，CAS提供了一种不同]]>
+    </summary>
+    
+      <category term="java" scheme="http://minotaursu.com/tags/java/"/>
+    
+      <category term="并发" scheme="http://minotaursu.com/tags/%E5%B9%B6%E5%8F%91/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[java Lock]]></title>
+    <link href="http://minotaursu.com/2014/11/03/java-Lock/"/>
+    <id>http://minotaursu.com/2014/11/03/java-Lock/</id>
+    <published>2014-11-02T23:57:08.000Z</published>
+    <updated>2015-07-08T06:47:51.000Z</updated>
+    <content type="html"><![CDATA[<p>在jdk5中，新增了Lock接口来提供一种比synchronized更灵活的锁机制。</p>
+<blockquote>
+<p>ReentrantLock</p>
+</blockquote>
+<p>ReentrantLock是被最广泛使用来替代synchronized的Lock接口实现，ReentrantLock的代码使用非常简单，只要记得将unlock写在finally方法中就可以了。<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">Lock</span> <span class="keyword">lock</span> = new ReentrantLock();</span></span><br><span class="line"><span class="operator"><span class="keyword">lock</span>.<span class="keyword">lock</span>();</span></span><br><span class="line">try &#123;</span><br><span class="line">&#125; finally &#123;</span><br><span class="line">	<span class="operator"><span class="keyword">lock</span>.<span class="keyword">unlock</span>();</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>相比synchronied，ReentrantLock具有以下特性：</p>
+<ul>
+<li>非阻塞的tryLock，可以进行锁的轮询。</li>
+<li>能被中断的lockInterruptibly，可以进行锁中断。</li>
+<li>有超时时间的tryLock</li>
+</ul>
+<p>ReentrantLock的默认构造函数是非公平的，公平的锁机制会对锁的请求进行排队，按照FIFO的原则进行锁的获取，造成JVM对于等待中的线程调度次序和操作系统对线程的调度不匹配，所以公平锁的性能要小于非公平锁的性能；在大多数场景下我们都可以使用ReentrantLock的默认构造函数，而在某些需要避免‘饥饿’发生的场景下，我们可以使用ReentrantLock(true)。</p>
+<blockquote>
+<p>ReentrantReadWriteLock</p>
+</blockquote>
+<p>ReentrantReadWriteLock实现了ReadWriteLock接口，提供了一对锁：readLock与writeLock。读锁可以由多个线程同时保持，读锁则是独占的。比较适合读多写少高并发的场景，相比于ReentrantLock，ReentrantReadWriteLock的使用场景并不广泛，性能也要差一点。</p>
+<p>ReadWriteLock的互斥性：</p>
+<ul>
+<li>读读不互斥</li>
+<li>读写互斥</li>
+<li>写写互斥</li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>在jdk5中，新增了Lock接口来提供一种比synchronized更灵活的锁机制。</p>
+<blockquote>
+<p>ReentrantLock</p>
+</blockquote>
+<p>ReentrantLock是被最广泛使用来替代synchronized的Loc]]>
+    </summary>
+    
+      <category term="java" scheme="http://minotaursu.com/tags/java/"/>
+    
+      <category term="并发" scheme="http://minotaursu.com/tags/%E5%B9%B6%E5%8F%91/"/>
+    
+      <category term="锁" scheme="http://minotaursu.com/tags/%E9%94%81/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[jdk7jdk8新特性概述]]></title>
+    <link href="http://minotaursu.com/2014/10/27/jdk7jdk8%E6%96%B0%E7%89%B9%E6%80%A7%E6%A6%82%E8%BF%B0/"/>
+    <id>http://minotaursu.com/2014/10/27/jdk7jdk8新特性概述/</id>
+    <published>2014-10-27T13:43:38.000Z</published>
+    <updated>2015-09-21T09:50:50.000Z</updated>
+    <content type="html"><![CDATA[<p>在oracle停止对jdk6更新，jdk8发布之后，公司终于要把生产环境更新到jdk7，下面列一下jdk7,8的可能需要关注的新特性。</p>
+<h2 id="jdk7">jdk7</h2><ul>
+<li>G1垃圾回收</li>
+<li>fork-join框架</li>
+<li>二进制变量</li>
+<li>Switch支持String类型</li>
+<li>try-with-resource</li>
+<li>简化泛型</li>
+<li>catch多个异常</li>
+<li>InvokeDynamic</li>
+<li>更多NIO的API</li>
+</ul>
+<h2 id="jdk8">jdk8</h2><ul>
+<li>lambda</li>
+<li>Nashorn JavaScript Engine</li>
+<li>JDBC 4.2</li>
+<li>Bulk Data Operations for Collections</li>
+<li>Base64</li>
+<li>新的时间函数</li>
+<li>HTTP URL Permissions</li>
+<li>Repeating Annotations</li>
+</ul>
+<p>新特性链接：<br><a href="http://openjdk.java.net/projects/jdk7/features" target="_blank" rel="external">http://openjdk.java.net/projects/jdk7/features</a><br><a href="http://openjdk.java.net/projects/jdk8/features" target="_blank" rel="external">http://openjdk.java.net/projects/jdk8/features</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>在oracle停止对jdk6更新，jdk8发布之后，公司终于要把生产环境更新到jdk7，下面列一下jdk7,8的可能需要关注的新特性。</p>
+<h2 id="jdk7">jdk7</h2><ul>
+<li>G1垃圾回收</li>
+<li>fork-join框架</li>
+]]>
+    </summary>
+    
+      <category term="jdk" scheme="http://minotaursu.com/tags/jdk/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[分布式事务处理总结]]></title>
+    <link href="http://minotaursu.com/2014/10/24/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%E5%A4%84%E7%90%86%E6%80%BB%E7%BB%93/"/>
+    <id>http://minotaursu.com/2014/10/24/分布式事务处理总结/</id>
+    <published>2014-10-24T12:23:12.000Z</published>
+    <updated>2015-07-08T06:47:51.000Z</updated>
+    <content type="html"><![CDATA[<p>最近看了一段涉及到事务处理的代码，正好去年做过的一个项目也对强一致性有着很高的要求，当时做过比较长时间的调研，决定把学习到的知识都总结一遍加深记忆，也方便后续遇到事务处理问题时寻找解决方案。</p>
+<p>其实大多数互联网应用对事务性要求都不高，更多的挑战在于更好的性能和更高的可扩展性，只有少数涉及到账户和交易的系统才对事务和一致性有着强烈的需求。</p>
+<h2 id="事务机制：_ACID原则">事务机制： ACID原则</h2><p>当我们需要对2个及以上的数据实体进行写操作，这些数据存在依赖关系，需要保证同时成功或者失败的时候，我们就需要 <strong>原子性</strong> 操作。例如总账户和交易明细，他们是存在依赖关系的，如果更新了总账户，没有产生交易明细，就会出现不一致的状态。<br>    仅仅原子性还不能保证数据的一致性，原子性只能保证一起写成功/失败。例如在一个原子性更新交易明细成功之后，更新总账户之前，另一个写操作更新了总账户，就会导致总账户和交易明细的不一致，因此事务机制提供了 <strong>隔离性</strong> 来解决这个问题，如果隔离性存在问题，就会导致“脏读” 和 “幻读”。<br>    数据库采用锁机制实现隔离性。在事务开始时，数据库会对其加锁，直到整个事务完成之后才会释放锁，在隔离期间其他事务进行排队等待，退化成串行操作，数据库的TPS明显下降。<br>    在设计分布式事务时，为了保证性能，事务的执行时间越短越好，资源锁定时间越短越好，尽量使用无锁实现，牺牲 <strong>强一致性</strong> ，保证 <strong>高可用性</strong> 。</p>
+<h2 id="基石：_CAP原则">基石： CAP原则</h2><p>CAP原则对于分布式系统的意义就像牛顿三大定律对于经典物理学。</p>
+<ul>
+<li>Consistency：一致性要求读操作和读操作即时完成，不存在重叠，如果一个写操作成功，后续所有的读都必须能对到这个新的数据；如果写操作失败，后续的所有的读都不能返回这个新值。在实际的业务中，往往只要求 <strong>最终一致性</strong> ，当写入一个新值后，有可能读不出来，但在某个时间窗口后保证最终能够读出来。</li>
+<li>Availability：每一个非故障节点对于灭一个请求都要做出响应。</li>
+<li>Partition tolerance：以实际效果而言，分区相当于对通信的时限要求。系统如果不能在时限内达成数据一致性，就意味着发生了分区的情况，必须就当前操作在C和A之间做出选择。(如果网络中不存在分区，客户端和服务端在同一环境中，通过事务可以保证一致性和可用性，满足CA，例如单点数据库)    </li>
+<li>由于CAP三者不能同时满足的特点，在分布式环境中系统间存在通信的特点，分区是必然存在的，因此往往只能在可用性和一致性间做权衡，而在实际情况中，对可用性的需求高于强一致性的需求,具体的实现也是向着AP发展，通过后续补偿机制满足最终一致性。  </li>
+</ul>
+<h2 id="分布式事务实现：AP向">分布式事务实现：AP向</h2><p>基本方向就是保证最终一致性，实现高可用性。使用 <strong>状态机</strong> 进行业务流程状态控制，先写入非基本数据，最后写入基本数据，如果一切成功，万事大吉；如果基本数据写失败，通过 <strong>补偿机制</strong> 实现非基本数据回滚。另外实现一个 <strong>检测系统</strong> 定期扫描事务写操作结果，应对网络中断，系统宕机等节点故障的情况。</p>
+<p>可以设想一个最简单的分布式事务场景，对于跨银行的转账操作，该操作涉及到调用两个异地的Service服务，一个是本地提供的取款服务，一个是目标银行提供的存款服务，该两个服务本身无状态且独立，构成一个完整的事务。对于事务的处理初步分析:  </p>
+<p><strong>事务补偿机制</strong><br>事务补偿即在事务链中的任何一个正向事务操作，都必须存在一个完全符合回滚规则的可逆事务。如果是一个完整的事务链，则必须事务链中的每一个业务服务或操作都有对应的可逆服务。对于Service服务本身无状态，也不容易实现前面讨论过的通过DTC或XA机制实现的跨应用和资源的事务管理，建立跨资源的事务上下文。因此也较难以实现真正的预提交和正式提交的分离。 </p>
+<p>在这种情况下以上面例子来说，首先调用取款服务，完全调用成功并返回，数据已经持久化。然后调用异地的存款服务，如果也调用成功，则本身无任何问题。如果调用失败，则需要调用本地注册的逆向服务（本地存款服务），如果本地存款服务调用失败，则必须考虑重试，如果约定重试次数仍然不成功，则必须log到完整的不一致信息。也可以是将本地存款服务作为消息发送到消息中间件，由消息中间件接管后续操作。 </p>
+<p>在上面方式中可以看到需要手工编写大量的代码来处理以保证事务的完整性，我们可以考虑实现一个通用的事务管理器，实现事务链和事务上下文的管理。对于事务链上的任何一个服务正向和逆向操作均在事务管理和协同器上注册，由事务管理器接管所有的事务补偿和回滚操作。 </p>
+<p><strong>基于消息的最终一致性</strong><br>在这里首先要回答的是我们需要时实时一致性还是最终一致性的问题，如果需要的是最终一致性，那么BASE策略中的基于消息的最终一致性是比较好的解决方案。这种方案真正实现了两个服务的真正解耦，解耦的关键就是异步消息和消息持久化机制。 </p>
+<p>还是以上面的例子来看。对于转账操作，原有的两个服务调用变化为第一步调用本地的取款服务，第二步发送异地取款的异步消息到消息中间件。如果第二步在本地，则保证事务的完整性基本无任何问题，即本身就是本地事务的管理机制。只要两个操作都成功即可以返回客户成功。 </p>
+<p>由于解耦，我们看到客户得到成功返回的时候，如果是上面一种情况则异地卡马上就能查询账户存款增加。而第二种情况则不一定，因为本身是一种异步处理机制。消息中间件得到消息后会去对消息解析，然后调用异地银行提供的存款服务进行存款，如果服务调用失败则进行重试。 </p>
+<p>异地银行存款操作不应该长久地出现异常而无法使用，因此一旦发现异常我们可以迅速的解决，消息中间件中异常服务自然会进行重试以保证事务的最终一致性。这种方式假设问题一定可以解决，在不到万不得已的情况下本地的取款服务一般不进行可逆操作。 </p>
+<p>在本地取款到异地存款两个服务调用之间，会存在一个真空期，这段时间相关现金不在任何一个账户，而只是在一个事务的中间状态，但是客户并不关心这个，只要在约定的时间保证事务最终的一致性即可。 </p>
+<p><strong>关于等幂操作的问题</strong><br>重复调用多次产生的业务结果与调用一次产生的业务结果相同，简单点讲所有提供的业务服务，不管是正向还是逆向的业务服务，都必须要支持重试。因为服务调用失败这种异常必须考虑到，不能因为服务的多次调用而导致业务数据的累计增加或减少。 </p>
+<p><strong>关于是否可以补偿的问题</strong><br>在这里我们谈的是多个跨系统的业务服务组合成一个分布式事务，因此在对事务进行补偿的时候必须要考虑客户需要的是否一定是最终一致性。客户对中间阶段出现的不一致的承受度是如何的。 </p>
+<p>在上面的例子来看，如果采用事务补偿机制，基本可以是做到准实时的补偿，不会有太大的影响。而如果采用基于消息的最终一致性方式，则可能整个周期比较长，需要较长的时间才能给得到最终的一致性。比如周六转款，客户可能下周一才得到通知转账不成功而进行了回退，那么就必须要考虑客户是否能给忍受。 </p>
+<p>其次对于前面讨论，如果真正需要的是实时的一致性，那么即使采用事务补偿机制，也无法达到实时的一致性。即很可能在两个业务服务调用中间，客户前台业务操作对持久化的数据进行了其它额外的操作。在这种模式下，我们不得不考虑需要在数据库表增加业务状态锁的问题，即整个事务没有完整提交并成功前，第一个业务服务调用虽然持久化在数据库，但是仍然是一个中间状态，需要通过业务锁来标记，控制相关的业务操作和行为。但是在这种模式下无疑增加了整个分布式业务系统的复杂度。</p>
+<p>参考资料：<br><a href="http://wenku.baidu.com/view/be946bec0975f46527d3e104.html" target="_blank" rel="external">http://wenku.baidu.com/view/be946bec0975f46527d3e104.html</a><br><a href="http://coolshell.cn/articles/10910.html" target="_blank" rel="external">http://coolshell.cn/articles/10910.html</a><br><a href="http://zh.wikipedia.org/wiki/CAP%E5%AE%9A%E7%90%86" target="_blank" rel="external">http://zh.wikipedia.org/wiki/CAP%E5%AE%9A%E7%90%86</a>  </p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>最近看了一段涉及到事务处理的代码，正好去年做过的一个项目也对强一致性有着很高的要求，当时做过比较长时间的调研，决定把学习到的知识都总结一遍加深记忆，也方便后续遇到事务处理问题时寻找解决方案。</p>
+<p>其实大多数互联网应用对事务性要求都不高，更多的挑战在于更好的性能和更]]>
+    </summary>
+    
+      <category term="ACID" scheme="http://minotaursu.com/tags/ACID/"/>
+    
+      <category term="CAP" scheme="http://minotaursu.com/tags/CAP/"/>
+    
+      <category term="事务" scheme="http://minotaursu.com/tags/%E4%BA%8B%E5%8A%A1/"/>
+    
+      <category term="分布式" scheme="http://minotaursu.com/tags/%E5%88%86%E5%B8%83%E5%BC%8F/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[我在广告应用这三年]]></title>
+    <link href="http://minotaursu.com/2014/07/07/%E6%88%91%E5%9C%A8%E5%B9%BF%E5%91%8A%E5%BA%94%E7%94%A8%E8%BF%99%E4%B8%89%E5%B9%B4/"/>
+    <id>http://minotaursu.com/2014/07/07/我在广告应用这三年/</id>
+    <published>2014-07-07T07:22:22.000Z</published>
+    <updated>2015-07-08T06:47:51.000Z</updated>
+    <content type="html"><![CDATA[<h2 id="try">try</h2><p>回首3年前的7月，我背着一个硕大的包，拎着满满的行李箱走下飞机来到杭州，在一个阳光明媚的有些刺眼，天气闷热难耐的日子，正式告别了学校，入职阿里巴巴广告应用团队，开始了人生中的第一份正式工作。三年后的7月，我在一个天气清爽的日子写下这段文字，决定告别熟悉的广告业务，加入了一个新的业务团队。<br>在这三年的时间里经历了工作地点的变动，从滨江到华星到西溪；经历了组织架构的调整，从asc到一淘到阿里妈妈；经历了工作内容的变化，从外投到SEM到结算到bp到品牌实效。项目经历上一直是从0到1，从无到有的比较多，做的事情大部分都是新系统的开发和原有系统的大改造。幸运的是这些经历让我对经典的广告业务都有一些理解，遗憾的是缺少把一个业务从1做到100，长的枝繁叶茂的体验。  </p>
+<h2 id="外投">外投</h2><p>关键词：<strong>站外投放，二跳，A/B test，异步加载，gzip</strong><br>公司不让说。 </p>
+<h2 id="SEM">SEM</h2><p>关键词：<strong>hadoop，shell，openApi，webservice，soap</strong><br>公司不让说。  </p>
+<h2 id="结算">结算</h2><p>关键词：<strong>事务，XA协议，账户，性能，稳定性，akka</strong><br>公司不让说。  </p>
+<h2 id="搜索导购&amp;一淘直通车">搜索导购&amp;一淘直通车</h2><p>关键词：<strong>搜索，导购，直通车，p4p，bp</strong><br>公司不让说。  </p>
+<h2 id="品牌实效">品牌实效</h2><p>关键词: <strong>建站，cms，组件化</strong><br>公司不让说。 </p>
+<h2 id="finally">finally</h2><p>最后，感谢3年来团队自由宽松的工作氛围，感谢热情友善的小伙伴们，Farewell fellows!</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2 id="try">try</h2><p>回首3年前的7月，我背着一个硕大的包，拎着满满的行李箱走下飞机来到杭州，在一个阳光明媚的有些刺眼，天气闷热难耐的日子，正式告别了学校，入职阿里巴巴广告应用团队，开始了人生中的第一份正式工作。三年后的7月，我在一个天气清爽的日子写下这]]>
+    </summary>
+    
+      <category term="p4p" scheme="http://minotaursu.com/tags/p4p/"/>
+    
+      <category term="工作" scheme="http://minotaursu.com/tags/%E5%B7%A5%E4%BD%9C/"/>
+    
+      <category term="广告" scheme="http://minotaursu.com/tags/%E5%B9%BF%E5%91%8A/"/>
+    
+      <category term="开发" scheme="http://minotaursu.com/tags/%E5%BC%80%E5%8F%91/"/>
+    
+      <category term="淘宝" scheme="http://minotaursu.com/tags/%E6%B7%98%E5%AE%9D/"/>
+    
+  </entry>
+  
+</feed>
