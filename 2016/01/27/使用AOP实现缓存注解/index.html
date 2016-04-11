@@ -16,7 +16,7 @@
 <meta property="og:description" content="为何重造轮子  
 
 半年前写了一个注解驱动的缓存，最近提交到了github。缓存大量的被使用在应用中的多个地方，简单的使用方式就是代码先查询缓存中是否存在数据，如果不存在或者缓存过期再查询数据库，并将查询的结果缓存一段时间，缓存key通常是入参的对象或者入参对象的某些属性，有些时候还需要按照某种条件判断是否缓存。可以看到这种功能性代码和具体的业务代码混合在一起的实现方式有很大的代码冗余，即不便于维">
-<meta property="og:updated_time" content="2016-04-11T11:26:57.000Z">
+<meta property="og:updated_time" content="2016-04-11T11:37:34.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="使用AOP实现缓存注解">
 <meta name="twitter:description" content="为何重造轮子  
@@ -96,7 +96,7 @@
         <span>posts</span>
       </div>
       <div class="article-info-block">
-        25
+        24
         <span>tags</span>
       </div>
     </div>
@@ -162,25 +162,25 @@
 <p>怎样重造轮子</p>
 </blockquote>
 <p>鉴于spring3提供的cache注解不太能满足需求，最后决定自己写一个。目标是构造一个简单好用而不是大而全的缓存注解，整个过程陆陆续续花了3天时间，第一天确定技术方案，构建对象和对象间的关系; 第二天写具体的实现和debug; 第三天写demo和test。<br>确定技术方案的时候看了spring3的cache注解实现和在阿里时使用过的2个cache注解实现。最大是不同点是创建代理类的方式和动态生成cacheKey的实现。<br>不同的创建代理类的方式：  </p>
-<ol>
+<ul>
 <li>使用MethodInterceptor+xml配置，最经典的使用方式。缺点是同一个类的方法相互调用时不会被aop拦截，需要使用AopContext.currentProxy()获取代理类。  </li>
 <li>使用@AspectJ注解，可以有效的减少xml配置，缺点和MethodInterceptor相同。  </li>
 <li>基于SmartInstantiationAwareBeanPostProcessor+cglib创建代理类。 </li>
-</ol>
+</ul>
 <p>不同的生成cacheKey的方式：  </p>
-<ol>
+<ul>
 <li>使用SPEL  </li>
 <li>使用OGNL  </li>
 <li>使用正则表达式  </li>
-</ol>
+</ul>
 <p>最后选择了@AspectJ+SPEL的实现方式。<br>虽然具体的实现方式各自不同，类的调用结构和内部功能都是基本相同的。  </p>
-<ol>
+<ul>
 <li>cacheManager负责cache的管理，包含cache实现的list。  </li>
 <li>cache是具体的缓存实现，可以是redis，ehcache，memcache。  </li>
 <li>keyParser负责动态生成cacheKey。  </li>
 <li>interceptor负责注解的拦截。  </li>
 <li>@Cacheable，@CacheEvict等是具体的缓存注解。  </li>
-</ol>
+</ul>
 <p>按照上述的功能划分实现相关类后，花了一天的时间来写demo和test，全部的test跑通后就可以使用了。后面增加了一个CacheOperation转换具体的注解，统一对CacheOperation进行处理，代码简化了不少。</p>
 <blockquote>
 <p>实际遇到的问题</p>
@@ -190,7 +190,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2016/01/27/使用AOP实现缓存注解/" data-id="cimvwxpyt0000ssscb0me3ruc" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2016/01/27/使用AOP实现缓存注解/" data-id="cimvxc4lx0015u5sc9az79xbe" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/AOP/">AOP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/annotation/">annotation</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cache/">cache</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/spring/">spring</a></li></ul>

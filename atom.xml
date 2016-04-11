@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://minotaursu.com/"/>
-  <updated>2016-04-11T11:26:57.000Z</updated>
+  <updated>2016-04-11T11:37:34.000Z</updated>
   <id>http://minotaursu.com/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://minotaursu.com/2016/01/27/%E4%BD%BF%E7%94%A8AOP%E5%AE%9E%E7%8E%B0%E7%BC%93%E5%AD%98%E6%B3%A8%E8%A7%A3/"/>
     <id>http://minotaursu.com/2016/01/27/使用AOP实现缓存注解/</id>
     <published>2016-01-27T03:47:04.000Z</published>
-    <updated>2016-04-11T11:26:57.000Z</updated>
+    <updated>2016-04-11T11:37:34.000Z</updated>
     <content type="html"><![CDATA[<blockquote>
 <p>为何重造轮子  </p>
 </blockquote>
@@ -28,25 +28,25 @@
 <p>怎样重造轮子</p>
 </blockquote>
 <p>鉴于spring3提供的cache注解不太能满足需求，最后决定自己写一个。目标是构造一个简单好用而不是大而全的缓存注解，整个过程陆陆续续花了3天时间，第一天确定技术方案，构建对象和对象间的关系; 第二天写具体的实现和debug; 第三天写demo和test。<br>确定技术方案的时候看了spring3的cache注解实现和在阿里时使用过的2个cache注解实现。最大是不同点是创建代理类的方式和动态生成cacheKey的实现。<br>不同的创建代理类的方式：  </p>
-<ol>
+<ul>
 <li>使用MethodInterceptor+xml配置，最经典的使用方式。缺点是同一个类的方法相互调用时不会被aop拦截，需要使用AopContext.currentProxy()获取代理类。  </li>
 <li>使用@AspectJ注解，可以有效的减少xml配置，缺点和MethodInterceptor相同。  </li>
 <li>基于SmartInstantiationAwareBeanPostProcessor+cglib创建代理类。 </li>
-</ol>
+</ul>
 <p>不同的生成cacheKey的方式：  </p>
-<ol>
+<ul>
 <li>使用SPEL  </li>
 <li>使用OGNL  </li>
 <li>使用正则表达式  </li>
-</ol>
+</ul>
 <p>最后选择了@AspectJ+SPEL的实现方式。<br>虽然具体的实现方式各自不同，类的调用结构和内部功能都是基本相同的。  </p>
-<ol>
+<ul>
 <li>cacheManager负责cache的管理，包含cache实现的list。  </li>
 <li>cache是具体的缓存实现，可以是redis，ehcache，memcache。  </li>
 <li>keyParser负责动态生成cacheKey。  </li>
 <li>interceptor负责注解的拦截。  </li>
 <li>@Cacheable，@CacheEvict等是具体的缓存注解。  </li>
-</ol>
+</ul>
 <p>按照上述的功能划分实现相关类后，花了一天的时间来写demo和test，全部的test跑通后就可以使用了。后面增加了一个CacheOperation转换具体的注解，统一对CacheOperation进行处理，代码简化了不少。</p>
 <blockquote>
 <p>实际遇到的问题</p>
