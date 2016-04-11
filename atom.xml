@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://minotaursu.com/"/>
-  <updated>2015-09-21T03:31:45.000Z</updated>
+  <updated>2016-04-11T11:26:57.000Z</updated>
   <id>http://minotaursu.com/</id>
   
   <author>
@@ -13,6 +13,64 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[使用AOP实现缓存注解]]></title>
+    <link href="http://minotaursu.com/2016/01/27/%E4%BD%BF%E7%94%A8AOP%E5%AE%9E%E7%8E%B0%E7%BC%93%E5%AD%98%E6%B3%A8%E8%A7%A3/"/>
+    <id>http://minotaursu.com/2016/01/27/使用AOP实现缓存注解/</id>
+    <published>2016-01-27T03:47:04.000Z</published>
+    <updated>2016-04-11T11:26:57.000Z</updated>
+    <content type="html"><![CDATA[<blockquote>
+<p>为何重造轮子  </p>
+</blockquote>
+<p>半年前写了一个注解驱动的缓存，最近提交到了<a href="https://github.com/minotaursu/cacheAnnotation" target="_blank" rel="external">github</a>。缓存大量的被使用在应用中的多个地方，简单的使用方式就是代码先查询缓存中是否存在数据，如果不存在或者缓存过期再查询数据库，并将查询的结果缓存一段时间，缓存key通常是入参的对象或者入参对象的某些属性，有些时候还需要按照某种条件判断是否缓存。可以看到这种功能性代码和具体的业务代码混合在一起的实现方式有很大的代码冗余，即不便于维护也不灵活。使用切面的方式可以很好的抽取功能相似代码冗余的缓存代码，将缓存代码和业务代码隔离开，这样既做到了对业务的无侵入又可以灵活更换具体缓存组件。<br>其实从spring3之后spring就提供了@Cacheable注解，但是用起来不爽的地方还是太多，例如缓存时间是由cache本身设置的而非在每个@Cacheable注解中指定，这个粒度有点太大了；没有缓存key的前缀设置，不同方法很容易出现key冲突。</p>
+<blockquote>
+<p>怎样重造轮子</p>
+</blockquote>
+<p>鉴于spring3提供的cache注解不太能满足需求，最后决定自己写一个。目标是构造一个简单好用而不是大而全的缓存注解，整个过程陆陆续续花了3天时间，第一天确定技术方案，构建对象和对象间的关系; 第二天写具体的实现和debug; 第三天写demo和test。<br>确定技术方案的时候看了spring3的cache注解实现和在阿里时使用过的2个cache注解实现。最大是不同点是创建代理类的方式和动态生成cacheKey的实现。<br>不同的创建代理类的方式：  </p>
+<ol>
+<li>使用MethodInterceptor+xml配置，最经典的使用方式。缺点是同一个类的方法相互调用时不会被aop拦截，需要使用AopContext.currentProxy()获取代理类。  </li>
+<li>使用@AspectJ注解，可以有效的减少xml配置，缺点和MethodInterceptor相同。  </li>
+<li>基于SmartInstantiationAwareBeanPostProcessor+cglib创建代理类。 </li>
+</ol>
+<p>不同的生成cacheKey的方式：  </p>
+<ol>
+<li>使用SPEL  </li>
+<li>使用OGNL  </li>
+<li>使用正则表达式  </li>
+</ol>
+<p>最后选择了@AspectJ+SPEL的实现方式。<br>虽然具体的实现方式各自不同，类的调用结构和内部功能都是基本相同的。  </p>
+<ol>
+<li>cacheManager负责cache的管理，包含cache实现的list。  </li>
+<li>cache是具体的缓存实现，可以是redis，ehcache，memcache。  </li>
+<li>keyParser负责动态生成cacheKey。  </li>
+<li>interceptor负责注解的拦截。  </li>
+<li>@Cacheable，@CacheEvict等是具体的缓存注解。  </li>
+</ol>
+<p>按照上述的功能划分实现相关类后，花了一天的时间来写demo和test，全部的test跑通后就可以使用了。后面增加了一个CacheOperation转换具体的注解，统一对CacheOperation进行处理，代码简化了不少。</p>
+<blockquote>
+<p>实际遇到的问题</p>
+</blockquote>
+<p>实际使用中主要遇到了2个问题，一个是interceptor中catch了所有的Exception并打印错误日志，实际上我们会在应用中定义BizException，当发生预期内的错误时会抛出BizException，而BizException是不需要被拦截打印错误日志的。另一个是问题是并发读写问题，在cache中没有缓存的时候，ThreadA从DB获取数据，ThreadB修改了数据库的数据，ThreadB删除缓存，ThreadA然后put修改之前的数据。原本以为按照业务特点发生并发读写的概率不高，结果发现接口轮询+事务导致频繁发生不一致的情况。缓存失效策略一直是缓存使用中的难题，甚至是计算机科学中两大难题之一。处理数据库并发最常见的2个解决思路是乐观锁和串行化，但是并不适用于解决缓存和数据库的不一致，google了一下也没有找到特别好的解决方案。考虑到应用并没有超高的QPS，短时间的缓存穿透不会造成系统的崩溃，最后通过增加一个redis的缓存删除标识进行解决，这个删除标识会存活5s，在这5s中不会执行put缓存操作从而避免了缓存和数据库的不一致。</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<blockquote>
+<p>为何重造轮子  </p>
+</blockquote>
+<p>半年前写了一个注解驱动的缓存，最近提交到了<a href="https://github.com/minotaursu/cacheAnnotation" target="_blank" r]]>
+    </summary>
+    
+      <category term="AOP" scheme="http://minotaursu.com/tags/AOP/"/>
+    
+      <category term="annotation" scheme="http://minotaursu.com/tags/annotation/"/>
+    
+      <category term="cache" scheme="http://minotaursu.com/tags/cache/"/>
+    
+      <category term="java" scheme="http://minotaursu.com/tags/java/"/>
+    
+      <category term="spring" scheme="http://minotaursu.com/tags/spring/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[小明的魔法调度框架之旅]]></title>
@@ -402,36 +460,6 @@
       <category term="事务" scheme="http://minotaursu.com/tags/%E4%BA%8B%E5%8A%A1/"/>
     
       <category term="分布式" scheme="http://minotaursu.com/tags/%E5%88%86%E5%B8%83%E5%BC%8F/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[我在广告应用这三年]]></title>
-    <link href="http://minotaursu.com/2014/07/07/%E6%88%91%E5%9C%A8%E5%B9%BF%E5%91%8A%E5%BA%94%E7%94%A8%E8%BF%99%E4%B8%89%E5%B9%B4/"/>
-    <id>http://minotaursu.com/2014/07/07/我在广告应用这三年/</id>
-    <published>2014-07-07T07:22:22.000Z</published>
-    <updated>2015-07-08T06:47:51.000Z</updated>
-    <content type="html"><![CDATA[<h2 id="try">try</h2><p>回首3年前的7月，我背着一个硕大的包，拎着满满的行李箱走下飞机来到杭州，在一个阳光明媚的有些刺眼，天气闷热难耐的日子，正式告别了学校，入职阿里巴巴广告应用团队，开始了人生中的第一份正式工作。三年后的7月，我在一个天气清爽的日子写下这段文字，决定告别熟悉的广告业务，加入了一个新的业务团队。<br>在这三年的时间里经历了工作地点的变动，从滨江到华星到西溪；经历了组织架构的调整，从asc到一淘到阿里妈妈；经历了工作内容的变化，从外投到SEM到结算到bp到品牌实效。项目经历上一直是从0到1，从无到有的比较多，做的事情大部分都是新系统的开发和原有系统的大改造。幸运的是这些经历让我对经典的广告业务都有一些理解，遗憾的是缺少把一个业务从1做到100，长的枝繁叶茂的体验。  </p>
-<h2 id="外投">外投</h2><p>关键词：<strong>站外投放，二跳，A/B test，异步加载，gzip</strong><br>公司不让说。 </p>
-<h2 id="SEM">SEM</h2><p>关键词：<strong>hadoop，shell，openApi，webservice，soap</strong><br>公司不让说。  </p>
-<h2 id="结算">结算</h2><p>关键词：<strong>事务，XA协议，账户，性能，稳定性，akka</strong><br>公司不让说。  </p>
-<h2 id="搜索导购&amp;一淘直通车">搜索导购&amp;一淘直通车</h2><p>关键词：<strong>搜索，导购，直通车，p4p，bp</strong><br>公司不让说。  </p>
-<h2 id="品牌实效">品牌实效</h2><p>关键词: <strong>建站，cms，组件化</strong><br>公司不让说。 </p>
-<h2 id="finally">finally</h2><p>最后，感谢3年来团队自由宽松的工作氛围，感谢热情友善的小伙伴们，Farewell fellows!</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<h2 id="try">try</h2><p>回首3年前的7月，我背着一个硕大的包，拎着满满的行李箱走下飞机来到杭州，在一个阳光明媚的有些刺眼，天气闷热难耐的日子，正式告别了学校，入职阿里巴巴广告应用团队，开始了人生中的第一份正式工作。三年后的7月，我在一个天气清爽的日子写下这]]>
-    </summary>
-    
-      <category term="p4p" scheme="http://minotaursu.com/tags/p4p/"/>
-    
-      <category term="工作" scheme="http://minotaursu.com/tags/%E5%B7%A5%E4%BD%9C/"/>
-    
-      <category term="广告" scheme="http://minotaursu.com/tags/%E5%B9%BF%E5%91%8A/"/>
-    
-      <category term="开发" scheme="http://minotaursu.com/tags/%E5%BC%80%E5%8F%91/"/>
-    
-      <category term="淘宝" scheme="http://minotaursu.com/tags/%E6%B7%98%E5%AE%9D/"/>
     
   </entry>
   

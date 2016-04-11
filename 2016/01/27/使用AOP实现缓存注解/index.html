@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>使用AOP实现缓存注解 | Minotaur story</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="google-site-verification" content="bDBQbYqQqKkNOj4OxUu1rjxMw6nQqWpxzBffZ7yj2kA" />
+  <meta name="description" content="为何重造轮子  
+
+半年前写了一个注解驱动的缓存，最近提交到了github。缓存大量的被使用在应用中的多个地方，简单的使用方式就是代码先查询缓存中是否存在数据，如果不存在或者缓存过期再查询数据库，并将查询的结果缓存一段时间，缓存key通常是入参的对象或者入参对象的某些属性，有些时候还需要按照某种条件判断是否缓存。可以看到这种功能性代码和具体的业务代码混合在一起的实现方式有很大的代码冗余，即不便于维">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用AOP实现缓存注解">
+<meta property="og:url" content="http://minotaursu.com/2016/01/27/使用AOP实现缓存注解/index.html">
+<meta property="og:site_name" content="Minotaur story">
+<meta property="og:description" content="为何重造轮子  
+
+半年前写了一个注解驱动的缓存，最近提交到了github。缓存大量的被使用在应用中的多个地方，简单的使用方式就是代码先查询缓存中是否存在数据，如果不存在或者缓存过期再查询数据库，并将查询的结果缓存一段时间，缓存key通常是入参的对象或者入参对象的某些属性，有些时候还需要按照某种条件判断是否缓存。可以看到这种功能性代码和具体的业务代码混合在一起的实现方式有很大的代码冗余，即不便于维">
+<meta property="og:updated_time" content="2016-04-11T11:26:57.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用AOP实现缓存注解">
+<meta name="twitter:description" content="为何重造轮子  
+
+半年前写了一个注解驱动的缓存，最近提交到了github。缓存大量的被使用在应用中的多个地方，简单的使用方式就是代码先查询缓存中是否存在数据，如果不存在或者缓存过期再查询数据库，并将查询的结果缓存一段时间，缓存key通常是入参的对象或者入参对象的某些属性，有些时候还需要按照某种条件判断是否缓存。可以看到这种功能性代码和具体的业务代码混合在一起的实现方式有很大的代码冗余，即不便于维">
+  
+  
+    <link rel="icon" href="css/images/favicon.ico">
+  
+  
+ <link href='//fonts.useso.com/css?family=Open+Sans:400italic,400,600' rel='stylesheet' type='text/css'>
+ <link href="//fonts.useso.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+
+
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css" type="text/css">
+  
+
+  
+</head>
+
+<body>
+  <div id="container">
+    <header id="header">
+  <div id="header-main" class="header-inner">
+    <div class="outer">
+      <a href="/" id="logo"><i class="logo" style="background-image: url(/css/images/logo.png)"></i><span class="site-title">Minotaur story</span></a>
+      <nav id="main-nav">
+        
+          <a class="main-nav-link" href="/.">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      
+        <nav id="sub-nav">
+          <div class="profile" id="profile-nav">
+            <a id="profile-anchor" href="javascript:;"><img class="avatar" src="/css/images/author.png"><i class="fa fa-caret-down"></i></a>
+          </div>
+        </nav>
+      
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit"> </button><input type="hidden" name="sitesearch" value="http://minotaursu.com"></form>
+      </div>
+    </div>
+  </div>
+  <div id="main-nav-mobile" class="header-sub header-inner">
+    <table class="menu outer">
+      <tr>
+        
+          <td><a class="main-nav-link" href="/.">Home</a></td>
+        
+          <td><a class="main-nav-link" href="/archives">Archives</a></td>
+        
+        <td>
+          <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><input type="hidden" name="sitesearch" value="http://minotaursu.com"></form>
+        </td>
+      </tr>
+    </table>
+  </div>
+</header>
+
+    <div class="outer">
+      
+        <aside id="profile">
+  <div class="inner profile-inner">
+    <div class="base-info profile-block">
+      <img id="avatar" class="img-fanc img-wrapper" src="/css/images/author.png">
+      <h2 id="name">minotaur</h2>
+      <h3 id="title"></h3>
+      <span id="location"><i class="fa fa-map-marker"></i>Hangzhou, China</span>
+      <a id="follow" href="https://github.com/minotaursu">FOLLOW</a>
+    </div>
+    <div class="article-info profile-block">
+      <div class="article-info-block">
+        13
+        <span>posts</span>
+      </div>
+      <div class="article-info-block">
+        25
+        <span>tags</span>
+      </div>
+    </div>
+    
+    <div class="contact-info profile-block">
+      <table class="contact-list">
+        <tr>
+          
+          <td><a href="https://github.com/minotaursu" target="_blank" title="github"><i class="fa fa-github"></i></a></td>
+          
+          <td><a href="http://weibo.com/julyflame" target="_blank" title="weibo"><i class="fa fa-weibo"></i></a></td>
+          
+          <td><a href="http://hexo-tuchuan.qiniudn.com/logo/weixin.jpg" target="_blank" title="weixin"><i class="fa fa-weixin"></i></a></td>
+          
+          <td><a href="https://twitter.com/minotaursu" target="_blank" title="twitter"><i class="fa fa-twitter"></i></a></td>
+          
+          <td><a href="/atom.xml" target="_blank" title="rss"><i class="fa fa-rss"></i></a></td>
+          
+        </tr>
+      </table>
+    </div>
+    
+    
+  </div>
+</aside>
+
+      
+      <section id="main"><article id="post-使用AOP实现缓存注解" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      使用AOP实现缓存注解
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2016/01/27/使用AOP实现缓存注解/">
+      <time datetime="2016-01-27T03:47:04.000Z" itemprop="datePublished">2016-01-27</time>
+    </a>
+  </div>
+
+
+          
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <blockquote>
+<p>为何重造轮子  </p>
+</blockquote>
+<p>半年前写了一个注解驱动的缓存，最近提交到了<a href="https://github.com/minotaursu/cacheAnnotation" target="_blank" rel="external">github</a>。缓存大量的被使用在应用中的多个地方，简单的使用方式就是代码先查询缓存中是否存在数据，如果不存在或者缓存过期再查询数据库，并将查询的结果缓存一段时间，缓存key通常是入参的对象或者入参对象的某些属性，有些时候还需要按照某种条件判断是否缓存。可以看到这种功能性代码和具体的业务代码混合在一起的实现方式有很大的代码冗余，即不便于维护也不灵活。使用切面的方式可以很好的抽取功能相似代码冗余的缓存代码，将缓存代码和业务代码隔离开，这样既做到了对业务的无侵入又可以灵活更换具体缓存组件。<br>其实从spring3之后spring就提供了@Cacheable注解，但是用起来不爽的地方还是太多，例如缓存时间是由cache本身设置的而非在每个@Cacheable注解中指定，这个粒度有点太大了；没有缓存key的前缀设置，不同方法很容易出现key冲突。</p>
+<blockquote>
+<p>怎样重造轮子</p>
+</blockquote>
+<p>鉴于spring3提供的cache注解不太能满足需求，最后决定自己写一个。目标是构造一个简单好用而不是大而全的缓存注解，整个过程陆陆续续花了3天时间，第一天确定技术方案，构建对象和对象间的关系; 第二天写具体的实现和debug; 第三天写demo和test。<br>确定技术方案的时候看了spring3的cache注解实现和在阿里时使用过的2个cache注解实现。最大是不同点是创建代理类的方式和动态生成cacheKey的实现。<br>不同的创建代理类的方式：  </p>
+<ol>
+<li>使用MethodInterceptor+xml配置，最经典的使用方式。缺点是同一个类的方法相互调用时不会被aop拦截，需要使用AopContext.currentProxy()获取代理类。  </li>
+<li>使用@AspectJ注解，可以有效的减少xml配置，缺点和MethodInterceptor相同。  </li>
+<li>基于SmartInstantiationAwareBeanPostProcessor+cglib创建代理类。 </li>
+</ol>
+<p>不同的生成cacheKey的方式：  </p>
+<ol>
+<li>使用SPEL  </li>
+<li>使用OGNL  </li>
+<li>使用正则表达式  </li>
+</ol>
+<p>最后选择了@AspectJ+SPEL的实现方式。<br>虽然具体的实现方式各自不同，类的调用结构和内部功能都是基本相同的。  </p>
+<ol>
+<li>cacheManager负责cache的管理，包含cache实现的list。  </li>
+<li>cache是具体的缓存实现，可以是redis，ehcache，memcache。  </li>
+<li>keyParser负责动态生成cacheKey。  </li>
+<li>interceptor负责注解的拦截。  </li>
+<li>@Cacheable，@CacheEvict等是具体的缓存注解。  </li>
+</ol>
+<p>按照上述的功能划分实现相关类后，花了一天的时间来写demo和test，全部的test跑通后就可以使用了。后面增加了一个CacheOperation转换具体的注解，统一对CacheOperation进行处理，代码简化了不少。</p>
+<blockquote>
+<p>实际遇到的问题</p>
+</blockquote>
+<p>实际使用中主要遇到了2个问题，一个是interceptor中catch了所有的Exception并打印错误日志，实际上我们会在应用中定义BizException，当发生预期内的错误时会抛出BizException，而BizException是不需要被拦截打印错误日志的。另一个是问题是并发读写问题，在cache中没有缓存的时候，ThreadA从DB获取数据，ThreadB修改了数据库的数据，ThreadB删除缓存，ThreadA然后put修改之前的数据。原本以为按照业务特点发生并发读写的概率不高，结果发现接口轮询+事务导致频繁发生不一致的情况。缓存失效策略一直是缓存使用中的难题，甚至是计算机科学中两大难题之一。处理数据库并发最常见的2个解决思路是乐观锁和串行化，但是并不适用于解决缓存和数据库的不一致，google了一下也没有找到特别好的解决方案。考虑到应用并没有超高的QPS，短时间的缓存穿透不会造成系统的崩溃，最后通过增加一个redis的缓存删除标识进行解决，这个删除标识会存活5s，在这5s中不会执行put缓存操作从而避免了缓存和数据库的不一致。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://minotaursu.com/2016/01/27/使用AOP实现缓存注解/" data-id="cimvwxpyt0000ssscb0me3ruc" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/AOP/">AOP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/annotation/">annotation</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cache/">cache</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/spring/">spring</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2015/12/12/小明的魔法调度框架之旅/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">小明的魔法调度框架之旅</div>
+    </a>
+  
+</nav>
+
+
+  
+</article>
+
+
+</section>
+      
+        <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">recents</h3>
+    <div class="widget">
+      <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/01/27/使用AOP实现缓存注解/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"></p>
+              <p class="item-title"><a href="/2016/01/27/使用AOP实现缓存注解/" class="title">使用AOP实现缓存注解</a></p>
+              <p class="item-date"><time datetime="2016-01-27T03:47:04.000Z" itemprop="datePublished">2016-01-27</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2015/12/12/小明的魔法调度框架之旅/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"></p>
+              <p class="item-title"><a href="/2015/12/12/小明的魔法调度框架之旅/" class="title">小明的魔法调度框架之旅</a></p>
+              <p class="item-date"><time datetime="2015-12-12T04:01:24.000Z" itemprop="datePublished">2015-12-12</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2015/04/13/我设计的12306/" class="thumbnail">
+  
+    <span style="background-image:url(http://hexo-tuchuan.qiniudn.com/tickets.jpg
+)" alt="我设计的12306" class="thumbnail-image"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"></p>
+              <p class="item-title"><a href="/2015/04/13/我设计的12306/" class="title">我设计的12306</a></p>
+              <p class="item-date"><time datetime="2015-04-13T14:49:30.000Z" itemprop="datePublished">2015-04-13</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2015/01/09/缓存的使用/" class="thumbnail">
+  
+    <span style="background-image:url(http://7jpo4q.com1.z0.glb.clouddn.com/speed.jpg?imageView/1/w/670/h/450
+)" alt="缓存的使用" class="thumbnail-image"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"></p>
+              <p class="item-title"><a href="/2015/01/09/缓存的使用/" class="title">缓存的使用</a></p>
+              <p class="item-date"><time datetime="2015-01-09T10:07:37.000Z" itemprop="datePublished">2015-01-9</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2014/12/30/2014年终总结/" class="thumbnail">
+  
+    <span style="background-image:url(http://hexo-tuchuan.qiniudn.com/saber.jpg?imageView/1/w/670/h/900
+)" alt="2014年终总结" class="thumbnail-image"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"></p>
+              <p class="item-title"><a href="/2014/12/30/2014年终总结/" class="title">2014年终总结</a></p>
+              <p class="item-date"><time datetime="2014-12-30T06:59:27.000Z" itemprop="datePublished">2014-12-30</time></p>
+            </div>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">tag cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/2014/" style="font-size: 10px;">2014</a> <a href="/tags/ACID/" style="font-size: 10px;">ACID</a> <a href="/tags/AOP/" style="font-size: 10px;">AOP</a> <a href="/tags/CAP/" style="font-size: 10px;">CAP</a> <a href="/tags/annotation/" style="font-size: 10px;">annotation</a> <a href="/tags/cache/" style="font-size: 10px;">cache</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/p4p/" style="font-size: 10px;">p4p</a> <a href="/tags/quartz/" style="font-size: 10px;">quartz</a> <a href="/tags/spring/" style="font-size: 10px;">spring</a> <a href="/tags/tips/" style="font-size: 10px;">tips</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/分布式/" style="font-size: 13.33px;">分布式</a> <a href="/tags/工作/" style="font-size: 13.33px;">工作</a> <a href="/tags/并发/" style="font-size: 16.67px;">并发</a> <a href="/tags/广告/" style="font-size: 10px;">广告</a> <a href="/tags/开发/" style="font-size: 16.67px;">开发</a> <a href="/tags/码农/" style="font-size: 13.33px;">码农</a> <a href="/tags/缓存/" style="font-size: 13.33px;">缓存</a> <a href="/tags/调度/" style="font-size: 10px;">调度</a> <a href="/tags/锁/" style="font-size: 13.33px;">锁</a> <a href="/tags/阿里/" style="font-size: 10px;">阿里</a>
+    </div>
+  </div>
+
+  
+    <iframe width="100%" height="550" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=550&fansRow=2&ptype=1&speed=0&skin=3&isTitle=0&noborder=0&isWeibo=1&isFans=0&uid=1710777934&verifier=308e50f9&dpc=1"></iframe>
+
+  
+  <div id="toTop" class="fa fa-chevron-up"></div>
+</aside>
+      
+    </div>
+    <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2016 minotaur<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="https://github.com/minotaursu/hexo-theme-icarus">icarus</a>.
+      
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1256401841'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s11.cnzz.com/z_stat.php%3Fid%3D1256401841%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
+<!-- End cnzz Analytics -->
+
+
+    </div>
+  </div>
+</footer>
+
+    
+
+
+
+ <script src="//ajax.useso.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
+
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+  </div>
+</body>
+</html>

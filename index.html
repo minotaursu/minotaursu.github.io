@@ -85,11 +85,11 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        12
+        13
         <span>posts</span>
       </div>
       <div class="article-info-block">
-        20
+        25
         <span>tags</span>
       </div>
     </div>
@@ -118,6 +118,85 @@
 
       
       <section id="main">
+      <article id="post-使用AOP实现缓存注解" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/01/27/使用AOP实现缓存注解/">使用AOP实现缓存注解</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2016/01/27/使用AOP实现缓存注解/">
+      <time datetime="2016-01-27T03:47:04.000Z" itemprop="datePublished">2016-01-27</time>
+    </a>
+  </div>
+
+
+          
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <blockquote>
+<p>为何重造轮子  </p>
+</blockquote>
+<p>半年前写了一个注解驱动的缓存，最近提交到了<a href="https://github.com/minotaursu/cacheAnnotation" target="_blank" rel="external">github</a>。缓存大量的被使用在应用中的多个地方，简单的使用方式就是代码先查询缓存中是否存在数据，如果不存在或者缓存过期再查询数据库，并将查询的结果缓存一段时间，缓存key通常是入参的对象或者入参对象的某些属性，有些时候还需要按照某种条件判断是否缓存。可以看到这种功能性代码和具体的业务代码混合在一起的实现方式有很大的代码冗余，即不便于维护也不灵活。使用切面的方式可以很好的抽取功能相似代码冗余的缓存代码，将缓存代码和业务代码隔离开，这样既做到了对业务的无侵入又可以灵活更换具体缓存组件。<br>其实从spring3之后spring就提供了@Cacheable注解，但是用起来不爽的地方还是太多，例如缓存时间是由cache本身设置的而非在每个@Cacheable注解中指定，这个粒度有点太大了；没有缓存key的前缀设置，不同方法很容易出现key冲突。</p>
+<blockquote>
+<p>怎样重造轮子</p>
+</blockquote>
+<p>鉴于spring3提供的cache注解不太能满足需求，最后决定自己写一个。目标是构造一个简单好用而不是大而全的缓存注解，整个过程陆陆续续花了3天时间，第一天确定技术方案，构建对象和对象间的关系; 第二天写具体的实现和debug; 第三天写demo和test。<br>确定技术方案的时候看了spring3的cache注解实现和在阿里时使用过的2个cache注解实现。最大是不同点是创建代理类的方式和动态生成cacheKey的实现。<br>不同的创建代理类的方式：  </p>
+<ol>
+<li>使用MethodInterceptor+xml配置，最经典的使用方式。缺点是同一个类的方法相互调用时不会被aop拦截，需要使用AopContext.currentProxy()获取代理类。  </li>
+<li>使用@AspectJ注解，可以有效的减少xml配置，缺点和MethodInterceptor相同。  </li>
+<li>基于SmartInstantiationAwareBeanPostProcessor+cglib创建代理类。 </li>
+</ol>
+<p>不同的生成cacheKey的方式：  </p>
+<ol>
+<li>使用SPEL  </li>
+<li>使用OGNL  </li>
+<li>使用正则表达式  </li>
+</ol>
+<p>最后选择了@AspectJ+SPEL的实现方式。<br>虽然具体的实现方式各自不同，类的调用结构和内部功能都是基本相同的。  </p>
+<ol>
+<li>cacheManager负责cache的管理，包含cache实现的list。  </li>
+<li>cache是具体的缓存实现，可以是redis，ehcache，memcache。  </li>
+<li>keyParser负责动态生成cacheKey。  </li>
+<li>interceptor负责注解的拦截。  </li>
+<li>@Cacheable，@CacheEvict等是具体的缓存注解。  </li>
+</ol>
+<p>按照上述的功能划分实现相关类后，花了一天的时间来写demo和test，全部的test跑通后就可以使用了。后面增加了一个CacheOperation转换具体的注解，统一对CacheOperation进行处理，代码简化了不少。</p>
+<blockquote>
+<p>实际遇到的问题</p>
+</blockquote>
+<p>实际使用中主要遇到了2个问题，一个是interceptor中catch了所有的Exception并打印错误日志，实际上我们会在应用中定义BizException，当发生预期内的错误时会抛出BizException，而BizException是不需要被拦截打印错误日志的。另一个是问题是并发读写问题，在cache中没有缓存的时候，ThreadA从DB获取数据，ThreadB修改了数据库的数据，ThreadB删除缓存，ThreadA然后put修改之前的数据。原本以为按照业务特点发生并发读写的概率不高，结果发现接口轮询+事务导致频繁发生不一致的情况。缓存失效策略一直是缓存使用中的难题，甚至是计算机科学中两大难题之一。处理数据库并发最常见的2个解决思路是乐观锁和串行化，但是并不适用于解决缓存和数据库的不一致，google了一下也没有找到特别好的解决方案。考虑到应用并没有超高的QPS，短时间的缓存穿透不会造成系统的崩溃，最后通过增加一个redis的缓存删除标识进行解决，这个删除标识会存活5s，在这5s中不会执行put缓存操作从而避免了缓存和数据库的不一致。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://minotaursu.com/2016/01/27/使用AOP实现缓存注解/" data-id="cimvwxpyt0000ssscb0me3ruc" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/AOP/">AOP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/annotation/">annotation</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cache/">cache</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/spring/">spring</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
       <article id="post-小明的魔法调度框架之旅" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -182,7 +261,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2015/12/12/小明的魔法调度框架之旅/" data-id="ciewj5bpd000rg1scwpop072w" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2015/12/12/小明的魔法调度框架之旅/" data-id="cimvwj9i9000rryscxwdzxeeh" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/quartz/">quartz</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/调度/">调度</a></li></ul>
@@ -253,7 +332,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2015/04/13/我设计的12306/" data-id="ciewj5bou0007g1scw5g5jl9i" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2015/04/13/我设计的12306/" data-id="cimvwj9i20007rysc5gvpykfm" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/分布式/">分布式</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/开发/">开发</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/码农/">码农</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/缓存/">缓存</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/锁/">锁</a></li></ul>
@@ -330,7 +409,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2015/01/09/缓存的使用/" data-id="ciewj5boa0000g1scrnr6owxp" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2015/01/09/缓存的使用/" data-id="cimvwj9hd0000rysctau8ye04" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/并发/">并发</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/缓存/">缓存</a></li></ul>
@@ -390,78 +469,10 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2014/12/30/2014年终总结/" data-id="ciewj5bpy001og1sck00iwknw" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2014/12/30/2014年终总结/" data-id="cimvwj9ix001yryscmhsvxb04" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/2014/">2014</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/工作/">工作</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/码农/">码农</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-jar包冲突与inode" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2014/12/24/jar包冲突与inode/">jar包冲突与inode</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2014/12/24/jar包冲突与inode/">
-      <time datetime="2014-12-24T06:20:40.000Z" itemprop="datePublished">2014-12-24</time>
-    </a>
-  </div>
-
-
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <blockquote>
-<p>包冲突</p>
-</blockquote>
-<p>几乎上点规模的java系统就会遇到jar冲突，不负责任的讲排除依赖成了每次发布上线前必做的工作。虽然问题的本质都是jar冲突，但是表现上却有很多不同，从NoSuchMethodError,ClassNotFoundException到field找不到,作用域错误；并且触发冲突条件也不相同，最好并且最常见的是在应用启动时抛出异常，比较恶心的是运行时是某些特殊的边界条件下抛出异常特别。<br>在某些领域，某些境界提出问题，发现问题比解决问题具有更高的价值，但应用开发显然不属于这种高端领域，对于一般的jar冲突我的做法如下。</p>
-<ol>
-<li>查看log中的异常堆栈信息，在idea中CTRL+N，一般会发现多个类。</li>
-<li>如果1搞不定，可以加入jvm参数-verbose:class，log里会打印出类的加载信息。</li>
-<li>确定jar包名，执行mvn dependency:tree&gt;tree.log。</li>
-<li>如果是lib中的包冲突就排除相应的jar。</li>
-<li>如果不能exclusion，声明一个路径最短，最靠前的dependency。告诉maven，畜生！用这个版本的jar。</li>
-<li>如果是容器||中间件的包和应用lib包冲突，就升级容器||中间件。</li>
-</ol>
-<blockquote>
-<p>inode</p>
-</blockquote>
-<p>在jar冲突中有一种情况就是开发/日常是没问题的，生产环境存在冲突，甚至是生产环境中一部分机器存在冲突，这个是因为tomcat等容器的classLoader加载顺序是不排序的，依赖于底层文件系统的顺序，具体到*nix中就是inode的顺序，每个inode中保存了文件系统的一个文件对象的元信息存储，简单的将就是文件在扇区中的索引值。</p>
-<p>可以使用 ls -li 和 stat查看inode，鉴于安全等原因以免引起不必要的麻烦，就不截图了。</p>
-<blockquote>
-<p>finally</p>
-</blockquote>
-<p>实际上大部分的jar都是向后兼容的，如果maven能够按照最高版本依赖（其实也是有问题的），而不是最短路径依赖，相信这个问题会好很多。实际开发中，可以使用maven的依赖冲突检测插件进行事先排除；也可以在部署的lib中查找下进行事后处理；有些发布系统会提前告知本次发布相比与上次新增了那些jar，删除了那些jar，这是一个比较好的策略，毕竟更简单的方法具有更好的执行性。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2014/12/24/jar包冲突与inode/" data-id="ciewj5bpr001fg1scy8k9r6l0" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/开发/">开发</a></li></ul>
 
     </footer>
   </div>
@@ -483,6 +494,23 @@
     <h3 class="widget-title">recents</h3>
     <div class="widget">
       <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/01/27/使用AOP实现缓存注解/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"></p>
+              <p class="item-title"><a href="/2016/01/27/使用AOP实现缓存注解/" class="title">使用AOP实现缓存注解</a></p>
+              <p class="item-date"><time datetime="2016-01-27T03:47:04.000Z" itemprop="datePublished">2016-01-27</time></p>
+            </div>
+          </li>
         
           <li>
             
@@ -555,23 +583,6 @@
             </div>
           </li>
         
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2014/12/24/jar包冲突与inode/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"></p>
-              <p class="item-title"><a href="/2014/12/24/jar包冲突与inode/" class="title">jar包冲突与inode</a></p>
-              <p class="item-date"><time datetime="2014-12-24T06:20:40.000Z" itemprop="datePublished">2014-12-24</time></p>
-            </div>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -581,7 +592,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">tag cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/2014/" style="font-size: 10px;">2014</a> <a href="/tags/ACID/" style="font-size: 10px;">ACID</a> <a href="/tags/CAP/" style="font-size: 10px;">CAP</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/p4p/" style="font-size: 10px;">p4p</a> <a href="/tags/quartz/" style="font-size: 10px;">quartz</a> <a href="/tags/tips/" style="font-size: 10px;">tips</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/分布式/" style="font-size: 13.33px;">分布式</a> <a href="/tags/工作/" style="font-size: 13.33px;">工作</a> <a href="/tags/并发/" style="font-size: 16.67px;">并发</a> <a href="/tags/广告/" style="font-size: 10px;">广告</a> <a href="/tags/开发/" style="font-size: 16.67px;">开发</a> <a href="/tags/淘宝/" style="font-size: 10px;">淘宝</a> <a href="/tags/码农/" style="font-size: 13.33px;">码农</a> <a href="/tags/缓存/" style="font-size: 13.33px;">缓存</a> <a href="/tags/调度/" style="font-size: 10px;">调度</a> <a href="/tags/锁/" style="font-size: 13.33px;">锁</a>
+      <a href="/tags/2014/" style="font-size: 10px;">2014</a> <a href="/tags/ACID/" style="font-size: 10px;">ACID</a> <a href="/tags/AOP/" style="font-size: 10px;">AOP</a> <a href="/tags/CAP/" style="font-size: 10px;">CAP</a> <a href="/tags/annotation/" style="font-size: 10px;">annotation</a> <a href="/tags/cache/" style="font-size: 10px;">cache</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/p4p/" style="font-size: 10px;">p4p</a> <a href="/tags/quartz/" style="font-size: 10px;">quartz</a> <a href="/tags/spring/" style="font-size: 10px;">spring</a> <a href="/tags/tips/" style="font-size: 10px;">tips</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/分布式/" style="font-size: 13.33px;">分布式</a> <a href="/tags/工作/" style="font-size: 13.33px;">工作</a> <a href="/tags/并发/" style="font-size: 16.67px;">并发</a> <a href="/tags/广告/" style="font-size: 10px;">广告</a> <a href="/tags/开发/" style="font-size: 16.67px;">开发</a> <a href="/tags/码农/" style="font-size: 13.33px;">码农</a> <a href="/tags/缓存/" style="font-size: 13.33px;">缓存</a> <a href="/tags/调度/" style="font-size: 10px;">调度</a> <a href="/tags/锁/" style="font-size: 13.33px;">锁</a> <a href="/tags/阿里/" style="font-size: 10px;">阿里</a>
     </div>
   </div>
 
@@ -597,7 +608,7 @@
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2015 minotaur<br>
+      &copy; 2016 minotaur<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="https://github.com/minotaursu/hexo-theme-icarus">icarus</a>.
       
 <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1256401841'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s11.cnzz.com/z_stat.php%3Fid%3D1256401841%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
