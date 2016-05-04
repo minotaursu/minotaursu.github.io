@@ -3,18 +3,26 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Tag: cache | Minotaur story</title>
+  <title>git实用攻略（二） | Minotaur story</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="google-site-verification" content="bDBQbYqQqKkNOj4OxUu1rjxMw6nQqWpxzBffZ7yj2kA" />
-  <meta name="description" content="java developer life">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Minotaur story">
-<meta property="og:url" content="http://minotaursu.com/tags/cache/index.html">
+  <meta name="description" content="最近团队的版本控制从svn切换到了git，虽说已经使用git有2年多了，也写了一个实用攻略，但是github上的项目使用经验和公司内部团队协作的使用经验还有很多不同。补充下新的使用体会。首先还是看一下git的3个区：working，stage，commit，心中有个概念。
+
+github和gitlab账户的共存配置sshkey登录的时候，git只能识别默认的id_rsa的秘钥文件，只有一个账户能够">
+<meta property="og:type" content="article">
+<meta property="og:title" content="git实用攻略（二）">
+<meta property="og:url" content="http://minotaursu.com/2015/05/04/git实用攻略二/index.html">
 <meta property="og:site_name" content="Minotaur story">
-<meta property="og:description" content="java developer life">
+<meta property="og:description" content="最近团队的版本控制从svn切换到了git，虽说已经使用git有2年多了，也写了一个实用攻略，但是github上的项目使用经验和公司内部团队协作的使用经验还有很多不同。补充下新的使用体会。首先还是看一下git的3个区：working，stage，commit，心中有个概念。
+
+github和gitlab账户的共存配置sshkey登录的时候，git只能识别默认的id_rsa的秘钥文件，只有一个账户能够">
+<meta property="og:image" content="http://7jpo4q.com1.z0.glb.clouddn.com/gitflow.png?imageView/1/w/670/h/280">
+<meta property="og:updated_time" content="2016-05-04T09:36:18.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Minotaur story">
-<meta name="twitter:description" content="java developer life">
+<meta name="twitter:title" content="git实用攻略（二）">
+<meta name="twitter:description" content="最近团队的版本控制从svn切换到了git，虽说已经使用git有2年多了，也写了一个实用攻略，但是github上的项目使用经验和公司内部团队协作的使用经验还有很多不同。补充下新的使用体会。首先还是看一下git的3个区：working，stage，commit，心中有个概念。
+
+github和gitlab账户的共存配置sshkey登录的时候，git只能识别默认的id_rsa的秘钥文件，只有一个账户能够">
   
   
     <link rel="icon" href="css/images/favicon.ico">
@@ -117,49 +125,95 @@
 </aside>
 
       
-      <section id="main">
-    <section class="archives-wrap">
-    <div class="archive-tag-wrap">
-      <span class="archive-tag">#cache</span>
-    </div>
-    <div class="archives">
+      <section id="main"><article id="post-git实用攻略二" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
     
-    <div class="archive-article-thumbnail">
-      <a href="/2016/01/27/使用AOP实现缓存注解/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-    </div>
     
-    <header class="archive-article-header">
-      
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2016/01/27/使用AOP实现缓存注解/">使用AOP实现缓存注解</a>
+    <h1 class="article-title" itemprop="name">
+      git实用攻略（二）
     </h1>
   
 
-      
-        
-  <div class="archive-article-date">
+        <div class="article-meta">
+          
+  <div class="article-date">
     <i class="fa fa-calendar"></i>
-    <a href="/2016/01/27/使用AOP实现缓存注解/">
-      <time datetime="2016-01-27T03:47:04.000Z" itemprop="datePublished">2016 Jan 27</time>
+    <a href="/2015/05/04/git实用攻略二/">
+      <time datetime="2015-05-04T09:30:55.000Z" itemprop="datePublished">2015-05-4</time>
     </a>
   </div>
 
 
-      
-    </header>
-  </div>
-</article>
+          
+        </div>
+      </header>
     
-    </div></section>
-    </section>
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <p>最近团队的版本控制从svn切换到了git，虽说已经使用git有2年多了，也写了一个<a href="http://minotaursu.com/2014/07/01/git%E5%AE%9E%E7%94%A8%E6%94%BB%E7%95%A5/">实用攻略</a>，但是github上的项目使用经验和公司内部团队协作的使用经验还有很多不同。补充下新的使用体会。<br><img src="http://7jpo4q.com1.z0.glb.clouddn.com/gitflow.png?imageView/1/w/670/h/280" alt=""><br>首先还是看一下git的3个区：working，stage，commit，心中有个概念。</p>
+<ol>
+<li><p><strong>github和gitlab账户的共存</strong><br>配置sshkey登录的时候，git只能识别默认的id_rsa的秘钥文件，只有一个账户能够免登，在bash启动脚本中增加ssh-add file 实现多个账户的免登。</p>
+</li>
+<li><p><strong>迁出新的远程分支代码</strong><br>本地已经有了master分支和develop分支代码，假设有一个project1的远程项目分支需要开发，使用git checkout -b project1 origin/project1迁出新的远程分支代码。</p>
+</li>
+<li><p><strong>使用git pull —rebase拉取代码</strong><br>使用pull —rebase拉取最新代码可以保持一颗干净的commit树。</p>
+</li>
+<li><p><strong>使用merge，不要使用rebase合并不同的分支</strong><br>使用rebase合并不同的分支会导致很多的冲突。 </p>
+</li>
+<li><p><strong>git reflog</strong><br>可以看到本地仓库的操作记录，在reset操作后进行恢复特别有用。</p>
+</li>
+<li><p><strong>git commit —amend</strong><br>补救提交，不产生commit log。</p>
+</li>
+<li><p><strong>git reset —hard HEAD</strong><br>使用HEAD的内容覆盖工作区，放弃暂缓区的内容。</p>
+</li>
+<li><p><strong>git reset HEAD</strong><br>退回暂缓区的内容，和git reset commitId一样，都是指针操作。</p>
+</li>
+<li><p><strong>alias命令</strong><br>编辑 ~/.gitconfig，赋予复杂的命令一个简单的别名</p>
+</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://minotaursu.com/2015/05/04/git实用攻略二/" data-id="cinso371k001sxascbi8wq72r" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/git/">git</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2015/12/12/小明的魔法调度框架之旅/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          小明的魔法调度框架之旅
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2015/04/13/我设计的12306/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">我设计的12306</div>
+    </a>
+  
+</nav>
+
+
+  
+</article>
+
+
+</section>
       
         <aside id="sidebar">
   
