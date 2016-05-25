@@ -17,7 +17,7 @@ tags: git
 3. **git add**  
 将本地修改/新增加入到git的index中，支持**git add file1 file2**，**git add dir**，**git add .**等多种形式
 4. **git rm**  
-删除本地文件&index中存储的修改, **git rm file1 file2** 删除文件，**git rm -r dir** 递归删除，**git rm --ached file1** 只从index中删除，适用于**git add**了一个不想提交的文件
+删除本地文件&index中存储的修改, **git rm file1 file2** 删除文件，**git rm -r dir** 递归删除，**git rm --cached file1** 只从index中删除，适用于**git add**了一个不想提交的文件
 5. **git commit -m "message"**  
 提交index到head
 6. **git status**  
