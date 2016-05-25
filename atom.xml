@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://minotaursu.com/"/>
-  <updated>2016-04-11T11:37:35.000Z</updated>
+  <updated>2016-05-25T03:39:48.000Z</updated>
   <id>http://minotaursu.com/</id>
   
   <author>
@@ -13,6 +13,69 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[构建可靠的系统]]></title>
+    <link href="http://minotaursu.com/2016/05/25/%E6%9E%84%E5%BB%BA%E5%8F%AF%E9%9D%A0%E7%9A%84%E7%B3%BB%E7%BB%9F/"/>
+    <id>http://minotaursu.com/2016/05/25/构建可靠的系统/</id>
+    <published>2016-05-25T03:38:00.000Z</published>
+    <updated>2016-05-25T03:39:48.000Z</updated>
+    <content type="html"><![CDATA[<p>编写的代码能否在线上持续的提供稳定可靠的服务是区分普通程序员，文艺程序员，2B程序员的重要标准之一。持续的提供稳定可靠的服务说起来简单，实际影响的因素有很多，数据的量级，请求的峰值，并发的影响，架构的设计，系统的复杂度，外部依赖，线上的运维，单测和CR的执行，这些都一定程度影响着系统能否持续的提供稳定可靠的服务。和所有的工程类似，软件工程的质量也不是由单一因素就能决定的，这里我们不谈这些因素的影响，只站在开发者的角度说一下如何构造可靠的系统，在可控的范围内实现一个能够提供稳定可靠服务的系统。软件有风险，开发需谨慎，一家之言仅供参考。</p>
+<blockquote>
+<p>区分可靠和不可靠的操作</p>
+</blockquote>
+<p>区分可靠和不可靠的操作，是编写可靠代码的基本要求。只有理解了什么是可靠与不可靠才能做出正确的应对，使可靠的代码简洁，不可靠的代码健壮，例如从缓存中获取数据，更新数据库，这些就是不可靠的操作，可能因为网络，软件，硬件等各种原因失败，代码需要根据不同的情况记录异常或者进行重试等操作，因为更新数据库可能失败，需要在有一致性要求的情况加上事务。除了第三方不可靠之外，代码在不同的环境也可能是不可靠的，例如单线程安全的代码在多线程可能就是不可靠的，串行访问可靠的代码在并发时可能就是不可靠的，单机可靠的代码在分布式环境可能就是不可靠的，小数据量时可靠的代码在数据量变大时可能就是不可靠的。知道了遇到的是老虎还是Hello Kitty，才知道是要逃还是微笑。</p>
+<blockquote>
+<p>快速失败，抛出异常</p>
+</blockquote>
+<p>fail fast做为一个设计开发原则往往和我们的直觉背道而驰，为了系统的健壮性我们往往将错误自动处理掉，希望系统进行运行下去，减少错误的产生。其实这种做法往往会滋生出隐藏很深的bug，编写很多magic code，导致维护代码和查找错误都很困难。快速失败的原则让错误尽早被发现，避免导致更大的错误，有人觉得程序有很多assert语句和抛出异常很不安全，事实上fail fast不会导致系统的crash，反而因为出现什么bug和bug在哪里都一目了然增加了系统的健壮性，fail fast就像创业一样快速的试错，如果发现方向不可行就赶紧打住避免更大的损失。比较典型的fail fast使用就是接口入参时的各种assert和调用第三方时的超时设置，这样即使第三方出现故障也不会导致线程打满拖垮我们的系统。</p>
+<blockquote>
+<p>兜底与降级</p>
+</blockquote>
+<p>提到了快速失败就不能不说兜底，快速失败是为了尽快的发现错误，避免错误的隐藏和扩大。兜底是为了错误容忍，避免因为非核心流程的失败导致整体功能的不可用。例如我们在获取商品详情时，不能因为获取商品评价信息失败就导致整个商品详情失败；获取某些配置信息时本地也要有一份兜底配置，避免因为配置信息获取不到导致核心业务的失败。如果说兜底是在错误发生时的被动防御，那么降级就是对错误的主动预防了，同样以商品详情为例，在某次活动期间流量暴增，那么可以主动放弃获取商品评价信息，展示商品是否有库存代替具体的库存数量，减小服务器的鸭梨，加快响应速度。</p>
+<blockquote>
+<p>良好的api设计</p>
+</blockquote>
+<p>设计一个良好的api从来都不是件容易的事情，设计一个良好的RPC调用的api就更加困难。假设有一个通过商品id获取商品详情的需求。<br>最开始我们的api可能是这样的</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Item <span class="function"><span class="title">getItemById</span><span class="params">(Long id)</span></span></span><br></pre></td></tr></table></figure>
+<p>因为是RPC调用，当返回是null的时候调用方懵逼了，这啥情况，是出错了？是超时？是没有商品？，于是对返回的对象进行一次封装，api变成介样</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RpcResult&lt;Item&gt; <span class="function"><span class="title">getItemById</span><span class="params">(Long id)</span></span></span><br></pre></td></tr></table></figure>
+<p>后面产品狗说需要批量获取商品，于是变成批量查询，api变成介样</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RpcResult&lt;Item&gt; <span class="function"><span class="title">getItemsByIds</span><span class="params">(List&lt;Long&gt; ids)</span></span></span><br></pre></td></tr></table></figure>
+<p>后面有个2B调用方一次性传了10W个id过来，几十秒也没能查出来，于是限制最多一次传100个避免长时间执行，api变成介样。</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RpcResult&lt;Item&gt; <span class="function"><span class="title">getItemsByIdsWithLimit</span><span class="params">(Long id)</span></span></span><br></pre></td></tr></table></figure>
+<p>可见良好的RPC的api设计需要考虑   </p>
+<ol>
+<li>返回值需要包含错误码，是业务异常还是网络异常，是否可以重试。   </li>
+<li>减少业务方的调用，将业务方多次调用才能完成的事情封装成一个接口。  </li>
+<li>api的命名和注释要规范，毕竟调用方不清楚实现细节，能够直观看到就是api和注释。</li>
+</ol>
+<p>同时作为调用方也要对接口进行wrapper，解决接口不规范的问题，隔离提供方api升级变更的影响。</p>
+<blockquote>
+<p>避免单点</p>
+</blockquote>
+<p>系统不是只运行一次，人生也不是赌博，不要总想着All in。一般对于无状态的就采用多活方案，对于任务调度这种只有一个能运行的可以考虑redis，zookeeper做锁控制，某些系统也会采用一台服务器运行，一台standby的方案，通过心跳检查的方式发现运行的主机挂掉后拉起备机的方案。</p>
+<blockquote>
+<p>做好提前量</p>
+</blockquote>
+<p>考虑到业务的发展，流量爆发的突然性，业界有着系统架构支持10倍增长，系统设计支持5倍增长，系统实现支持2倍增长的说法。数据存储，服务规划这些改动比较麻烦的事情最好在设计之初的考虑清楚，随着业务的发展也要<br>做好提前量，不要等到服务不可用了才想到堆机器。</p>
+<blockquote>
+<p>预热与发布过程</p>
+</blockquote>
+<p>除了设计和实现时遵循良好的原则规范，平滑发布也是需要考虑的一点，发布过程的兼容，稳定，可回滚都是在开发之时就要考虑清楚的。除了发布过程之外，还需要考虑发布后活动前的预热，需要通过预热请求提高缓存的命中率，保证热点数据都在缓存中，系统没有经过预热，大促活动来临之时请求瞬间就击穿了空空如也的缓存直接击垮了数据库。</p>
+<p><img src="http://hexo-tuchuan.qiniudn.com/towers.jpg?imageView/1/w/670/h/400" alt=""></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>编写的代码能否在线上持续的提供稳定可靠的服务是区分普通程序员，文艺程序员，2B程序员的重要标准之一。持续的提供稳定可靠的服务说起来简单，实际影响的因素有很多，数据的量级，请求的峰值，并发的影响，架构的设计，系统的复杂度，外部依赖，线上的运维，单测和CR的执行，这些都一定程度]]>
+    </summary>
+    
+      <category term="java" scheme="http://minotaursu.com/tags/java/"/>
+    
+      <category term="工作" scheme="http://minotaursu.com/tags/%E5%B7%A5%E4%BD%9C/"/>
+    
+      <category term="开发" scheme="http://minotaursu.com/tags/%E5%BC%80%E5%8F%91/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[使用AOP实现缓存注解]]></title>
@@ -407,48 +470,6 @@
       <category term="并发" scheme="http://minotaursu.com/tags/%E5%B9%B6%E5%8F%91/"/>
     
       <category term="锁" scheme="http://minotaursu.com/tags/%E9%94%81/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[jdk7jdk8新特性概述]]></title>
-    <link href="http://minotaursu.com/2014/10/27/jdk7jdk8%E6%96%B0%E7%89%B9%E6%80%A7%E6%A6%82%E8%BF%B0/"/>
-    <id>http://minotaursu.com/2014/10/27/jdk7jdk8新特性概述/</id>
-    <published>2014-10-27T13:43:38.000Z</published>
-    <updated>2015-09-21T09:50:50.000Z</updated>
-    <content type="html"><![CDATA[<p>在oracle停止对jdk6更新，jdk8发布之后，公司终于要把生产环境更新到jdk7，下面列一下jdk7,8的可能需要关注的新特性。</p>
-<h2 id="jdk7">jdk7</h2><ul>
-<li>G1垃圾回收</li>
-<li>fork-join框架</li>
-<li>二进制变量</li>
-<li>Switch支持String类型</li>
-<li>try-with-resource</li>
-<li>简化泛型</li>
-<li>catch多个异常</li>
-<li>InvokeDynamic</li>
-<li>更多NIO的API</li>
-</ul>
-<h2 id="jdk8">jdk8</h2><ul>
-<li>lambda</li>
-<li>Nashorn JavaScript Engine</li>
-<li>JDBC 4.2</li>
-<li>Bulk Data Operations for Collections</li>
-<li>Base64</li>
-<li>新的时间函数</li>
-<li>HTTP URL Permissions</li>
-<li>Repeating Annotations</li>
-</ul>
-<p>新特性链接：<br><a href="http://openjdk.java.net/projects/jdk7/features" target="_blank" rel="external">http://openjdk.java.net/projects/jdk7/features</a><br><a href="http://openjdk.java.net/projects/jdk8/features" target="_blank" rel="external">http://openjdk.java.net/projects/jdk8/features</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>在oracle停止对jdk6更新，jdk8发布之后，公司终于要把生产环境更新到jdk7，下面列一下jdk7,8的可能需要关注的新特性。</p>
-<h2 id="jdk7">jdk7</h2><ul>
-<li>G1垃圾回收</li>
-<li>fork-join框架</li>
-]]>
-    </summary>
-    
-      <category term="jdk" scheme="http://minotaursu.com/tags/jdk/"/>
     
   </entry>
   

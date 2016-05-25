@@ -85,11 +85,11 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        14
+        15
         <span>posts</span>
       </div>
       <div class="article-info-block">
-        25
+        24
         <span>tags</span>
       </div>
     </div>
@@ -118,6 +118,97 @@
 
       
       <section id="main">
+      <article id="post-构建可靠的系统" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/05/25/构建可靠的系统/">构建可靠的系统</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2016/05/25/构建可靠的系统/">
+      <time datetime="2016-05-25T03:38:00.000Z" itemprop="datePublished">2016-05-25</time>
+    </a>
+  </div>
+
+
+          
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <p>编写的代码能否在线上持续的提供稳定可靠的服务是区分普通程序员，文艺程序员，2B程序员的重要标准之一。持续的提供稳定可靠的服务说起来简单，实际影响的因素有很多，数据的量级，请求的峰值，并发的影响，架构的设计，系统的复杂度，外部依赖，线上的运维，单测和CR的执行，这些都一定程度影响着系统能否持续的提供稳定可靠的服务。和所有的工程类似，软件工程的质量也不是由单一因素就能决定的，这里我们不谈这些因素的影响，只站在开发者的角度说一下如何构造可靠的系统，在可控的范围内实现一个能够提供稳定可靠服务的系统。软件有风险，开发需谨慎，一家之言仅供参考。</p>
+<blockquote>
+<p>区分可靠和不可靠的操作</p>
+</blockquote>
+<p>区分可靠和不可靠的操作，是编写可靠代码的基本要求。只有理解了什么是可靠与不可靠才能做出正确的应对，使可靠的代码简洁，不可靠的代码健壮，例如从缓存中获取数据，更新数据库，这些就是不可靠的操作，可能因为网络，软件，硬件等各种原因失败，代码需要根据不同的情况记录异常或者进行重试等操作，因为更新数据库可能失败，需要在有一致性要求的情况加上事务。除了第三方不可靠之外，代码在不同的环境也可能是不可靠的，例如单线程安全的代码在多线程可能就是不可靠的，串行访问可靠的代码在并发时可能就是不可靠的，单机可靠的代码在分布式环境可能就是不可靠的，小数据量时可靠的代码在数据量变大时可能就是不可靠的。知道了遇到的是老虎还是Hello Kitty，才知道是要逃还是微笑。</p>
+<blockquote>
+<p>快速失败，抛出异常</p>
+</blockquote>
+<p>fail fast做为一个设计开发原则往往和我们的直觉背道而驰，为了系统的健壮性我们往往将错误自动处理掉，希望系统进行运行下去，减少错误的产生。其实这种做法往往会滋生出隐藏很深的bug，编写很多magic code，导致维护代码和查找错误都很困难。快速失败的原则让错误尽早被发现，避免导致更大的错误，有人觉得程序有很多assert语句和抛出异常很不安全，事实上fail fast不会导致系统的crash，反而因为出现什么bug和bug在哪里都一目了然增加了系统的健壮性，fail fast就像创业一样快速的试错，如果发现方向不可行就赶紧打住避免更大的损失。比较典型的fail fast使用就是接口入参时的各种assert和调用第三方时的超时设置，这样即使第三方出现故障也不会导致线程打满拖垮我们的系统。</p>
+<blockquote>
+<p>兜底与降级</p>
+</blockquote>
+<p>提到了快速失败就不能不说兜底，快速失败是为了尽快的发现错误，避免错误的隐藏和扩大。兜底是为了错误容忍，避免因为非核心流程的失败导致整体功能的不可用。例如我们在获取商品详情时，不能因为获取商品评价信息失败就导致整个商品详情失败；获取某些配置信息时本地也要有一份兜底配置，避免因为配置信息获取不到导致核心业务的失败。如果说兜底是在错误发生时的被动防御，那么降级就是对错误的主动预防了，同样以商品详情为例，在某次活动期间流量暴增，那么可以主动放弃获取商品评价信息，展示商品是否有库存代替具体的库存数量，减小服务器的鸭梨，加快响应速度。</p>
+<blockquote>
+<p>良好的api设计</p>
+</blockquote>
+<p>设计一个良好的api从来都不是件容易的事情，设计一个良好的RPC调用的api就更加困难。假设有一个通过商品id获取商品详情的需求。<br>最开始我们的api可能是这样的</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Item <span class="function"><span class="title">getItemById</span><span class="params">(Long id)</span></span></span><br></pre></td></tr></table></figure>
+<p>因为是RPC调用，当返回是null的时候调用方懵逼了，这啥情况，是出错了？是超时？是没有商品？，于是对返回的对象进行一次封装，api变成介样</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RpcResult&lt;Item&gt; <span class="function"><span class="title">getItemById</span><span class="params">(Long id)</span></span></span><br></pre></td></tr></table></figure>
+<p>后面产品狗说需要批量获取商品，于是变成批量查询，api变成介样</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RpcResult&lt;Item&gt; <span class="function"><span class="title">getItemsByIds</span><span class="params">(List&lt;Long&gt; ids)</span></span></span><br></pre></td></tr></table></figure>
+<p>后面有个2B调用方一次性传了10W个id过来，几十秒也没能查出来，于是限制最多一次传100个避免长时间执行，api变成介样。</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RpcResult&lt;Item&gt; <span class="function"><span class="title">getItemsByIdsWithLimit</span><span class="params">(Long id)</span></span></span><br></pre></td></tr></table></figure>
+<p>可见良好的RPC的api设计需要考虑   </p>
+<ol>
+<li>返回值需要包含错误码，是业务异常还是网络异常，是否可以重试。   </li>
+<li>减少业务方的调用，将业务方多次调用才能完成的事情封装成一个接口。  </li>
+<li>api的命名和注释要规范，毕竟调用方不清楚实现细节，能够直观看到就是api和注释。</li>
+</ol>
+<p>同时作为调用方也要对接口进行wrapper，解决接口不规范的问题，隔离提供方api升级变更的影响。</p>
+<blockquote>
+<p>避免单点</p>
+</blockquote>
+<p>系统不是只运行一次，人生也不是赌博，不要总想着All in。一般对于无状态的就采用多活方案，对于任务调度这种只有一个能运行的可以考虑redis，zookeeper做锁控制，某些系统也会采用一台服务器运行，一台standby的方案，通过心跳检查的方式发现运行的主机挂掉后拉起备机的方案。</p>
+<blockquote>
+<p>做好提前量</p>
+</blockquote>
+<p>考虑到业务的发展，流量爆发的突然性，业界有着系统架构支持10倍增长，系统设计支持5倍增长，系统实现支持2倍增长的说法。数据存储，服务规划这些改动比较麻烦的事情最好在设计之初的考虑清楚，随着业务的发展也要<br>做好提前量，不要等到服务不可用了才想到堆机器。</p>
+<blockquote>
+<p>预热与发布过程</p>
+</blockquote>
+<p>除了设计和实现时遵循良好的原则规范，平滑发布也是需要考虑的一点，发布过程的兼容，稳定，可回滚都是在开发之时就要考虑清楚的。除了发布过程之外，还需要考虑发布后活动前的预热，需要通过预热请求提高缓存的命中率，保证热点数据都在缓存中，系统没有经过预热，大促活动来临之时请求瞬间就击穿了空空如也的缓存直接击垮了数据库。</p>
+<p><img src="http://hexo-tuchuan.qiniudn.com/towers.jpg?imageView/1/w/670/h/400" alt=""></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://minotaursu.com/2016/05/25/构建可靠的系统/" data-id="ciomboj3o0007agsc6q7asiea" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/工作/">工作</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/开发/">开发</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
       <article id="post-使用AOP实现缓存注解" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -184,7 +275,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2016/01/27/使用AOP实现缓存注解/" data-id="cinso37160015xasc7jas6y5i" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2016/01/27/使用AOP实现缓存注解/" data-id="ciomboj530019agscwjl9rfp5" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/AOP/">AOP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/annotation/">annotation</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cache/">cache</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/spring/">spring</a></li></ul>
@@ -261,7 +352,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2015/12/12/小明的魔法调度框架之旅/" data-id="cinso370x000rxasclo28lg99" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2015/12/12/小明的魔法调度框架之旅/" data-id="ciomboj4v000vagschmu82q4o" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/quartz/">quartz</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/调度/">调度</a></li></ul>
@@ -329,7 +420,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2015/05/04/git实用攻略二/" data-id="cinso371k001sxascbi8wq72r" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2015/05/04/git实用攻略二/" data-id="ciomboj5f001wagsc6qyspk5g" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/git/">git</a></li></ul>
@@ -400,87 +491,10 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2015/04/13/我设计的12306/" data-id="cinso36zv0007xasc550xxjjr" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2015/04/13/我设计的12306/" data-id="ciomboj4e000dagsccrs7wcpp" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/分布式/">分布式</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/开发/">开发</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/码农/">码农</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/缓存/">缓存</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/锁/">锁</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-缓存的使用" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/01/09/缓存的使用/">缓存的使用</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2015/01/09/缓存的使用/">
-      <time datetime="2015-01-09T10:07:37.000Z" itemprop="datePublished">2015-01-9</time>
-    </a>
-  </div>
-
-
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <p><img src="http://7jpo4q.com1.z0.glb.clouddn.com/speed.jpg?imageView/1/w/670/h/450" alt=""><br>缓存一直是web2.0应用的性能核心，缓存大幅提高了应用QPS，减少了数据库的压力，降低了RT，让应用能够飞起来。缓存具有易于上手，难于精通的特点，缓存失效的设计是整个缓存应用的难点，在某些复杂情况，不适合的缓存设计增加了系统出错的可能。下面对缓存使用的几种典型情况做下分析。</p>
-<blockquote>
-<p>本地缓存</p>
-</blockquote>
-<ol>
-<li>用于缓存复杂算法的不可变计算结果。</li>
-<li>在单机或者数据变化率极低的情况下，本地缓存是一个良好的策略，因为本地缓存的效率最高，相比于分布式缓存，具有更少的网络开销，响应时间也更短，使用更加的灵活。例如邮政编码，报表数据，或者离线处理后的中奖用户名单等场景非常适合使用本地缓存。</li>
-<li>在某些场景，本地缓存作为分布式缓存的前置缓存使用，可以设置一个过期时间较长的分布式缓存，同时设置一个过期时间较短的本地缓存。</li>
-<li>数据变化率极低的情况下（例如按天更新）；往往也使用定时任务或者对象内置一个定时器从数据库获取最新的数据更新过期数据，相比按时间过期这种失效策略，这种定时更新的策略具有更好的性能。</li>
-</ol>
-<blockquote>
-<p>分布式缓存</p>
-</blockquote>
-<ol>
-<li>分布式缓存是应用开发中最常见的技术，分布式缓存解决了本地缓存的不一致问题，也避免了本地缓存可能带来的内存泄露问题。通常使用annotation的方式指定CRUD操作如何进行缓存，在annotation中指定key，过期时间，缓存策略（ehcache，memcache，分级缓存），在缓存具有高命中率的情况下可以极大的减少数据库压力，大大提高了系统的吞吐量。</li>
-<li>当缓存失效，请求不能从缓存中取出数据时，一般查询数据库获取，当并发量很高的时候，会给数据库带来极高的压力甚至雪崩，导致服务不可用。一般有几种做法，1）增加一个锁，缓存失效时获取锁，只有获取锁的请求才去查询数据库。2）增加一个存活缓存，当存活缓存为空时，重置存活缓存，然后获取数据，这样只有第一个检查到存活缓存为空的请求会访问数据库。<br>3） 优雅降级，对于某些不重要的数据（例如文章浏览量），当缓存失效时，可以直接返回空，前端不做展示。</li>
-</ol>
-<blockquote>
-<p>缓存分页数据</p>
-</blockquote>
-<p>在某些条件下，获取到的数据是list，并且需要（必然）进行分页展示。缓存在几种情况下不适合使用，其中一种就是缓存大对象，大对象会导致缓存的性能降低，网络开销和计算开销也比较大。按照每页的Key缓存数据也是不合适的，当有写操作时需要失效所有的key。对于需要缓存分页数据的需求，视情况可以 1）只缓存前2页数据，绝大部分的流量都集中在前2页。2）只缓存id的list，获取到id的list后进行分页，然后通过service获取每个id的缓存数据。</p>
-<blockquote>
-<p>缓存写操作</p>
-</blockquote>
-<p>在某些场景，具有高频的写操作（例如记录浏览数，游戏领域）如果对数据的准确性要求不高，可以通过缓存写操作，定时存盘的方式大幅提高性能。例如所有的浏览数都记录在缓存中，每分钟更新一次数据库，在某些关键操作后（例如击杀BOSS），可以强制更新数据库一次，保证数据不因为宕机而丢失。</p>
-<blockquote>
-<p>分布式缓存计数器</p>
-</blockquote>
-<p>分布式缓存提供了统一的存储和原子操作，便于集群环境下的使用。库存计算是分布式缓存的一个典型应用场景，在用户购买商品前会进行减库存，虽然在高并发时会将库存减为负数，但只要保证缓存中的数值大于等于0时才能购买就能防止超卖。<br>在秒杀的场景中可以本地缓存配合分布式缓存使用，因为秒杀的时间太短，用户并不关心秒杀过程中的库存数，例如秒杀商品只有5件，可以在每台服务器做一个库存数等于5的原子计数器，这样将极大减少分布式缓存的请求数。甚至在秒杀的场景中，可以完全使用内存缓存，通过zookeeper提前指定一台机器的内存库存数等于5，其他机器都设置为0。</p>
-<p>参考：<br><a href="http://book.douban.com/subject/10756899/" target="_blank" rel="external">高扩展性网站的50条原则</a><br><a href="http://book.douban.com/subject/3924175/" target="_blank" rel="external">构建高性能web站点</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2015/01/09/缓存的使用/" data-id="cinso36yq0000xasct4b1h5k9" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/并发/">并发</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/缓存/">缓存</a></li></ul>
 
     </footer>
   </div>
@@ -502,6 +516,24 @@
     <h3 class="widget-title">recents</h3>
     <div class="widget">
       <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/05/25/构建可靠的系统/" class="thumbnail">
+  
+    <span style="background-image:url(http://hexo-tuchuan.qiniudn.com/towers.jpg?imageView/1/w/670/h/400
+)" alt="构建可靠的系统" class="thumbnail-image"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"></p>
+              <p class="item-title"><a href="/2016/05/25/构建可靠的系统/" class="title">构建可靠的系统</a></p>
+              <p class="item-date"><time datetime="2016-05-25T03:38:00.000Z" itemprop="datePublished">2016-05-25</time></p>
+            </div>
+          </li>
         
           <li>
             
@@ -573,24 +605,6 @@
             </div>
           </li>
         
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2015/01/09/缓存的使用/" class="thumbnail">
-  
-    <span style="background-image:url(http://7jpo4q.com1.z0.glb.clouddn.com/speed.jpg?imageView/1/w/670/h/450
-)" alt="缓存的使用" class="thumbnail-image"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"></p>
-              <p class="item-title"><a href="/2015/01/09/缓存的使用/" class="title">缓存的使用</a></p>
-              <p class="item-date"><time datetime="2015-01-09T10:07:37.000Z" itemprop="datePublished">2015-01-9</time></p>
-            </div>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -600,7 +614,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">tag cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/2014/" style="font-size: 10px;">2014</a> <a href="/tags/ACID/" style="font-size: 10px;">ACID</a> <a href="/tags/AOP/" style="font-size: 10px;">AOP</a> <a href="/tags/CAP/" style="font-size: 10px;">CAP</a> <a href="/tags/annotation/" style="font-size: 10px;">annotation</a> <a href="/tags/cache/" style="font-size: 10px;">cache</a> <a href="/tags/git/" style="font-size: 13.33px;">git</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/p4p/" style="font-size: 10px;">p4p</a> <a href="/tags/quartz/" style="font-size: 10px;">quartz</a> <a href="/tags/spring/" style="font-size: 10px;">spring</a> <a href="/tags/tips/" style="font-size: 10px;">tips</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/分布式/" style="font-size: 13.33px;">分布式</a> <a href="/tags/工作/" style="font-size: 13.33px;">工作</a> <a href="/tags/并发/" style="font-size: 16.67px;">并发</a> <a href="/tags/广告/" style="font-size: 10px;">广告</a> <a href="/tags/开发/" style="font-size: 16.67px;">开发</a> <a href="/tags/码农/" style="font-size: 13.33px;">码农</a> <a href="/tags/缓存/" style="font-size: 13.33px;">缓存</a> <a href="/tags/调度/" style="font-size: 10px;">调度</a> <a href="/tags/锁/" style="font-size: 13.33px;">锁</a> <a href="/tags/阿里/" style="font-size: 10px;">阿里</a>
+      <a href="/tags/2014/" style="font-size: 10px;">2014</a> <a href="/tags/ACID/" style="font-size: 10px;">ACID</a> <a href="/tags/AOP/" style="font-size: 10px;">AOP</a> <a href="/tags/CAP/" style="font-size: 10px;">CAP</a> <a href="/tags/annotation/" style="font-size: 10px;">annotation</a> <a href="/tags/cache/" style="font-size: 10px;">cache</a> <a href="/tags/git/" style="font-size: 12.5px;">git</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/p4p/" style="font-size: 10px;">p4p</a> <a href="/tags/quartz/" style="font-size: 10px;">quartz</a> <a href="/tags/spring/" style="font-size: 10px;">spring</a> <a href="/tags/tips/" style="font-size: 10px;">tips</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/分布式/" style="font-size: 12.5px;">分布式</a> <a href="/tags/工作/" style="font-size: 15px;">工作</a> <a href="/tags/并发/" style="font-size: 15px;">并发</a> <a href="/tags/广告/" style="font-size: 10px;">广告</a> <a href="/tags/开发/" style="font-size: 17.5px;">开发</a> <a href="/tags/码农/" style="font-size: 12.5px;">码农</a> <a href="/tags/缓存/" style="font-size: 12.5px;">缓存</a> <a href="/tags/调度/" style="font-size: 10px;">调度</a> <a href="/tags/锁/" style="font-size: 12.5px;">锁</a> <a href="/tags/阿里/" style="font-size: 10px;">阿里</a>
     </div>
   </div>
 

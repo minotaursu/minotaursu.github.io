@@ -3,43 +3,20 @@
 <head>
   <meta charset="utf-8">
   
-  <title>小明的魔法调度框架之旅 | Minotaur story</title>
+  <title>构建可靠的系统 | Minotaur story</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="google-site-verification" content="bDBQbYqQqKkNOj4OxUu1rjxMw6nQqWpxzBffZ7yj2kA" />
-  <meta name="description" content="据说每个程序员上辈子都是法力高深的魔法师
-
-crontab
-
-话说小明11年从新手村毕业，拿着一把等级为灰色的木剑就开始了打怪升级之路。小明发现怪并不好打，怪物都是在凌晨4点才出现的，好在小明在新手村的时候学会了一个叫crontab的静态魔法，该魔法虽然等级低但是不需要吟唱时间，小明将crontab附魔在自己的木剑上，木剑就可以每天凌晨4点定时去打怪了。
-
-quartz
-
-虽然crontab这个静">
+  <meta name="description" content="编写的代码能否在线上持续的提供稳定可靠的服务是区分普通程序员，文艺程序员，2B程序员的重要标准之一。持续的提供稳定可靠的服务说起来简单，实际影响的因素有很多，数据的量级，请求的峰值，并发的影响，架构的设计，系统的复杂度，外部依赖，线上的运维，单测和CR的执行，这些都一定程度影响着系统能否持续的提供稳定可靠的服务。和所有的工程类似，软件工程的质量也不是由单一因素就能决定的，这里我们不谈这些因素的影响">
 <meta property="og:type" content="article">
-<meta property="og:title" content="小明的魔法调度框架之旅">
-<meta property="og:url" content="http://minotaursu.com/2015/12/12/小明的魔法调度框架之旅/index.html">
+<meta property="og:title" content="构建可靠的系统">
+<meta property="og:url" content="http://minotaursu.com/2016/05/25/构建可靠的系统/index.html">
 <meta property="og:site_name" content="Minotaur story">
-<meta property="og:description" content="据说每个程序员上辈子都是法力高深的魔法师
-
-crontab
-
-话说小明11年从新手村毕业，拿着一把等级为灰色的木剑就开始了打怪升级之路。小明发现怪并不好打，怪物都是在凌晨4点才出现的，好在小明在新手村的时候学会了一个叫crontab的静态魔法，该魔法虽然等级低但是不需要吟唱时间，小明将crontab附魔在自己的木剑上，木剑就可以每天凌晨4点定时去打怪了。
-
-quartz
-
-虽然crontab这个静">
-<meta property="og:updated_time" content="2015-09-21T03:31:45.000Z">
+<meta property="og:description" content="编写的代码能否在线上持续的提供稳定可靠的服务是区分普通程序员，文艺程序员，2B程序员的重要标准之一。持续的提供稳定可靠的服务说起来简单，实际影响的因素有很多，数据的量级，请求的峰值，并发的影响，架构的设计，系统的复杂度，外部依赖，线上的运维，单测和CR的执行，这些都一定程度影响着系统能否持续的提供稳定可靠的服务。和所有的工程类似，软件工程的质量也不是由单一因素就能决定的，这里我们不谈这些因素的影响">
+<meta property="og:image" content="http://hexo-tuchuan.qiniudn.com/towers.jpg?imageView/1/w/670/h/400">
+<meta property="og:updated_time" content="2016-05-25T03:39:48.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="小明的魔法调度框架之旅">
-<meta name="twitter:description" content="据说每个程序员上辈子都是法力高深的魔法师
-
-crontab
-
-话说小明11年从新手村毕业，拿着一把等级为灰色的木剑就开始了打怪升级之路。小明发现怪并不好打，怪物都是在凌晨4点才出现的，好在小明在新手村的时候学会了一个叫crontab的静态魔法，该魔法虽然等级低但是不需要吟唱时间，小明将crontab附魔在自己的木剑上，木剑就可以每天凌晨4点定时去打怪了。
-
-quartz
-
-虽然crontab这个静">
+<meta name="twitter:title" content="构建可靠的系统">
+<meta name="twitter:description" content="编写的代码能否在线上持续的提供稳定可靠的服务是区分普通程序员，文艺程序员，2B程序员的重要标准之一。持续的提供稳定可靠的服务说起来简单，实际影响的因素有很多，数据的量级，请求的峰值，并发的影响，架构的设计，系统的复杂度，外部依赖，线上的运维，单测和CR的执行，这些都一定程度影响着系统能否持续的提供稳定可靠的服务。和所有的工程类似，软件工程的质量也不是由单一因素就能决定的，这里我们不谈这些因素的影响">
   
   
     <link rel="icon" href="css/images/favicon.ico">
@@ -142,7 +119,7 @@ quartz
 </aside>
 
       
-      <section id="main"><article id="post-小明的魔法调度框架之旅" class="article article-type-post" itemscope itemprop="blogPost">
+      <section id="main"><article id="post-构建可靠的系统" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
     
@@ -151,7 +128,7 @@ quartz
         
   
     <h1 class="article-title" itemprop="name">
-      小明的魔法调度框架之旅
+      构建可靠的系统
     </h1>
   
 
@@ -159,8 +136,8 @@ quartz
           
   <div class="article-date">
     <i class="fa fa-calendar"></i>
-    <a href="/2015/12/12/小明的魔法调度框架之旅/">
-      <time datetime="2015-12-12T04:01:24.000Z" itemprop="datePublished">2015-12-12</time>
+    <a href="/2016/05/25/构建可靠的系统/">
+      <time datetime="2016-05-25T03:38:00.000Z" itemprop="datePublished">2016-05-25</time>
     </a>
   </div>
 
@@ -172,44 +149,58 @@ quartz
     <div class="article-entry" itemprop="articleBody">
       
                 
-        <p><em>据说每个程序员上辈子都是法力高深的魔法师</em></p>
+        <p>编写的代码能否在线上持续的提供稳定可靠的服务是区分普通程序员，文艺程序员，2B程序员的重要标准之一。持续的提供稳定可靠的服务说起来简单，实际影响的因素有很多，数据的量级，请求的峰值，并发的影响，架构的设计，系统的复杂度，外部依赖，线上的运维，单测和CR的执行，这些都一定程度影响着系统能否持续的提供稳定可靠的服务。和所有的工程类似，软件工程的质量也不是由单一因素就能决定的，这里我们不谈这些因素的影响，只站在开发者的角度说一下如何构造可靠的系统，在可控的范围内实现一个能够提供稳定可靠服务的系统。软件有风险，开发需谨慎，一家之言仅供参考。</p>
 <blockquote>
-<p>crontab</p>
+<p>区分可靠和不可靠的操作</p>
 </blockquote>
-<p>话说小明11年从新手村毕业，拿着一把等级为灰色的木剑就开始了打怪升级之路。小明发现怪并不好打，怪物都是在凌晨4点才出现的，好在小明在新手村的时候学会了一个叫crontab的静态魔法，该魔法虽然等级低但是不需要吟唱时间，小明将crontab附魔在自己的木剑上，木剑就可以每天凌晨4点定时去打怪了。</p>
+<p>区分可靠和不可靠的操作，是编写可靠代码的基本要求。只有理解了什么是可靠与不可靠才能做出正确的应对，使可靠的代码简洁，不可靠的代码健壮，例如从缓存中获取数据，更新数据库，这些就是不可靠的操作，可能因为网络，软件，硬件等各种原因失败，代码需要根据不同的情况记录异常或者进行重试等操作，因为更新数据库可能失败，需要在有一致性要求的情况加上事务。除了第三方不可靠之外，代码在不同的环境也可能是不可靠的，例如单线程安全的代码在多线程可能就是不可靠的，串行访问可靠的代码在并发时可能就是不可靠的，单机可靠的代码在分布式环境可能就是不可靠的，小数据量时可靠的代码在数据量变大时可能就是不可靠的。知道了遇到的是老虎还是Hello Kitty，才知道是要逃还是微笑。</p>
 <blockquote>
-<p>quartz</p>
+<p>快速失败，抛出异常</p>
 </blockquote>
-<p>虽然crontab这个静态魔法很NB，无奈小明的装备换的太频繁，每次更新装备都需要重新将crontab附魔到武器上才行；这个时候小明已经学会了一个叫quartz的中级魔法，相对不需要吟唱的crontab，quartz需要按照Job，JobDetail，Tigger，Scheduler的顺序进行吟唱才行，虽然过程是<br>复杂了一些，但是好处是显而易见的，魔法再也不需要和装备进行绑定，Scheduler是一个完全独立结界，Scheduler可以容纳多个JobDetail和Tigger,内部的固有魔法线程池可以并行调度多个任务。</p>
+<p>fail fast做为一个设计开发原则往往和我们的直觉背道而驰，为了系统的健壮性我们往往将错误自动处理掉，希望系统进行运行下去，减少错误的产生。其实这种做法往往会滋生出隐藏很深的bug，编写很多magic code，导致维护代码和查找错误都很困难。快速失败的原则让错误尽早被发现，避免导致更大的错误，有人觉得程序有很多assert语句和抛出异常很不安全，事实上fail fast不会导致系统的crash，反而因为出现什么bug和bug在哪里都一目了然增加了系统的健壮性，fail fast就像创业一样快速的试错，如果发现方向不可行就赶紧打住避免更大的损失。比较典型的fail fast使用就是接口入参时的各种assert和调用第三方时的超时设置，这样即使第三方出现故障也不会导致线程打满拖垮我们的系统。</p>
 <blockquote>
-<p>quartz集群</p>
+<p>兜底与降级</p>
 </blockquote>
-<p>在使用了quartz这个中级魔法之后，小明轻松了很长一段时间，再也不必为换装备导致魔法失效而苦恼。在成为了一个合格的中级魔法师之后，学会了无限剑制这种BT魔法之后，小明决定向着中级副本进发，为了应付副本危险的环境，小明利用无限剑制将每个装备都附上了quartz这个魔法，现在问题来了，如果所有的quartz都发动，会产生魔法混乱现象，导致反噬；小明打开了《哈利波特》上面说需要使用魔法石进行魔法加持，例如红魔石mysql，绿魔石redis，蓝魔石zookeeper，只要魔石具有原子性锁操作机制就可以了，在红魔石mysql和quartz配合下，顺序的杀掉了怪物。</p>
+<p>提到了快速失败就不能不说兜底，快速失败是为了尽快的发现错误，避免错误的隐藏和扩大。兜底是为了错误容忍，避免因为非核心流程的失败导致整体功能的不可用。例如我们在获取商品详情时，不能因为获取商品评价信息失败就导致整个商品详情失败；获取某些配置信息时本地也要有一份兜底配置，避免因为配置信息获取不到导致核心业务的失败。如果说兜底是在错误发生时的被动防御，那么降级就是对错误的主动预防了，同样以商品详情为例，在某次活动期间流量暴增，那么可以主动放弃获取商品评价信息，展示商品是否有库存代替具体的库存数量，减小服务器的鸭梨，加快响应速度。</p>
 <blockquote>
-<p>ttd/tbschedule</p>
+<p>良好的api设计</p>
 </blockquote>
-<p>在中级副本打怪升级一段时间后，小明购买了高级魔法ttd和tbschedule，相对于静态魔法crontab和中级魔法quartz，高级魔法的功能真是-碉堡了。</p>
-<ul>
-<li>支持剑系武器java，弓系武器shell等多种武器；</li>
-<li>支持对吟唱依赖，上一个魔法吟唱成功后才会出现下一个魔法；</li>
-<li>支持大规模魔法分拆，合并</li>
-<li>有着路由规则指定这种高级魔法；</li>
-<li>由蓝宝石zookeeper进行加持和魔法心跳检测，保证不会出现魔法阵的混乱；</li>
-<li>通过魔物netty进行大规模魔法阵的触发；</li>
-<li>通过魔法镜面可以看到魔法执行的效果，当遇到大boss导致魔法失效时还有魔法消息监控功能；</li>
-</ul>
+<p>设计一个良好的api从来都不是件容易的事情，设计一个良好的RPC调用的api就更加困难。假设有一个通过商品id获取商品详情的需求。<br>最开始我们的api可能是这样的</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Item <span class="function"><span class="title">getItemById</span><span class="params">(Long id)</span></span></span><br></pre></td></tr></table></figure>
+<p>因为是RPC调用，当返回是null的时候调用方懵逼了，这啥情况，是出错了？是超时？是没有商品？，于是对返回的对象进行一次封装，api变成介样</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RpcResult&lt;Item&gt; <span class="function"><span class="title">getItemById</span><span class="params">(Long id)</span></span></span><br></pre></td></tr></table></figure>
+<p>后面产品狗说需要批量获取商品，于是变成批量查询，api变成介样</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RpcResult&lt;Item&gt; <span class="function"><span class="title">getItemsByIds</span><span class="params">(List&lt;Long&gt; ids)</span></span></span><br></pre></td></tr></table></figure>
+<p>后面有个2B调用方一次性传了10W个id过来，几十秒也没能查出来，于是限制最多一次传100个避免长时间执行，api变成介样。</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RpcResult&lt;Item&gt; <span class="function"><span class="title">getItemsByIdsWithLimit</span><span class="params">(Long id)</span></span></span><br></pre></td></tr></table></figure>
+<p>可见良好的RPC的api设计需要考虑   </p>
+<ol>
+<li>返回值需要包含错误码，是业务异常还是网络异常，是否可以重试。   </li>
+<li>减少业务方的调用，将业务方多次调用才能完成的事情封装成一个接口。  </li>
+<li>api的命名和注释要规范，毕竟调用方不清楚实现细节，能够直观看到就是api和注释。</li>
+</ol>
+<p>同时作为调用方也要对接口进行wrapper，解决接口不规范的问题，隔离提供方api升级变更的影响。</p>
 <blockquote>
-<p>future</p>
+<p>避免单点</p>
 </blockquote>
-<p>在小明使用了购买的高级魔法TTD后，小明再也没有见过洛杉鸡凌晨4点的天空（其实是从来好么）。小明听说在山的那边海的那边有一群蓝精灵，他们快速又瞬移，他们筑墙又监禁，他们喽啰无敌生活在那绿色的大森林，他们亵渎溶火漩涡又结群……<br>不过小明并不惧怕，因为芝士就是力量。</p>
+<p>系统不是只运行一次，人生也不是赌博，不要总想着All in。一般对于无状态的就采用多活方案，对于任务调度这种只有一个能运行的可以考虑redis，zookeeper做锁控制，某些系统也会采用一台服务器运行，一台standby的方案，通过心跳检查的方式发现运行的主机挂掉后拉起备机的方案。</p>
+<blockquote>
+<p>做好提前量</p>
+</blockquote>
+<p>考虑到业务的发展，流量爆发的突然性，业界有着系统架构支持10倍增长，系统设计支持5倍增长，系统实现支持2倍增长的说法。数据存储，服务规划这些改动比较麻烦的事情最好在设计之初的考虑清楚，随着业务的发展也要<br>做好提前量，不要等到服务不可用了才想到堆机器。</p>
+<blockquote>
+<p>预热与发布过程</p>
+</blockquote>
+<p>除了设计和实现时遵循良好的原则规范，平滑发布也是需要考虑的一点，发布过程的兼容，稳定，可回滚都是在开发之时就要考虑清楚的。除了发布过程之外，还需要考虑发布后活动前的预热，需要通过预热请求提高缓存的命中率，保证热点数据都在缓存中，系统没有经过预热，大促活动来临之时请求瞬间就击穿了空空如也的缓存直接击垮了数据库。</p>
+<p><img src="http://hexo-tuchuan.qiniudn.com/towers.jpg?imageView/1/w/670/h/400" alt=""></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2015/12/12/小明的魔法调度框架之旅/" data-id="ciomboj4v000vagschmu82q4o" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2016/05/25/构建可靠的系统/" data-id="ciomboj3o0007agsc6q7asiea" class="article-share-link">Share</a>
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/quartz/">quartz</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/调度/">调度</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/工作/">工作</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/开发/">开发</a></li></ul>
 
     </footer>
   </div>
@@ -217,19 +208,10 @@ quartz
     
 <nav id="article-nav">
   
-    <a href="/2016/01/27/使用AOP实现缓存注解/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          使用AOP实现缓存注解
-        
-      </div>
-    </a>
   
-  
-    <a href="/2015/05/04/git实用攻略二/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2016/01/27/使用AOP实现缓存注解/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">git实用攻略（二）</div>
+      <div class="article-nav-title">使用AOP实现缓存注解</div>
     </a>
   
 </nav>
