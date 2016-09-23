@@ -149,13 +149,6 @@
     </url>
 
     <url>
-        <loc>http://minotaursu.com/tags/java/</loc>
-        <lastmod>2016-05-25T03:39:48.000Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
         <loc>http://minotaursu.com/tags/%E5%B7%A5%E4%BD%9C/</loc>
         <lastmod>2016-05-25T03:39:48.000Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -165,6 +158,27 @@
     <url>
         <loc>http://minotaursu.com/tags/%E5%BC%80%E5%8F%91/</loc>
         <lastmod>2016-05-25T03:39:48.000Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://minotaursu.com/tags/java/</loc>
+        <lastmod>2016-09-23T08:15:42.000Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://minotaursu.com/tags/nio/</loc>
+        <lastmod>2016-09-23T08:15:42.000Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://minotaursu.com/tags/netty/</loc>
+        <lastmod>2016-09-23T08:15:42.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>

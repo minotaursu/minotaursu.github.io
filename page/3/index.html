@@ -85,11 +85,11 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        15
+        16
         <span>posts</span>
       </div>
       <div class="article-info-block">
-        24
+        26
         <span>tags</span>
       </div>
     </div>
@@ -118,6 +118,75 @@
 
       
       <section id="main">
+      <article id="post-java-Lock" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2014/11/03/java-Lock/">java Lock</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2014/11/03/java-Lock/">
+      <time datetime="2014-11-02T23:57:08.000Z" itemprop="datePublished">2014-11-3</time>
+    </a>
+  </div>
+
+
+          
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <p>在jdk5中，新增了Lock接口来提供一种比synchronized更灵活的锁机制。</p>
+<blockquote>
+<p>ReentrantLock</p>
+</blockquote>
+<p>ReentrantLock是被最广泛使用来替代synchronized的Lock接口实现，ReentrantLock的代码使用非常简单，只要记得将unlock写在finally方法中就可以了。<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">Lock</span> <span class="keyword">lock</span> = new ReentrantLock();</span></span><br><span class="line"><span class="operator"><span class="keyword">lock</span>.<span class="keyword">lock</span>();</span></span><br><span class="line">try &#123;</span><br><span class="line">&#125; finally &#123;</span><br><span class="line">	<span class="operator"><span class="keyword">lock</span>.<span class="keyword">unlock</span>();</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>相比synchronied，ReentrantLock具有以下特性：</p>
+<ul>
+<li>非阻塞的tryLock，可以进行锁的轮询。</li>
+<li>能被中断的lockInterruptibly，可以进行锁中断。</li>
+<li>有超时时间的tryLock</li>
+</ul>
+<p>ReentrantLock的默认构造函数是非公平的，公平的锁机制会对锁的请求进行排队，按照FIFO的原则进行锁的获取，造成JVM对于等待中的线程调度次序和操作系统对线程的调度不匹配，所以公平锁的性能要小于非公平锁的性能；在大多数场景下我们都可以使用ReentrantLock的默认构造函数，而在某些需要避免‘饥饿’发生的场景下，我们可以使用ReentrantLock(true)。</p>
+<blockquote>
+<p>ReentrantReadWriteLock</p>
+</blockquote>
+<p>ReentrantReadWriteLock实现了ReadWriteLock接口，提供了一对锁：readLock与writeLock。读锁可以由多个线程同时保持，读锁则是独占的。比较适合读多写少高并发的场景，相比于ReentrantLock，ReentrantReadWriteLock的使用场景并不广泛，性能也要差一点。</p>
+<p>ReadWriteLock的互斥性：</p>
+<ul>
+<li>读读不互斥</li>
+<li>读写互斥</li>
+<li>写写互斥</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://minotaursu.com/2014/11/03/java-Lock/" data-id="citfhpo84001vwasc8acunjwu" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/并发/">并发</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/锁/">锁</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
       <article id="post-jdk7jdk8新特性概述" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -175,7 +244,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2014/10/27/jdk7jdk8新特性概述/" data-id="ciomboj59001magscnoe86cop" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2014/10/27/jdk7jdk8新特性概述/" data-id="citfhpo81001swasc1fawdtra" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/jdk/">jdk</a></li></ul>
@@ -256,7 +325,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2014/10/24/分布式事务处理总结/" data-id="ciomboj500011agschmtqo1nk" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2014/10/24/分布式事务处理总结/" data-id="citfhpo7r0011wasco3462qyh" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ACID/">ACID</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CAP/">CAP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/事务/">事务</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/分布式/">分布式</a></li></ul>
@@ -310,7 +379,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2014/07/07/我在广告应用这三年/" data-id="ciomboj4q000magscqsdh8ytv" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2014/07/07/我在广告应用这三年/" data-id="citfhpo7i000mwasc8cuyqx3z" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/p4p/">p4p</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/工作/">工作</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/广告/">广告</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/开发/">开发</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/阿里/">阿里</a></li></ul>
@@ -384,7 +453,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2014/07/01/git实用攻略/" data-id="ciomboj5j001zagscc8cdqcm2" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2014/07/01/git实用攻略/" data-id="citfhpo8b0025wascly6yexb5" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/git/">git</a></li></ul>
@@ -397,70 +466,8 @@
 
 
     
-      <article id="post-一些技术发展和职业规划的建议" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2014/06/24/一些技术发展和职业规划的建议/">一些技术发展和职业规划的建议</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2014/06/24/一些技术发展和职业规划的建议/">
-      <time datetime="2014-06-24T05:39:53.000Z" itemprop="datePublished">2014-06-24</time>
-    </a>
-  </div>
-
-
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <p>一些来自<a href="http://weibo.com/aimingoo" target="_blank" rel="external">周爱民</a>老师的技术发展和职业规划的建议，共勉~ </p>
-<ul>
-<li>不要急</li>
-<li>不要害怕改变</li>
-<li>不要只做不想</li>
-<li>听别人的话，即使你不想听</li>
-<li>订一个五年期的目标，写一个一年期的计划，然后回顾它</li>
-<li>学好中文，学好写文章，学会打标点符号</li>
-<li>学好英语，有时候会发挥巨大作用</li>
-<li>把工作当成事业做，天天都在做事业，才会成功</li>
-<li>理论看不懂，就去实践；实践遇到问题，就去看理论</li>
-<li>参加一个开源项目。如果没你感兴趣的，就自己发起一个</li>
-<li>保持自己对某一件事物的热心，执著，即使这件事与你是不是程序员毫无关系</li>
-<li>成功不能被复制，但失败总在不停复制。看看别人是怎么倒下的，你可以更早地成功</li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2014/06/24/一些技术发展和职业规划的建议/" data-id="ciomboj57001jagscapshby8o" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/tips/">tips</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
       <nav id="page-nav">
-        <a class="extend prev" rel="prev" href="/page/2/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span>
+        <a class="extend prev" rel="prev" href="/page/2/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/4/">Next &raquo;</a>
       </nav>
     </section>
       
@@ -471,6 +478,24 @@
     <h3 class="widget-title">recents</h3>
     <div class="widget">
       <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/09/23/netty详解之io模型/" class="thumbnail">
+  
+    <span style="background-image:url(http://hexo-tuchuan.qiniudn.com/bio.png
+)" alt="netty详解之io模型" class="thumbnail-image"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"></p>
+              <p class="item-title"><a href="/2016/09/23/netty详解之io模型/" class="title">netty详解之io模型</a></p>
+              <p class="item-date"><time datetime="2016-09-23T08:12:54.000Z" itemprop="datePublished">2016-09-23</time></p>
+            </div>
+          </li>
         
           <li>
             
@@ -542,24 +567,6 @@
             </div>
           </li>
         
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2015/04/13/我设计的12306/" class="thumbnail">
-  
-    <span style="background-image:url(http://hexo-tuchuan.qiniudn.com/tickets.jpg
-)" alt="我设计的12306" class="thumbnail-image"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"></p>
-              <p class="item-title"><a href="/2015/04/13/我设计的12306/" class="title">我设计的12306</a></p>
-              <p class="item-date"><time datetime="2015-04-13T14:49:30.000Z" itemprop="datePublished">2015-04-13</time></p>
-            </div>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -569,7 +576,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">tag cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/2014/" style="font-size: 10px;">2014</a> <a href="/tags/ACID/" style="font-size: 10px;">ACID</a> <a href="/tags/AOP/" style="font-size: 10px;">AOP</a> <a href="/tags/CAP/" style="font-size: 10px;">CAP</a> <a href="/tags/annotation/" style="font-size: 10px;">annotation</a> <a href="/tags/cache/" style="font-size: 10px;">cache</a> <a href="/tags/git/" style="font-size: 12.5px;">git</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/p4p/" style="font-size: 10px;">p4p</a> <a href="/tags/quartz/" style="font-size: 10px;">quartz</a> <a href="/tags/spring/" style="font-size: 10px;">spring</a> <a href="/tags/tips/" style="font-size: 10px;">tips</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/分布式/" style="font-size: 12.5px;">分布式</a> <a href="/tags/工作/" style="font-size: 15px;">工作</a> <a href="/tags/并发/" style="font-size: 15px;">并发</a> <a href="/tags/广告/" style="font-size: 10px;">广告</a> <a href="/tags/开发/" style="font-size: 17.5px;">开发</a> <a href="/tags/码农/" style="font-size: 12.5px;">码农</a> <a href="/tags/缓存/" style="font-size: 12.5px;">缓存</a> <a href="/tags/调度/" style="font-size: 10px;">调度</a> <a href="/tags/锁/" style="font-size: 12.5px;">锁</a> <a href="/tags/阿里/" style="font-size: 10px;">阿里</a>
+      <a href="/tags/2014/" style="font-size: 10px;">2014</a> <a href="/tags/ACID/" style="font-size: 10px;">ACID</a> <a href="/tags/AOP/" style="font-size: 10px;">AOP</a> <a href="/tags/CAP/" style="font-size: 10px;">CAP</a> <a href="/tags/annotation/" style="font-size: 10px;">annotation</a> <a href="/tags/cache/" style="font-size: 10px;">cache</a> <a href="/tags/git/" style="font-size: 12.5px;">git</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/netty/" style="font-size: 10px;">netty</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/p4p/" style="font-size: 10px;">p4p</a> <a href="/tags/quartz/" style="font-size: 10px;">quartz</a> <a href="/tags/spring/" style="font-size: 10px;">spring</a> <a href="/tags/tips/" style="font-size: 10px;">tips</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/分布式/" style="font-size: 12.5px;">分布式</a> <a href="/tags/工作/" style="font-size: 15px;">工作</a> <a href="/tags/并发/" style="font-size: 15px;">并发</a> <a href="/tags/广告/" style="font-size: 10px;">广告</a> <a href="/tags/开发/" style="font-size: 17.5px;">开发</a> <a href="/tags/码农/" style="font-size: 12.5px;">码农</a> <a href="/tags/缓存/" style="font-size: 12.5px;">缓存</a> <a href="/tags/调度/" style="font-size: 10px;">调度</a> <a href="/tags/锁/" style="font-size: 12.5px;">锁</a> <a href="/tags/阿里/" style="font-size: 10px;">阿里</a>
     </div>
   </div>
 
