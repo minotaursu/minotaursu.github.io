@@ -178,7 +178,21 @@
 
     <url>
         <loc>http://minotaursu.com/tags/netty/</loc>
-        <lastmod>2016-09-23T08:15:42.000Z</lastmod>
+        <lastmod>2016-09-23T09:43:00.000Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://minotaursu.com/tags/io/</loc>
+        <lastmod>2016-09-23T09:43:00.000Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://minotaursu.com/tags/reactor/</loc>
+        <lastmod>2016-09-23T09:43:00.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>

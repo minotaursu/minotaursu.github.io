@@ -85,11 +85,11 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        16
+        17
         <span>posts</span>
       </div>
       <div class="article-info-block">
-        26
+        28
         <span>tags</span>
       </div>
     </div>
@@ -118,6 +118,74 @@
 
       
       <section id="main">
+      <article id="post-git实用攻略二" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/05/04/git实用攻略二/">git实用攻略（二）</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2015/05/04/git实用攻略二/">
+      <time datetime="2015-05-04T09:30:55.000Z" itemprop="datePublished">2015-05-4</time>
+    </a>
+  </div>
+
+
+          
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <p>最近团队的版本控制从svn切换到了git，虽说已经使用git有2年多了，也写了一个<a href="http://minotaursu.com/2014/07/01/git%E5%AE%9E%E7%94%A8%E6%94%BB%E7%95%A5/">实用攻略</a>，但是github上的项目使用经验和公司内部团队协作的使用经验还有很多不同。补充下新的使用体会。<br><img src="http://7jpo4q.com1.z0.glb.clouddn.com/gitflow.png?imageView/1/w/670/h/280" alt=""><br>首先还是看一下git的3个区：working，stage，commit，心中有个概念。</p>
+<ol>
+<li><p><strong>github和gitlab账户的共存</strong><br>配置sshkey登录的时候，git只能识别默认的id_rsa的秘钥文件，只有一个账户能够免登，在bash启动脚本中增加ssh-add file 实现多个账户的免登。</p>
+</li>
+<li><p><strong>迁出新的远程分支代码</strong><br>本地已经有了master分支和develop分支代码，假设有一个project1的远程项目分支需要开发，使用git checkout -b project1 origin/project1迁出新的远程分支代码。</p>
+</li>
+<li><p><strong>使用git pull —rebase拉取代码</strong><br>使用pull —rebase拉取最新代码可以保持一颗干净的commit树。</p>
+</li>
+<li><p><strong>使用merge，不要使用rebase合并不同的分支</strong><br>使用rebase合并不同的分支会导致很多的冲突。 </p>
+</li>
+<li><p><strong>git reflog</strong><br>可以看到本地仓库的操作记录，在reset操作后进行恢复特别有用。</p>
+</li>
+<li><p><strong>git commit —amend</strong><br>补救提交，不产生commit log。</p>
+</li>
+<li><p><strong>git reset —hard HEAD</strong><br>使用HEAD的内容覆盖工作区，放弃暂缓区的内容。</p>
+</li>
+<li><p><strong>git reset HEAD</strong><br>退回暂缓区的内容，和git reset commitId一样，都是指针操作。</p>
+</li>
+<li><p><strong>alias命令</strong><br>编辑 ~/.gitconfig，赋予复杂的命令一个简单的别名</p>
+</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://minotaursu.com/2015/05/04/git实用攻略二/" data-id="citfkvrxl00283ysckapdk2tc" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/git/">git</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
       <article id="post-我设计的12306" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -176,7 +244,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2015/04/13/我设计的12306/" data-id="citfhpo7f000dwascbdln93zg" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2015/04/13/我设计的12306/" data-id="citfkvrwi000d3yscps07mhzz" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/分布式/">分布式</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/开发/">开发</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/码农/">码农</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/缓存/">缓存</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/锁/">锁</a></li></ul>
@@ -253,7 +321,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2015/01/09/缓存的使用/" data-id="citfhpo5v0000wascf1da2w0c" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2015/01/09/缓存的使用/" data-id="citfkvrvo00003yscd2g30yyk" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/并发/">并发</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/缓存/">缓存</a></li></ul>
@@ -313,7 +381,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2014/12/30/2014年终总结/" data-id="citfhpo8f002awascz28jt7e7" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2014/12/30/2014年终总结/" data-id="citfkvrxr002g3yscm3bgjumi" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/2014/">2014</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/工作/">工作</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/码农/">码农</a></li></ul>
@@ -381,72 +449,10 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2014/12/24/jar包冲突与inode/" data-id="citfhpo87001zwasc512lyola" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2014/12/24/jar包冲突与inode/" data-id="citfkvrxd00253ysctobnvd40" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/开发/">开发</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-CAS" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2014/11/05/CAS/">CAS</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2014/11/05/CAS/">
-      <time datetime="2014-11-05T07:06:24.000Z" itemprop="datePublished">2014-11-5</time>
-    </a>
-  </div>
-
-
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <blockquote>
-<p>CAS 是什么</p>
-</blockquote>
-<p>CAS是单词compare and set的缩写，意思是指在set之前先比较该值有没有变化，只有在没变的情况下才对其赋值。在java.util.concurrent包中，CAS提供了一种不同于互斥锁，读写锁的乐观锁机制，CAS和volatile一起构成了整个concurrent包的基石。</p>
-<blockquote>
-<p>CAS 原理</p>
-</blockquote>
-<p>我们都知道，在java语言之前，并发就已经广泛存在并在服务器领域得到了大量的应用。所以硬件厂商老早就在芯片中加入了大量直至并发操作的原语，从而在硬件层面提升效率。在intel的CPU中，使用cmpxchg指令,程序会根据当前处理器的类型来决定是否为cmpxchg指令添加lock前缀。如果程序是在多处理器上运行，就为cmpxchg指令加上lock前缀（lock cmpxchg）。反之，如果程序是在单处理器上运行，就省略lock前缀（单处理器自身会维护单处理器内的顺序一致性，不需要lock前缀提供的内存屏障效果）。<br>CAS 操作包含三个操作数 —— 内存位置（V）、预期原值（A）和新值(B)。 如果内存位置的值与预期原值相匹配，那么处理器会自动将该位置值更新为新值 。否则，处理器不做任何操作。无论哪种情况，它都会在 CAS 指令之前返回该 位置的值。（在 CAS 的一些特殊情况下将仅返回 CAS 是否成功，而不提取当前 值。）CAS 有效地说明了“我认为位置 V 应该包含值 A；如果包含该值，则将 B 放到这个位置；否则，不要更改该位置，只告诉我这个位置现在的值即可。”<br>通常将 CAS 用于同步的方式是从地址 V 读取值 A，执行多步计算来获得新 值 B，然后使用 CAS 将 V 的值从 A 改为 B。如果 V 处的值尚未同时更改，则 CAS 操作成功。<br>类似于 CAS 的指令允许算法执行读-修改-写操作，而无需害怕其他线程同时 修改变量，因为如果其他线程修改变量，那么 CAS 会检测它（并失败），算法可以对该操作重新计算。</p>
-<blockquote>
-<p>CAS缺点</p>
-</blockquote>
-<ol>
-<li>ABA问题<br>因为CAS需要在操作值的时候检查下值有没有发生变化，如果没有发生变化则更新，但是如果一个值原来是A，变成了B，又变成了A，那么使用CAS进行检查时会发现它的值没有发生变化，但是实际上却变化了。ABA问题的解决思路就是使用版本号。在变量前面追加上版本号，每次变量更新的时候把版本号加一，那么A－B－A 就会变成1A-2B－3A。</li>
-<li>CPU开销大<br>自旋CAS如果长时间不成功，会给CPU带来非常大的执行开销。</li>
-</ol>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2014/11/05/CAS/" data-id="citfhpo8d0027wascstocwk3i" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/并发/">并发</a></li></ul>
 
     </footer>
   </div>
@@ -468,6 +474,24 @@
     <h3 class="widget-title">recents</h3>
     <div class="widget">
       <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/09/23/netty详解之reactor模型/" class="thumbnail">
+  
+    <span style="background-image:url(http://hexo-tuchuan.qiniudn.com/reactor3.png
+)" alt="netty详解之reactor模型" class="thumbnail-image"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"></p>
+              <p class="item-title"><a href="/2016/09/23/netty详解之reactor模型/" class="title">netty详解之reactor模型</a></p>
+              <p class="item-date"><time datetime="2016-09-23T09:41:41.000Z" itemprop="datePublished">2016-09-23</time></p>
+            </div>
+          </li>
         
           <li>
             
@@ -539,24 +563,6 @@
             </div>
           </li>
         
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2015/05/04/git实用攻略二/" class="thumbnail">
-  
-    <span style="background-image:url(http://7jpo4q.com1.z0.glb.clouddn.com/gitflow.png?imageView/1/w/670/h/280
-)" alt="git实用攻略（二）" class="thumbnail-image"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"></p>
-              <p class="item-title"><a href="/2015/05/04/git实用攻略二/" class="title">git实用攻略（二）</a></p>
-              <p class="item-date"><time datetime="2015-05-04T09:30:55.000Z" itemprop="datePublished">2015-05-4</time></p>
-            </div>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -566,7 +572,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">tag cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/2014/" style="font-size: 10px;">2014</a> <a href="/tags/ACID/" style="font-size: 10px;">ACID</a> <a href="/tags/AOP/" style="font-size: 10px;">AOP</a> <a href="/tags/CAP/" style="font-size: 10px;">CAP</a> <a href="/tags/annotation/" style="font-size: 10px;">annotation</a> <a href="/tags/cache/" style="font-size: 10px;">cache</a> <a href="/tags/git/" style="font-size: 12.5px;">git</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/netty/" style="font-size: 10px;">netty</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/p4p/" style="font-size: 10px;">p4p</a> <a href="/tags/quartz/" style="font-size: 10px;">quartz</a> <a href="/tags/spring/" style="font-size: 10px;">spring</a> <a href="/tags/tips/" style="font-size: 10px;">tips</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/分布式/" style="font-size: 12.5px;">分布式</a> <a href="/tags/工作/" style="font-size: 15px;">工作</a> <a href="/tags/并发/" style="font-size: 15px;">并发</a> <a href="/tags/广告/" style="font-size: 10px;">广告</a> <a href="/tags/开发/" style="font-size: 17.5px;">开发</a> <a href="/tags/码农/" style="font-size: 12.5px;">码农</a> <a href="/tags/缓存/" style="font-size: 12.5px;">缓存</a> <a href="/tags/调度/" style="font-size: 10px;">调度</a> <a href="/tags/锁/" style="font-size: 12.5px;">锁</a> <a href="/tags/阿里/" style="font-size: 10px;">阿里</a>
+      <a href="/tags/2014/" style="font-size: 10px;">2014</a> <a href="/tags/ACID/" style="font-size: 10px;">ACID</a> <a href="/tags/AOP/" style="font-size: 10px;">AOP</a> <a href="/tags/CAP/" style="font-size: 10px;">CAP</a> <a href="/tags/annotation/" style="font-size: 10px;">annotation</a> <a href="/tags/cache/" style="font-size: 10px;">cache</a> <a href="/tags/git/" style="font-size: 12.5px;">git</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/netty/" style="font-size: 12.5px;">netty</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/p4p/" style="font-size: 10px;">p4p</a> <a href="/tags/quartz/" style="font-size: 10px;">quartz</a> <a href="/tags/reactor/" style="font-size: 10px;">reactor</a> <a href="/tags/spring/" style="font-size: 10px;">spring</a> <a href="/tags/tips/" style="font-size: 10px;">tips</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/分布式/" style="font-size: 12.5px;">分布式</a> <a href="/tags/工作/" style="font-size: 15px;">工作</a> <a href="/tags/并发/" style="font-size: 15px;">并发</a> <a href="/tags/广告/" style="font-size: 10px;">广告</a> <a href="/tags/开发/" style="font-size: 17.5px;">开发</a> <a href="/tags/码农/" style="font-size: 12.5px;">码农</a> <a href="/tags/缓存/" style="font-size: 12.5px;">缓存</a> <a href="/tags/调度/" style="font-size: 10px;">调度</a> <a href="/tags/锁/" style="font-size: 12.5px;">锁</a> <a href="/tags/阿里/" style="font-size: 10px;">阿里</a>
     </div>
   </div>
 
