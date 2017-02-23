@@ -6,42 +6,24 @@
   <title>CAS | Minotaur story</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="google-site-verification" content="bDBQbYqQqKkNOj4OxUu1rjxMw6nQqWpxzBffZ7yj2kA" />
-  <meta name="description" content="CAS 是什么
-
-CAS是单词compare and set的缩写，意思是指在set之前先比较该值有没有变化，只有在没变的情况下才对其赋值。在java.util.concurrent包中，CAS提供了一种不同于互斥锁，读写锁的乐观锁机制，CAS和volatile一起构成了整个concurrent包的基石。
-
-CAS 原理
-
-我们都知道，在java语言之前，并发就已经广泛存在并在服务器领域得到了大量">
+  <meta name="description" content="CAS 是什么CAS是单词compare and set的缩写，意思是指在set之前先比较该值有没有变化，只有在没变的情况下才对其赋值。在java.util.concurrent包中，CAS提供了一种不同于互斥锁，读写锁的乐观锁机制，CAS和volatile一起构成了整个concurrent包的基石。
+CAS 原理我们都知道，在java语言之前，并发就已经广泛存在并在服务器领域得到了大量的应用。所">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CAS">
 <meta property="og:url" content="http://minotaursu.com/2014/11/05/CAS/index.html">
 <meta property="og:site_name" content="Minotaur story">
-<meta property="og:description" content="CAS 是什么
-
-CAS是单词compare and set的缩写，意思是指在set之前先比较该值有没有变化，只有在没变的情况下才对其赋值。在java.util.concurrent包中，CAS提供了一种不同于互斥锁，读写锁的乐观锁机制，CAS和volatile一起构成了整个concurrent包的基石。
-
-CAS 原理
-
-我们都知道，在java语言之前，并发就已经广泛存在并在服务器领域得到了大量">
-<meta property="og:updated_time" content="2015-07-08T06:47:51.000Z">
+<meta property="og:description" content="CAS 是什么CAS是单词compare and set的缩写，意思是指在set之前先比较该值有没有变化，只有在没变的情况下才对其赋值。在java.util.concurrent包中，CAS提供了一种不同于互斥锁，读写锁的乐观锁机制，CAS和volatile一起构成了整个concurrent包的基石。
+CAS 原理我们都知道，在java语言之前，并发就已经广泛存在并在服务器领域得到了大量的应用。所">
+<meta property="og:updated_time" content="2017-02-23T03:32:14.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="CAS">
-<meta name="twitter:description" content="CAS 是什么
-
-CAS是单词compare and set的缩写，意思是指在set之前先比较该值有没有变化，只有在没变的情况下才对其赋值。在java.util.concurrent包中，CAS提供了一种不同于互斥锁，读写锁的乐观锁机制，CAS和volatile一起构成了整个concurrent包的基石。
-
-CAS 原理
-
-我们都知道，在java语言之前，并发就已经广泛存在并在服务器领域得到了大量">
+<meta name="twitter:description" content="CAS 是什么CAS是单词compare and set的缩写，意思是指在set之前先比较该值有没有变化，只有在没变的情况下才对其赋值。在java.util.concurrent包中，CAS提供了一种不同于互斥锁，读写锁的乐观锁机制，CAS和volatile一起构成了整个concurrent包的基石。
+CAS 原理我们都知道，在java语言之前，并发就已经广泛存在并在服务器领域得到了大量的应用。所">
   
   
-    <link rel="icon" href="css/images/favicon.ico">
+    <link rel="icon" href="/css/images/favicon.ico">
   
   
- <link href='//fonts.useso.com/css?family=Open+Sans:400italic,400,600' rel='stylesheet' type='text/css'>
- <link href="//fonts.useso.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
-
 
   <link rel="stylesheet" href="/css/style.css" type="text/css">
   <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css" type="text/css">
@@ -108,7 +90,7 @@ CAS 原理
         <span>posts</span>
       </div>
       <div class="article-info-block">
-        28
+        25
         <span>tags</span>
       </div>
     </div>
@@ -166,18 +148,9 @@ CAS 原理
     <div class="article-entry" itemprop="articleBody">
       
                 
-        <blockquote>
-<p>CAS 是什么</p>
-</blockquote>
-<p>CAS是单词compare and set的缩写，意思是指在set之前先比较该值有没有变化，只有在没变的情况下才对其赋值。在java.util.concurrent包中，CAS提供了一种不同于互斥锁，读写锁的乐观锁机制，CAS和volatile一起构成了整个concurrent包的基石。</p>
-<blockquote>
-<p>CAS 原理</p>
-</blockquote>
-<p>我们都知道，在java语言之前，并发就已经广泛存在并在服务器领域得到了大量的应用。所以硬件厂商老早就在芯片中加入了大量直至并发操作的原语，从而在硬件层面提升效率。在intel的CPU中，使用cmpxchg指令,程序会根据当前处理器的类型来决定是否为cmpxchg指令添加lock前缀。如果程序是在多处理器上运行，就为cmpxchg指令加上lock前缀（lock cmpxchg）。反之，如果程序是在单处理器上运行，就省略lock前缀（单处理器自身会维护单处理器内的顺序一致性，不需要lock前缀提供的内存屏障效果）。<br>CAS 操作包含三个操作数 —— 内存位置（V）、预期原值（A）和新值(B)。 如果内存位置的值与预期原值相匹配，那么处理器会自动将该位置值更新为新值 。否则，处理器不做任何操作。无论哪种情况，它都会在 CAS 指令之前返回该 位置的值。（在 CAS 的一些特殊情况下将仅返回 CAS 是否成功，而不提取当前 值。）CAS 有效地说明了“我认为位置 V 应该包含值 A；如果包含该值，则将 B 放到这个位置；否则，不要更改该位置，只告诉我这个位置现在的值即可。”<br>通常将 CAS 用于同步的方式是从地址 V 读取值 A，执行多步计算来获得新 值 B，然后使用 CAS 将 V 的值从 A 改为 B。如果 V 处的值尚未同时更改，则 CAS 操作成功。<br>类似于 CAS 的指令允许算法执行读-修改-写操作，而无需害怕其他线程同时 修改变量，因为如果其他线程修改变量，那么 CAS 会检测它（并失败），算法可以对该操作重新计算。</p>
-<blockquote>
-<p>CAS缺点</p>
-</blockquote>
-<ol>
+        <h2 id="CAS_是什么">CAS 是什么</h2><p>CAS是单词compare and set的缩写，意思是指在set之前先比较该值有没有变化，只有在没变的情况下才对其赋值。在java.util.concurrent包中，CAS提供了一种不同于互斥锁，读写锁的乐观锁机制，CAS和volatile一起构成了整个concurrent包的基石。</p>
+<h2 id="CAS_原理">CAS 原理</h2><p>我们都知道，在java语言之前，并发就已经广泛存在并在服务器领域得到了大量的应用。所以硬件厂商老早就在芯片中加入了大量直至并发操作的原语，从而在硬件层面提升效率。在intel的CPU中，使用cmpxchg指令,程序会根据当前处理器的类型来决定是否为cmpxchg指令添加lock前缀。如果程序是在多处理器上运行，就为cmpxchg指令加上lock前缀（lock cmpxchg）。反之，如果程序是在单处理器上运行，就省略lock前缀（单处理器自身会维护单处理器内的顺序一致性，不需要lock前缀提供的内存屏障效果）。<br>CAS 操作包含三个操作数 —— 内存位置（V）、预期原值（A）和新值(B)。 如果内存位置的值与预期原值相匹配，那么处理器会自动将该位置值更新为新值 。否则，处理器不做任何操作。无论哪种情况，它都会在 CAS 指令之前返回该 位置的值。（在 CAS 的一些特殊情况下将仅返回 CAS 是否成功，而不提取当前 值。）CAS 有效地说明了“我认为位置 V 应该包含值 A；如果包含该值，则将 B 放到这个位置；否则，不要更改该位置，只告诉我这个位置现在的值即可。”<br>通常将 CAS 用于同步的方式是从地址 V 读取值 A，执行多步计算来获得新 值 B，然后使用 CAS 将 V 的值从 A 改为 B。如果 V 处的值尚未同时更改，则 CAS 操作成功。<br>类似于 CAS 的指令允许算法执行读-修改-写操作，而无需害怕其他线程同时 修改变量，因为如果其他线程修改变量，那么 CAS 会检测它（并失败），算法可以对该操作重新计算。</p>
+<h2 id="CAS缺点">CAS缺点</h2><ol>
 <li>ABA问题<br>因为CAS需要在操作值的时候检查下值有没有发生变化，如果没有发生变化则更新，但是如果一个值原来是A，变成了B，又变成了A，那么使用CAS进行检查时会发现它的值没有发生变化，但是实际上却变化了。ABA问题的解决思路就是使用版本号。在变量前面追加上版本号，每次变量更新的时候把版本号加一，那么A－B－A 就会变成1A-2B－3A。</li>
 <li>CPU开销大<br>自旋CAS如果长时间不成功，会给CPU带来非常大的执行开销。</li>
 </ol>
@@ -185,7 +158,7 @@ CAS 原理
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2014/11/05/CAS/" data-id="citfkvrxo002d3ysc0dg2ldkt" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2014/11/05/CAS/" data-id="cizhuvuxr002aimfy82k6x40v" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/并发/">并发</a></li></ul>
@@ -325,7 +298,7 @@ CAS 原理
   <div class="widget-wrap">
     <h3 class="widget-title">tag cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/2014/" style="font-size: 10px;">2014</a> <a href="/tags/ACID/" style="font-size: 10px;">ACID</a> <a href="/tags/AOP/" style="font-size: 10px;">AOP</a> <a href="/tags/CAP/" style="font-size: 10px;">CAP</a> <a href="/tags/annotation/" style="font-size: 10px;">annotation</a> <a href="/tags/cache/" style="font-size: 10px;">cache</a> <a href="/tags/git/" style="font-size: 12.5px;">git</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/netty/" style="font-size: 12.5px;">netty</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/p4p/" style="font-size: 10px;">p4p</a> <a href="/tags/quartz/" style="font-size: 10px;">quartz</a> <a href="/tags/reactor/" style="font-size: 10px;">reactor</a> <a href="/tags/spring/" style="font-size: 10px;">spring</a> <a href="/tags/tips/" style="font-size: 10px;">tips</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/分布式/" style="font-size: 12.5px;">分布式</a> <a href="/tags/工作/" style="font-size: 15px;">工作</a> <a href="/tags/并发/" style="font-size: 15px;">并发</a> <a href="/tags/广告/" style="font-size: 10px;">广告</a> <a href="/tags/开发/" style="font-size: 17.5px;">开发</a> <a href="/tags/码农/" style="font-size: 12.5px;">码农</a> <a href="/tags/缓存/" style="font-size: 12.5px;">缓存</a> <a href="/tags/调度/" style="font-size: 10px;">调度</a> <a href="/tags/锁/" style="font-size: 12.5px;">锁</a> <a href="/tags/阿里/" style="font-size: 10px;">阿里</a>
+      <a href="/tags/ACID/" style="font-size: 10px;">ACID</a> <a href="/tags/AOP/" style="font-size: 10px;">AOP</a> <a href="/tags/CAP/" style="font-size: 10px;">CAP</a> <a href="/tags/annotation/" style="font-size: 10px;">annotation</a> <a href="/tags/git/" style="font-size: 12.5px;">git</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/netty/" style="font-size: 12.5px;">netty</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/quartz/" style="font-size: 10px;">quartz</a> <a href="/tags/reactor/" style="font-size: 10px;">reactor</a> <a href="/tags/spring/" style="font-size: 10px;">spring</a> <a href="/tags/tips/" style="font-size: 10px;">tips</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/分布式/" style="font-size: 12.5px;">分布式</a> <a href="/tags/工作/" style="font-size: 15px;">工作</a> <a href="/tags/并发/" style="font-size: 15px;">并发</a> <a href="/tags/开发/" style="font-size: 17.5px;">开发</a> <a href="/tags/缓存/" style="font-size: 15px;">缓存</a> <a href="/tags/职业规划/" style="font-size: 10px;">职业规划</a> <a href="/tags/调度/" style="font-size: 10px;">调度</a> <a href="/tags/锁/" style="font-size: 12.5px;">锁</a> <a href="/tags/阿里/" style="font-size: 12.5px;">阿里</a>
     </div>
   </div>
 
@@ -338,7 +311,7 @@ CAS 原理
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2016 minotaur<br>
+      &copy; 2017 minotaur<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="https://github.com/minotaursu/hexo-theme-icarus">icarus</a>.
       
 <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1256401841'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s11.cnzz.com/z_stat.php%3Fid%3D1256401841%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
@@ -353,13 +326,8 @@ CAS 原理
 
 
 
- <script src="//ajax.useso.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 
 
-
-
-  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
 
 
 <script src="/js/script.js" type="text/javascript"></script>

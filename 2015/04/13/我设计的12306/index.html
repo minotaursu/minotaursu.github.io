@@ -7,36 +7,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="google-site-verification" content="bDBQbYqQqKkNOj4OxUu1rjxMw6nQqWpxzBffZ7yj2kA" />
   <meta name="description" content="feed系统和火车票售卖系统是2个高访问高并发情况下具体很大挑战的系统。在低访问，低并发的情况下feed系统会变的非常简单，数据模型和业务功能都比较容易设计和实现，主要的挑战就剩如何面对层出不穷的敏感词和花样百出的广告语。相比之下，火车票售卖系统在低并发时也很有趣，假设我是12306的架构师，我会如何设计12306那。
-
-数据模型  
-
-先将系统进行拆分，独立成用户，车票，下单3个系统，每个系统内">
+数据模型先将系统进行拆分，独立成用户，车票，下单3个系统，每个系统内部封闭成多">
 <meta property="og:type" content="article">
 <meta property="og:title" content="我设计的12306">
 <meta property="og:url" content="http://minotaursu.com/2015/04/13/我设计的12306/index.html">
 <meta property="og:site_name" content="Minotaur story">
 <meta property="og:description" content="feed系统和火车票售卖系统是2个高访问高并发情况下具体很大挑战的系统。在低访问，低并发的情况下feed系统会变的非常简单，数据模型和业务功能都比较容易设计和实现，主要的挑战就剩如何面对层出不穷的敏感词和花样百出的广告语。相比之下，火车票售卖系统在低并发时也很有趣，假设我是12306的架构师，我会如何设计12306那。
-
-数据模型  
-
-先将系统进行拆分，独立成用户，车票，下单3个系统，每个系统内">
+数据模型先将系统进行拆分，独立成用户，车票，下单3个系统，每个系统内部封闭成多">
 <meta property="og:image" content="http://hexo-tuchuan.qiniudn.com/tickets.jpg">
-<meta property="og:updated_time" content="2015-07-08T06:47:51.000Z">
+<meta property="og:updated_time" content="2017-02-23T03:56:44.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="我设计的12306">
 <meta name="twitter:description" content="feed系统和火车票售卖系统是2个高访问高并发情况下具体很大挑战的系统。在低访问，低并发的情况下feed系统会变的非常简单，数据模型和业务功能都比较容易设计和实现，主要的挑战就剩如何面对层出不穷的敏感词和花样百出的广告语。相比之下，火车票售卖系统在低并发时也很有趣，假设我是12306的架构师，我会如何设计12306那。
-
-数据模型  
-
-先将系统进行拆分，独立成用户，车票，下单3个系统，每个系统内">
+数据模型先将系统进行拆分，独立成用户，车票，下单3个系统，每个系统内部封闭成多">
   
   
-    <link rel="icon" href="css/images/favicon.ico">
+    <link rel="icon" href="/css/images/favicon.ico">
   
   
- <link href='//fonts.useso.com/css?family=Open+Sans:400italic,400,600' rel='stylesheet' type='text/css'>
- <link href="//fonts.useso.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
-
 
   <link rel="stylesheet" href="/css/style.css" type="text/css">
   <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css" type="text/css">
@@ -103,7 +91,7 @@
         <span>posts</span>
       </div>
       <div class="article-info-block">
-        28
+        25
         <span>tags</span>
       </div>
     </div>
@@ -162,37 +150,25 @@
       
                 
         <p>feed系统和火车票售卖系统是2个高访问高并发情况下具体很大挑战的系统。<br>在低访问，低并发的情况下feed系统会变的非常简单，数据模型和业务功能都比较容易设计和实现，主要的挑战就剩如何面对层出不穷的敏感词和花样百出的广告语。相比之下，火车票售卖系统在低并发时也很有趣，假设我是12306的架构师，我会如何设计12306那。</p>
-<blockquote>
-<p>数据模型  </p>
-</blockquote>
-<p>先将系统进行拆分，独立成用户，车票，下单3个系统，每个系统内部封闭成多个服务，运行在独立的集群上面。这里只对车票系统进行数据模型设计。</p>
+<h2 id="数据模型">数据模型</h2><p>先将系统进行拆分，独立成用户，车票，下单3个系统，每个系统内部封闭成多个服务，运行在独立的集群上面。这里只对车票系统进行数据模型设计。</p>
 <p>先上ER图 <img src="http://hexo-tuchuan.qiniudn.com/tickets.jpg" alt="数据模型"></p>
 <p>数据分成动静2部分，车次，站点，座位的数据都是静态的基本不会变，可以通过运营系统提前进行录入生成；车票则根据以上三张表每天动态生成，每条车票记录一个车次上的一个座位号，初始化的始发站，终点站为该车次的始发站和终点站，数据在下单时进行更新。确定了数据模型后进行数据库的垂直和水平拆分，首先按照车次进行分库，将不同的车次hash到几个数据库中，减少每个数据库的负载；然后车票表按天拆分，提前生成3个月的车票表，每张车票表只存储当天发车的车票。</p>
-<blockquote>
-<p>用例  </p>
-</blockquote>
-<ul>
+<h2 id="用例">用例</h2><ul>
 <li>case1：查询<br>假设有一列从北京到深圳的火车D911，途经共20站。用户查询北京到杭州的列车，从cache中取出符合用户查询条件的车次（车次类型，始发站，终点站，始发时间，到站时间），按照车次从cache中取出北京和杭州的站点id和站序，北京站序为0，杭州站序为11。车票表中用<br>‘始发站序&lt;=0 and 终点站序&gt;=11 and 车次=D911 group by 座位类型’<br>的查询条件即可得到每种座位的剩余票数，可以将查询的结果做一个10s的缓存，如果前端展示的不是具体的剩余票量，而是有无票，可以使用一个更长时间的缓存，缓存的失效由服务端控制。</li>
 <li>case2：车票分拆<br>假设有一列从北京到深圳的火车D911，用户购买了一张从北京到杭州的车票，按照规则优先级随机取出一张车票，车票数据为 北京-深圳，始发站序0，终点站序20，将该车票状态置为无效，插入一张数据为杭州-深圳，始发站序11，终点站序20的车票，向下单系统发起请求，写入一张北京-杭州的订单。</li>
 <li>case3：车票合并<br>假设有一列从北京到深圳的火车D911，用户预订了北京-杭州的车票，从下单系统收到该订单失败或者超时或者退票的消息，取出其中和车票相关的信息，车次D911，北京-杭州，始发站序0，终点站序11，和车票表中该车次该座位的数据进行关联，合并数据，重新生成一条北京-深圳的车票。</li>
 </ul>
-<blockquote>
-<p>队列·流控·异步·无锁实现  </p>
-</blockquote>
-<p>系统的抗压能力和是吞吐量成正比的，这也就是为什么静态页面可以支持超高的QPS，查询的性能优化也比较容易，事务处理的性能提升最困难，系统处理时会保持tcp链接，占用系统资源，最终导致系统的崩溃，响应时间越快，资源的占用时间越短，吞吐能力也就越强，系统的可用性也就越高。<br>在某宝某猫做话费充值系统的思路完全可以用来做火车售票系统，将下单请求持久化，系统间通过消息解耦，通过多线程队列异步处理请求。具体的实现可以在收到下单购票请求后持久化，返回给用户一个排队中的提示(1-x分钟处理完成)，按照车次放到不同的队列中进行排队(期间可以做过滤/去重/合并处理），系统从队列中取数据进行处理。最终一致性就可以满足业务需求的地方，服务尽量减少事务和锁的使用，提高并发处理能力。</p>
-<blockquote>
-<p>降级  </p>
-</blockquote>
-<p>为啥要把降级单独拉出来说，我觉得本质上讲降级并不是由于架构设计上的充分考虑带来的可用性和伸缩性的提高，而是牺牲一部分的用户体验换来的系统的可用性，是对峰值事件的应对策略。基本实现就是在系统埋好各种开关，可以由人工控制也可以由系统触发，保证最基本的核心功能可用，其他的非核心功能和部分用户体验可以暂时舍弃。</p>
+<h2 id="队列·流控·异步·无锁实现">队列·流控·异步·无锁实现</h2><p>系统的抗压能力和是吞吐量成正比的，这也就是为什么静态页面可以支持超高的QPS，查询的性能优化也比较容易，事务处理的性能提升最困难，系统处理时会保持tcp链接，占用系统资源，最终导致系统的崩溃，响应时间越快，资源的占用时间越短，吞吐能力也就越强，系统的可用性也就越高。<br>在某宝某猫做话费充值系统的思路完全可以用来做火车售票系统，将下单请求持久化，系统间通过消息解耦，通过多线程队列异步处理请求。具体的实现可以在收到下单购票请求后持久化，返回给用户一个排队中的提示(1-x分钟处理完成)，按照车次放到不同的队列中进行排队(期间可以做过滤/去重/合并处理），系统从队列中取数据进行处理。最终一致性就可以满足业务需求的地方，服务尽量减少事务和锁的使用，提高并发处理能力。</p>
+<h2 id="降级">降级</h2><p>为啥要把降级单独拉出来说，我觉得本质上讲降级并不是由于架构设计上的充分考虑带来的可用性和伸缩性的提高，而是牺牲一部分的用户体验换来的系统的可用性，是对峰值事件的应对策略。基本实现就是在系统埋好各种开关，可以由人工控制也可以由系统触发，保证最基本的核心功能可用，其他的非核心功能和部分用户体验可以暂时舍弃。</p>
 <p>数据模型和业务功能就是这样，不论实现的多扭曲基本上大家都可以做出来，功能实现之后无bug是一个挑战，能够满足未来变化是一个挑战，在某个量级之后依然可用又是一个挑战。</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2015/04/13/我设计的12306/" data-id="citfkvrwi000d3yscps07mhzz" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2015/04/13/我设计的12306/" data-id="cizhuvuwq000kimfyqzg1u73z" class="article-share-link">Share</a>
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/分布式/">分布式</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/开发/">开发</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/码农/">码农</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/缓存/">缓存</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/锁/">锁</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/分布式/">分布式</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/开发/">开发</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/缓存/">缓存</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/锁/">锁</a></li></ul>
 
     </footer>
   </div>
@@ -329,7 +305,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">tag cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/2014/" style="font-size: 10px;">2014</a> <a href="/tags/ACID/" style="font-size: 10px;">ACID</a> <a href="/tags/AOP/" style="font-size: 10px;">AOP</a> <a href="/tags/CAP/" style="font-size: 10px;">CAP</a> <a href="/tags/annotation/" style="font-size: 10px;">annotation</a> <a href="/tags/cache/" style="font-size: 10px;">cache</a> <a href="/tags/git/" style="font-size: 12.5px;">git</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/netty/" style="font-size: 12.5px;">netty</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/p4p/" style="font-size: 10px;">p4p</a> <a href="/tags/quartz/" style="font-size: 10px;">quartz</a> <a href="/tags/reactor/" style="font-size: 10px;">reactor</a> <a href="/tags/spring/" style="font-size: 10px;">spring</a> <a href="/tags/tips/" style="font-size: 10px;">tips</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/分布式/" style="font-size: 12.5px;">分布式</a> <a href="/tags/工作/" style="font-size: 15px;">工作</a> <a href="/tags/并发/" style="font-size: 15px;">并发</a> <a href="/tags/广告/" style="font-size: 10px;">广告</a> <a href="/tags/开发/" style="font-size: 17.5px;">开发</a> <a href="/tags/码农/" style="font-size: 12.5px;">码农</a> <a href="/tags/缓存/" style="font-size: 12.5px;">缓存</a> <a href="/tags/调度/" style="font-size: 10px;">调度</a> <a href="/tags/锁/" style="font-size: 12.5px;">锁</a> <a href="/tags/阿里/" style="font-size: 10px;">阿里</a>
+      <a href="/tags/ACID/" style="font-size: 10px;">ACID</a> <a href="/tags/AOP/" style="font-size: 10px;">AOP</a> <a href="/tags/CAP/" style="font-size: 10px;">CAP</a> <a href="/tags/annotation/" style="font-size: 10px;">annotation</a> <a href="/tags/git/" style="font-size: 12.5px;">git</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/netty/" style="font-size: 12.5px;">netty</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/quartz/" style="font-size: 10px;">quartz</a> <a href="/tags/reactor/" style="font-size: 10px;">reactor</a> <a href="/tags/spring/" style="font-size: 10px;">spring</a> <a href="/tags/tips/" style="font-size: 10px;">tips</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/分布式/" style="font-size: 12.5px;">分布式</a> <a href="/tags/工作/" style="font-size: 15px;">工作</a> <a href="/tags/并发/" style="font-size: 15px;">并发</a> <a href="/tags/开发/" style="font-size: 17.5px;">开发</a> <a href="/tags/缓存/" style="font-size: 15px;">缓存</a> <a href="/tags/职业规划/" style="font-size: 10px;">职业规划</a> <a href="/tags/调度/" style="font-size: 10px;">调度</a> <a href="/tags/锁/" style="font-size: 12.5px;">锁</a> <a href="/tags/阿里/" style="font-size: 12.5px;">阿里</a>
     </div>
   </div>
 
@@ -342,7 +318,7 @@
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2016 minotaur<br>
+      &copy; 2017 minotaur<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="https://github.com/minotaursu/hexo-theme-icarus">icarus</a>.
       
 <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1256401841'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s11.cnzz.com/z_stat.php%3Fid%3D1256401841%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
@@ -357,13 +333,8 @@
 
 
 
- <script src="//ajax.useso.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 
 
-
-
-  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
 
 
 <script src="/js/script.js" type="text/javascript"></script>

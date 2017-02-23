@@ -13,18 +13,15 @@
 <meta property="og:site_name" content="Minotaur story">
 <meta property="og:description" content="编写的代码能否在线上持续的提供稳定可靠的服务是区分普通程序员，文艺程序员，2B程序员的重要标准之一。持续的提供稳定可靠的服务说起来简单，实际影响的因素有很多，数据的量级，请求的峰值，并发的影响，架构的设计，系统的复杂度，外部依赖，线上的运维，单测和CR的执行，这些都一定程度影响着系统能否持续的提供稳定可靠的服务。和所有的工程类似，软件工程的质量也不是由单一因素就能决定的，这里我们不谈这些因素的影响">
 <meta property="og:image" content="http://hexo-tuchuan.qiniudn.com/towers.jpg?imageView/1/w/670/h/400">
-<meta property="og:updated_time" content="2016-05-25T03:39:48.000Z">
+<meta property="og:updated_time" content="2017-02-23T03:43:16.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="构建可靠的系统">
 <meta name="twitter:description" content="编写的代码能否在线上持续的提供稳定可靠的服务是区分普通程序员，文艺程序员，2B程序员的重要标准之一。持续的提供稳定可靠的服务说起来简单，实际影响的因素有很多，数据的量级，请求的峰值，并发的影响，架构的设计，系统的复杂度，外部依赖，线上的运维，单测和CR的执行，这些都一定程度影响着系统能否持续的提供稳定可靠的服务。和所有的工程类似，软件工程的质量也不是由单一因素就能决定的，这里我们不谈这些因素的影响">
   
   
-    <link rel="icon" href="css/images/favicon.ico">
+    <link rel="icon" href="/css/images/favicon.ico">
   
   
- <link href='//fonts.useso.com/css?family=Open+Sans:400italic,400,600' rel='stylesheet' type='text/css'>
- <link href="//fonts.useso.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
-
 
   <link rel="stylesheet" href="/css/style.css" type="text/css">
   <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css" type="text/css">
@@ -91,7 +88,7 @@
         <span>posts</span>
       </div>
       <div class="article-info-block">
-        28
+        25
         <span>tags</span>
       </div>
     </div>
@@ -150,22 +147,10 @@
       
                 
         <p>编写的代码能否在线上持续的提供稳定可靠的服务是区分普通程序员，文艺程序员，2B程序员的重要标准之一。持续的提供稳定可靠的服务说起来简单，实际影响的因素有很多，数据的量级，请求的峰值，并发的影响，架构的设计，系统的复杂度，外部依赖，线上的运维，单测和CR的执行，这些都一定程度影响着系统能否持续的提供稳定可靠的服务。和所有的工程类似，软件工程的质量也不是由单一因素就能决定的，这里我们不谈这些因素的影响，只站在开发者的角度说一下如何构造可靠的系统，在可控的范围内实现一个能够提供稳定可靠服务的系统。软件有风险，开发需谨慎，一家之言仅供参考。</p>
-<blockquote>
-<p>区分可靠和不可靠的操作</p>
-</blockquote>
-<p>区分可靠和不可靠的操作，是编写可靠代码的基本要求。只有理解了什么是可靠与不可靠才能做出正确的应对，使可靠的代码简洁，不可靠的代码健壮，例如从缓存中获取数据，更新数据库，这些就是不可靠的操作，可能因为网络，软件，硬件等各种原因失败，代码需要根据不同的情况记录异常或者进行重试等操作，因为更新数据库可能失败，需要在有一致性要求的情况加上事务。除了第三方不可靠之外，代码在不同的环境也可能是不可靠的，例如单线程安全的代码在多线程可能就是不可靠的，串行访问可靠的代码在并发时可能就是不可靠的，单机可靠的代码在分布式环境可能就是不可靠的，小数据量时可靠的代码在数据量变大时可能就是不可靠的。知道了遇到的是老虎还是Hello Kitty，才知道是要逃还是微笑。</p>
-<blockquote>
-<p>快速失败，抛出异常</p>
-</blockquote>
-<p>fail fast做为一个设计开发原则往往和我们的直觉背道而驰，为了系统的健壮性我们往往将错误自动处理掉，希望系统进行运行下去，减少错误的产生。其实这种做法往往会滋生出隐藏很深的bug，编写很多magic code，导致维护代码和查找错误都很困难。快速失败的原则让错误尽早被发现，避免导致更大的错误，有人觉得程序有很多assert语句和抛出异常很不安全，事实上fail fast不会导致系统的crash，反而因为出现什么bug和bug在哪里都一目了然增加了系统的健壮性，fail fast就像创业一样快速的试错，如果发现方向不可行就赶紧打住避免更大的损失。比较典型的fail fast使用就是接口入参时的各种assert和调用第三方时的超时设置，这样即使第三方出现故障也不会导致线程打满拖垮我们的系统。</p>
-<blockquote>
-<p>兜底与降级</p>
-</blockquote>
-<p>提到了快速失败就不能不说兜底，快速失败是为了尽快的发现错误，避免错误的隐藏和扩大。兜底是为了错误容忍，避免因为非核心流程的失败导致整体功能的不可用。例如我们在获取商品详情时，不能因为获取商品评价信息失败就导致整个商品详情失败；获取某些配置信息时本地也要有一份兜底配置，避免因为配置信息获取不到导致核心业务的失败。如果说兜底是在错误发生时的被动防御，那么降级就是对错误的主动预防了，同样以商品详情为例，在某次活动期间流量暴增，那么可以主动放弃获取商品评价信息，展示商品是否有库存代替具体的库存数量，减小服务器的鸭梨，加快响应速度。</p>
-<blockquote>
-<p>良好的api设计</p>
-</blockquote>
-<p>设计一个良好的api从来都不是件容易的事情，设计一个良好的RPC调用的api就更加困难。假设有一个通过商品id获取商品详情的需求。<br>最开始我们的api可能是这样的</p>
+<h2 id="区分可靠和不可靠的操作">区分可靠和不可靠的操作</h2><p>区分可靠和不可靠的操作，是编写可靠代码的基本要求。只有理解了什么是可靠与不可靠才能做出正确的应对，使可靠的代码简洁，不可靠的代码健壮，例如从缓存中获取数据，更新数据库，这些就是不可靠的操作，可能因为网络，软件，硬件等各种原因失败，代码需要根据不同的情况记录异常或者进行重试等操作，因为更新数据库可能失败，需要在有一致性要求的情况加上事务。除了第三方不可靠之外，代码在不同的环境也可能是不可靠的，例如单线程安全的代码在多线程可能就是不可靠的，串行访问可靠的代码在并发时可能就是不可靠的，单机可靠的代码在分布式环境可能就是不可靠的，小数据量时可靠的代码在数据量变大时可能就是不可靠的。知道了遇到的是老虎还是Hello Kitty，才知道是要逃还是微笑。</p>
+<h2 id="快速失败，抛出异常">快速失败，抛出异常</h2><p>fail fast做为一个设计开发原则往往和我们的直觉背道而驰，为了系统的健壮性我们往往将错误自动处理掉，希望系统进行运行下去，减少错误的产生。其实这种做法往往会滋生出隐藏很深的bug，编写很多magic code，导致维护代码和查找错误都很困难。快速失败的原则让错误尽早被发现，避免导致更大的错误，有人觉得程序有很多assert语句和抛出异常很不安全，事实上fail fast不会导致系统的crash，反而因为出现什么bug和bug在哪里都一目了然增加了系统的健壮性，fail fast就像创业一样快速的试错，如果发现方向不可行就赶紧打住避免更大的损失。比较典型的fail fast使用就是接口入参时的各种assert和调用第三方时的超时设置，这样即使第三方出现故障也不会导致线程打满拖垮我们的系统。</p>
+<h2 id="兜底与降级">兜底与降级</h2><p>提到了快速失败就不能不说兜底，快速失败是为了尽快的发现错误，避免错误的隐藏和扩大。兜底是为了错误容忍，避免因为非核心流程的失败导致整体功能的不可用。例如我们在获取商品详情时，不能因为获取商品评价信息失败就导致整个商品详情失败；获取某些配置信息时本地也要有一份兜底配置，避免因为配置信息获取不到导致核心业务的失败。如果说兜底是在错误发生时的被动防御，那么降级就是对错误的主动预防了，同样以商品详情为例，在某次活动期间流量暴增，那么可以主动放弃获取商品评价信息，展示商品是否有库存代替具体的库存数量，减小服务器的鸭梨，加快响应速度。</p>
+<h2 id="良好的api设计">良好的api设计</h2><p>设计一个良好的api从来都不是件容易的事情，设计一个良好的RPC调用的api就更加困难。假设有一个通过商品id获取商品详情的需求。<br>最开始我们的api可能是这样的</p>
 <figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Item <span class="function"><span class="title">getItemById</span><span class="params">(Long id)</span></span></span><br></pre></td></tr></table></figure>
 <p>因为是RPC调用，当返回是null的时候调用方懵逼了，这啥情况，是出错了？是超时？是没有商品？，于是对返回的对象进行一次封装，api变成介样</p>
 <figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RpcResult&lt;Item&gt; <span class="function"><span class="title">getItemById</span><span class="params">(Long id)</span></span></span><br></pre></td></tr></table></figure>
@@ -180,24 +165,15 @@
 <li>api的命名和注释要规范，毕竟调用方不清楚实现细节，能够直观看到就是api和注释。</li>
 </ol>
 <p>同时作为调用方也要对接口进行wrapper，解决接口不规范的问题，隔离提供方api升级变更的影响。</p>
-<blockquote>
-<p>避免单点</p>
-</blockquote>
-<p>系统不是只运行一次，人生也不是赌博，不要总想着All in。一般对于无状态的就采用多活方案，对于任务调度这种只有一个能运行的可以考虑redis，zookeeper做锁控制，某些系统也会采用一台服务器运行，一台standby的方案，通过心跳检查的方式发现运行的主机挂掉后拉起备机的方案。</p>
-<blockquote>
-<p>做好提前量</p>
-</blockquote>
-<p>考虑到业务的发展，流量爆发的突然性，业界有着系统架构支持10倍增长，系统设计支持5倍增长，系统实现支持2倍增长的说法。数据存储，服务规划这些改动比较麻烦的事情最好在设计之初的考虑清楚，随着业务的发展也要<br>做好提前量，不要等到服务不可用了才想到堆机器。</p>
-<blockquote>
-<p>预热与发布过程</p>
-</blockquote>
-<p>除了设计和实现时遵循良好的原则规范，平滑发布也是需要考虑的一点，发布过程的兼容，稳定，可回滚都是在开发之时就要考虑清楚的。除了发布过程之外，还需要考虑发布后活动前的预热，需要通过预热请求提高缓存的命中率，保证热点数据都在缓存中，系统没有经过预热，大促活动来临之时请求瞬间就击穿了空空如也的缓存直接击垮了数据库。</p>
+<h2 id="避免单点">避免单点</h2><p>系统不是只运行一次，人生也不是赌博，不要总想着All in。一般对于无状态的就采用多活方案，对于任务调度这种只有一个能运行的可以考虑redis，zookeeper做锁控制，某些系统也会采用一台服务器运行，一台standby的方案，通过心跳检查的方式发现运行的主机挂掉后拉起备机的方案。</p>
+<h2 id="做好提前量">做好提前量</h2><p>考虑到业务的发展，流量爆发的突然性，业界有着系统架构支持10倍增长，系统设计支持5倍增长，系统实现支持2倍增长的说法。数据存储，服务规划这些改动比较麻烦的事情最好在设计之初的考虑清楚，随着业务的发展也要<br>做好提前量，不要等到服务不可用了才想到堆机器。</p>
+<h2 id="预热与发布过程">预热与发布过程</h2><p>除了设计和实现时遵循良好的原则规范，平滑发布也是需要考虑的一点，发布过程的兼容，稳定，可回滚都是在开发之时就要考虑清楚的。除了发布过程之外，还需要考虑发布后活动前的预热，需要通过预热请求提高缓存的命中率，保证热点数据都在缓存中，系统没有经过预热，大促活动来临之时请求瞬间就击穿了空空如也的缓存直接击垮了数据库。</p>
 <p><img src="http://hexo-tuchuan.qiniudn.com/towers.jpg?imageView/1/w/670/h/400" alt=""></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2016/05/25/构建可靠的系统/" data-id="citfkvrwe00073yscsx7kdvyr" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2016/05/25/构建可靠的系统/" data-id="cizhuvuwn000gimfyvuvpf6pi" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/工作/">工作</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/开发/">开发</a></li></ul>
@@ -337,7 +313,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">tag cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/2014/" style="font-size: 10px;">2014</a> <a href="/tags/ACID/" style="font-size: 10px;">ACID</a> <a href="/tags/AOP/" style="font-size: 10px;">AOP</a> <a href="/tags/CAP/" style="font-size: 10px;">CAP</a> <a href="/tags/annotation/" style="font-size: 10px;">annotation</a> <a href="/tags/cache/" style="font-size: 10px;">cache</a> <a href="/tags/git/" style="font-size: 12.5px;">git</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/netty/" style="font-size: 12.5px;">netty</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/p4p/" style="font-size: 10px;">p4p</a> <a href="/tags/quartz/" style="font-size: 10px;">quartz</a> <a href="/tags/reactor/" style="font-size: 10px;">reactor</a> <a href="/tags/spring/" style="font-size: 10px;">spring</a> <a href="/tags/tips/" style="font-size: 10px;">tips</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/分布式/" style="font-size: 12.5px;">分布式</a> <a href="/tags/工作/" style="font-size: 15px;">工作</a> <a href="/tags/并发/" style="font-size: 15px;">并发</a> <a href="/tags/广告/" style="font-size: 10px;">广告</a> <a href="/tags/开发/" style="font-size: 17.5px;">开发</a> <a href="/tags/码农/" style="font-size: 12.5px;">码农</a> <a href="/tags/缓存/" style="font-size: 12.5px;">缓存</a> <a href="/tags/调度/" style="font-size: 10px;">调度</a> <a href="/tags/锁/" style="font-size: 12.5px;">锁</a> <a href="/tags/阿里/" style="font-size: 10px;">阿里</a>
+      <a href="/tags/ACID/" style="font-size: 10px;">ACID</a> <a href="/tags/AOP/" style="font-size: 10px;">AOP</a> <a href="/tags/CAP/" style="font-size: 10px;">CAP</a> <a href="/tags/annotation/" style="font-size: 10px;">annotation</a> <a href="/tags/git/" style="font-size: 12.5px;">git</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/netty/" style="font-size: 12.5px;">netty</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/quartz/" style="font-size: 10px;">quartz</a> <a href="/tags/reactor/" style="font-size: 10px;">reactor</a> <a href="/tags/spring/" style="font-size: 10px;">spring</a> <a href="/tags/tips/" style="font-size: 10px;">tips</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/分布式/" style="font-size: 12.5px;">分布式</a> <a href="/tags/工作/" style="font-size: 15px;">工作</a> <a href="/tags/并发/" style="font-size: 15px;">并发</a> <a href="/tags/开发/" style="font-size: 17.5px;">开发</a> <a href="/tags/缓存/" style="font-size: 15px;">缓存</a> <a href="/tags/职业规划/" style="font-size: 10px;">职业规划</a> <a href="/tags/调度/" style="font-size: 10px;">调度</a> <a href="/tags/锁/" style="font-size: 12.5px;">锁</a> <a href="/tags/阿里/" style="font-size: 12.5px;">阿里</a>
     </div>
   </div>
 
@@ -350,7 +326,7 @@
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2016 minotaur<br>
+      &copy; 2017 minotaur<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="https://github.com/minotaursu/hexo-theme-icarus">icarus</a>.
       
 <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1256401841'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s11.cnzz.com/z_stat.php%3Fid%3D1256401841%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
@@ -365,13 +341,8 @@
 
 
 
- <script src="//ajax.useso.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 
 
-
-
-  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
 
 
 <script src="/js/script.js" type="text/javascript"></script>

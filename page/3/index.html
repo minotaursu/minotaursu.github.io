@@ -17,12 +17,9 @@
 <meta name="twitter:description" content="java developer life">
   
   
-    <link rel="icon" href="css/images/favicon.ico">
+    <link rel="icon" href="/css/images/favicon.ico">
   
   
- <link href='//fonts.useso.com/css?family=Open+Sans:400italic,400,600' rel='stylesheet' type='text/css'>
- <link href="//fonts.useso.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
-
 
   <link rel="stylesheet" href="/css/style.css" type="text/css">
   <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css" type="text/css">
@@ -89,7 +86,7 @@
         <span>posts</span>
       </div>
       <div class="article-info-block">
-        28
+        25
         <span>tags</span>
       </div>
     </div>
@@ -148,18 +145,9 @@
     <div class="article-entry" itemprop="articleBody">
       
                 
-        <blockquote>
-<p>CAS 是什么</p>
-</blockquote>
-<p>CAS是单词compare and set的缩写，意思是指在set之前先比较该值有没有变化，只有在没变的情况下才对其赋值。在java.util.concurrent包中，CAS提供了一种不同于互斥锁，读写锁的乐观锁机制，CAS和volatile一起构成了整个concurrent包的基石。</p>
-<blockquote>
-<p>CAS 原理</p>
-</blockquote>
-<p>我们都知道，在java语言之前，并发就已经广泛存在并在服务器领域得到了大量的应用。所以硬件厂商老早就在芯片中加入了大量直至并发操作的原语，从而在硬件层面提升效率。在intel的CPU中，使用cmpxchg指令,程序会根据当前处理器的类型来决定是否为cmpxchg指令添加lock前缀。如果程序是在多处理器上运行，就为cmpxchg指令加上lock前缀（lock cmpxchg）。反之，如果程序是在单处理器上运行，就省略lock前缀（单处理器自身会维护单处理器内的顺序一致性，不需要lock前缀提供的内存屏障效果）。<br>CAS 操作包含三个操作数 —— 内存位置（V）、预期原值（A）和新值(B)。 如果内存位置的值与预期原值相匹配，那么处理器会自动将该位置值更新为新值 。否则，处理器不做任何操作。无论哪种情况，它都会在 CAS 指令之前返回该 位置的值。（在 CAS 的一些特殊情况下将仅返回 CAS 是否成功，而不提取当前 值。）CAS 有效地说明了“我认为位置 V 应该包含值 A；如果包含该值，则将 B 放到这个位置；否则，不要更改该位置，只告诉我这个位置现在的值即可。”<br>通常将 CAS 用于同步的方式是从地址 V 读取值 A，执行多步计算来获得新 值 B，然后使用 CAS 将 V 的值从 A 改为 B。如果 V 处的值尚未同时更改，则 CAS 操作成功。<br>类似于 CAS 的指令允许算法执行读-修改-写操作，而无需害怕其他线程同时 修改变量，因为如果其他线程修改变量，那么 CAS 会检测它（并失败），算法可以对该操作重新计算。</p>
-<blockquote>
-<p>CAS缺点</p>
-</blockquote>
-<ol>
+        <h2 id="CAS_是什么">CAS 是什么</h2><p>CAS是单词compare and set的缩写，意思是指在set之前先比较该值有没有变化，只有在没变的情况下才对其赋值。在java.util.concurrent包中，CAS提供了一种不同于互斥锁，读写锁的乐观锁机制，CAS和volatile一起构成了整个concurrent包的基石。</p>
+<h2 id="CAS_原理">CAS 原理</h2><p>我们都知道，在java语言之前，并发就已经广泛存在并在服务器领域得到了大量的应用。所以硬件厂商老早就在芯片中加入了大量直至并发操作的原语，从而在硬件层面提升效率。在intel的CPU中，使用cmpxchg指令,程序会根据当前处理器的类型来决定是否为cmpxchg指令添加lock前缀。如果程序是在多处理器上运行，就为cmpxchg指令加上lock前缀（lock cmpxchg）。反之，如果程序是在单处理器上运行，就省略lock前缀（单处理器自身会维护单处理器内的顺序一致性，不需要lock前缀提供的内存屏障效果）。<br>CAS 操作包含三个操作数 —— 内存位置（V）、预期原值（A）和新值(B)。 如果内存位置的值与预期原值相匹配，那么处理器会自动将该位置值更新为新值 。否则，处理器不做任何操作。无论哪种情况，它都会在 CAS 指令之前返回该 位置的值。（在 CAS 的一些特殊情况下将仅返回 CAS 是否成功，而不提取当前 值。）CAS 有效地说明了“我认为位置 V 应该包含值 A；如果包含该值，则将 B 放到这个位置；否则，不要更改该位置，只告诉我这个位置现在的值即可。”<br>通常将 CAS 用于同步的方式是从地址 V 读取值 A，执行多步计算来获得新 值 B，然后使用 CAS 将 V 的值从 A 改为 B。如果 V 处的值尚未同时更改，则 CAS 操作成功。<br>类似于 CAS 的指令允许算法执行读-修改-写操作，而无需害怕其他线程同时 修改变量，因为如果其他线程修改变量，那么 CAS 会检测它（并失败），算法可以对该操作重新计算。</p>
+<h2 id="CAS缺点">CAS缺点</h2><ol>
 <li>ABA问题<br>因为CAS需要在操作值的时候检查下值有没有发生变化，如果没有发生变化则更新，但是如果一个值原来是A，变成了B，又变成了A，那么使用CAS进行检查时会发现它的值没有发生变化，但是实际上却变化了。ABA问题的解决思路就是使用版本号。在变量前面追加上版本号，每次变量更新的时候把版本号加一，那么A－B－A 就会变成1A-2B－3A。</li>
 <li>CPU开销大<br>自旋CAS如果长时间不成功，会给CPU带来非常大的执行开销。</li>
 </ol>
@@ -167,7 +155,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2014/11/05/CAS/" data-id="citfkvrxo002d3ysc0dg2ldkt" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2014/11/05/CAS/" data-id="cizhuvuxr002aimfy82k6x40v" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/并发/">并发</a></li></ul>
@@ -211,10 +199,7 @@
       
                 
         <p>在jdk5中，新增了Lock接口来提供一种比synchronized更灵活的锁机制。</p>
-<blockquote>
-<p>ReentrantLock</p>
-</blockquote>
-<p>ReentrantLock是被最广泛使用来替代synchronized的Lock接口实现，ReentrantLock的代码使用非常简单，只要记得将unlock写在finally方法中就可以了。<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">Lock</span> <span class="keyword">lock</span> = new ReentrantLock();</span></span><br><span class="line"><span class="operator"><span class="keyword">lock</span>.<span class="keyword">lock</span>();</span></span><br><span class="line">try &#123;</span><br><span class="line">&#125; finally &#123;</span><br><span class="line">	<span class="operator"><span class="keyword">lock</span>.<span class="keyword">unlock</span>();</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="ReentrantLock">ReentrantLock</h2><p>ReentrantLock是被最广泛使用来替代synchronized的Lock接口实现，ReentrantLock的代码使用非常简单，只要记得将unlock写在finally方法中就可以了。<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">Lock</span> <span class="keyword">lock</span> = new ReentrantLock();</span></span><br><span class="line"><span class="operator"><span class="keyword">lock</span>.<span class="keyword">lock</span>();</span></span><br><span class="line">try &#123;</span><br><span class="line">&#125; finally &#123;</span><br><span class="line">	<span class="operator"><span class="keyword">lock</span>.<span class="keyword">unlock</span>();</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>相比synchronied，ReentrantLock具有以下特性：</p>
 <ul>
 <li>非阻塞的tryLock，可以进行锁的轮询。</li>
@@ -222,10 +207,7 @@
 <li>有超时时间的tryLock</li>
 </ul>
 <p>ReentrantLock的默认构造函数是非公平的，公平的锁机制会对锁的请求进行排队，按照FIFO的原则进行锁的获取，造成JVM对于等待中的线程调度次序和操作系统对线程的调度不匹配，所以公平锁的性能要小于非公平锁的性能；在大多数场景下我们都可以使用ReentrantLock的默认构造函数，而在某些需要避免‘饥饿’发生的场景下，我们可以使用ReentrantLock(true)。</p>
-<blockquote>
-<p>ReentrantReadWriteLock</p>
-</blockquote>
-<p>ReentrantReadWriteLock实现了ReadWriteLock接口，提供了一对锁：readLock与writeLock。读锁可以由多个线程同时保持，读锁则是独占的。比较适合读多写少高并发的场景，相比于ReentrantLock，ReentrantReadWriteLock的使用场景并不广泛，性能也要差一点。</p>
+<h2 id="ReentrantReadWriteLock">ReentrantReadWriteLock</h2><p>ReentrantReadWriteLock实现了ReadWriteLock接口，提供了一对锁：readLock与writeLock。读锁可以由多个线程同时保持，读锁则是独占的。比较适合读多写少高并发的场景，相比于ReentrantLock，ReentrantReadWriteLock的使用场景并不广泛，性能也要差一点。</p>
 <p>ReadWriteLock的互斥性：</p>
 <ul>
 <li>读读不互斥</li>
@@ -236,7 +218,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2014/11/03/java-Lock/" data-id="citfkvrxb00213ysc2230pbum" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2014/11/03/java-Lock/" data-id="cizhuvuxj001yimfy1fjsmiq1" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/并发/">并发</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/锁/">锁</a></li></ul>
@@ -306,7 +288,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2014/10/27/jdk7jdk8新特性概述/" data-id="citfkvrx9001y3yscrn0k4b8o" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2014/10/27/jdk7jdk8新特性概述/" data-id="cizhuvuxd001vimfymqgx0oni" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/jdk/">jdk</a></li></ul>
@@ -351,24 +333,15 @@
                 
         <p>最近看了一段涉及到事务处理的代码，正好去年做过的一个项目也有强一致性的要求，当时做过比较长时间的调研，决定把学习到的知识都总结一遍加深记忆，也方便后续遇到事务处理问题时寻找解决方案。</p>
 <p>其实大多数互联网应用对事务性要求都不高，更多的挑战在于更好的性能和更高的可扩展性，只有少数涉及到账户和交易的系统才对事务和一致性有着强烈的要求。</p>
-<blockquote>
-<p>事务机制： ACID原则  </p>
-</blockquote>
-<p>当我们对2个及以上的数据实体进行写操作，这些数据存在依赖关系，需要保证同时成功或者失败的时候，我们就需要 <strong>原子性</strong> 操作。例如总账户和交易明细，他们是存在依赖关系的，如果更新了总账户，没有产生交易明细，就会出现不一致的状态。<br>    仅仅原子性还不能保证数据的一致性，原子性只能保证一起写成功/失败。例如在一个原子性更新交易明细成功之后，更新总账户之前，另一个写操作更新了总账户，就会导致总账户和交易明细的不一致，因此事务机制提供了 <strong>隔离性</strong> 来解决这个问题，如果隔离性存在问题，就会导致“脏读” 和 “幻读”。<br>    数据库采用锁机制实现隔离性。在事务开始时，数据库会对其加锁，直到整个事务完成之后才会释放锁，在隔离期间其他事务进行排队等待，退化成串行操作，数据库的TPS明显下降。<br>    在设计分布式事务时，为了保证性能，事务的执行时间越短越好，资源锁定时间越短越好，尽量使用无锁实现，牺牲 <strong>强一致性</strong> ，保证 <strong>高可用性</strong> 。</p>
-<blockquote>
-<p>基石： CAP原则  </p>
-</blockquote>
-<p>CAP原则对于分布式系统的意义就像牛顿三大定律对于经典物理学。</p>
+<h2 id="事务机制：_ACID原则">事务机制： ACID原则</h2><p>当我们对2个及以上的数据实体进行写操作，这些数据存在依赖关系，需要保证同时成功或者失败的时候，我们就需要 <strong>原子性</strong> 操作。例如总账户和交易明细，他们是存在依赖关系的，如果更新了总账户，没有产生交易明细，就会出现不一致的状态。<br>仅仅原子性还不能保证数据的一致性，原子性只能保证一起写成功/失败。例如在一个原子性更新交易明细成功之后，更新总账户之前，另一个写操作更新了总账户，就会导致总账户和交易明细的不一致，因此事务机制提供了 <strong>隔离性</strong> 来解决这个问题，如果隔离性存在问题，就会导致“脏读” 和 “幻读”。<br>数据库采用锁机制实现隔离性。在事务开始时，数据库会对其加锁，直到整个事务完成之后才会释放锁，在隔离期间其他事务进行排队等待，退化成串行操作，数据库的TPS明显下降。<br>在设计分布式事务时，为了保证性能，事务的执行时间越短越好，资源锁定时间越短越好，尽量使用无锁实现，牺牲 <strong>强一致性</strong> ，保证 <strong>高可用性</strong> 。</p>
+<h2 id="基石：_CAP原则">基石： CAP原则</h2><p>CAP原则对于分布式系统的意义就像牛顿三大定律对于经典物理学。</p>
 <ul>
 <li>Consistency：一致性要求读操作和读操作即时完成，不存在重叠，如果一个写操作成功，后续所有的读都必须能读到这个新的数据；如果写操作失败，后续的所有的读都不能返回这个新值。在实际的业务中，往往只要求 <strong>最终一致性</strong> ，当写入一个新值后，有可能读不出来，但在某个时间窗口后保证最终能够读出来。</li>
 <li>Availability：每一个非故障节点对于每一个请求都要做出响应。</li>
 <li>Partition tolerance：以实际效果而言，分区相当于对通信的时限要求。系统如果不能在时限内达成数据一致性，就意味着发生了分区的情况，必须就当前操作在C和A之间做出选择。(如果网络中不存在分区，客户端和服务端在同一环境中，通过事务可以保证一致性和可用性，满足CA，例如单点数据库)    </li>
 <li>由于CAP三者不能同时满足的特点，在分布式环境中系统间存在通信的特点，分区是必然存在的，因此往往只能在可用性和一致性间做权衡，而在实际情况中，对可用性的需求高于强一致性的需求,具体的实现也是向着AP发展，通过后续补偿机制满足最终一致性。  </li>
 </ul>
-<blockquote>
-<p>分布式事务实现：AP向  </p>
-</blockquote>
-<p>基本方向就是保证最终一致性，实现高可用性。使用 <strong>状态机</strong> 进行业务流程状态控制，先写入非基本数据，最后写入基本数据，如果一切成功，万事大吉；如果基本数据写失败，通过 <strong>补偿机制</strong> 实现非基本数据回滚。另外实现一个 <strong>检测系统</strong> 定期扫描事务写操作结果，应对网络中断，系统宕机等节点故障的情况。</p>
+<h2 id="分布式事务实现：AP向">分布式事务实现：AP向</h2><p>基本方向就是保证最终一致性，实现高可用性。使用 <strong>状态机</strong> 进行业务流程状态控制，先写入非基本数据，最后写入基本数据，如果一切成功，万事大吉；如果基本数据写失败，通过 <strong>补偿机制</strong> 实现非基本数据回滚。另外实现一个 <strong>检测系统</strong> 定期扫描事务写操作结果，应对网络中断，系统宕机等节点故障的情况。</p>
 <p>可以设想一个最简单的分布式事务场景，对于跨银行的转账操作，该操作涉及到调用两个异地的Service服务，一个是本地提供的取款服务，一个是目标银行提供的存款服务，该两个服务本身无状态且独立，构成一个完整的事务。对于事务的处理初步分析:  </p>
 <p><strong>事务补偿机制</strong><br>事务补偿即在事务链中的任何一个正向事务操作，都必须存在一个完全符合回滚规则的可逆事务。如果是一个完整的事务链，则必须事务链中的每一个业务服务或操作都有对应的可逆服务。对于Service服务本身无状态，也不容易实现前面讨论过的通过DTC或XA机制实现的跨应用和资源的事务管理，建立跨资源的事务上下文。因此也较难以实现真正的预提交和正式提交的分离。 </p>
 <p>在这种情况下以上面例子来说，首先调用取款服务，完全调用成功并返回，数据已经持久化。然后调用异地的存款服务，如果也调用成功，则本身无任何问题。如果调用失败，则需要调用本地注册的逆向服务（本地存款服务），如果本地存款服务调用失败，则必须考虑重试，如果约定重试次数仍然不成功，则必须log到完整的不一致信息。也可以是将本地存款服务作为消息发送到消息中间件，由消息中间件接管后续操作。 </p>
@@ -382,12 +355,12 @@
 <p><strong>关于是否可以补偿的问题</strong><br>在这里我们谈的是多个跨系统的业务服务组合成一个分布式事务，因此在对事务进行补偿的时候必须要考虑客户需要的是否一定是最终一致性。客户对中间阶段出现的不一致的承受度是如何的。 </p>
 <p>在上面的例子来看，如果采用事务补偿机制，基本可以是做到准实时的补偿，不会有太大的影响。而如果采用基于消息的最终一致性方式，则可能整个周期比较长，需要较长的时间才能给得到最终的一致性。比如周六转款，客户可能下周一才得到通知转账不成功而进行了回退，那么就必须要考虑客户是否能给忍受。 </p>
 <p>其次对于前面讨论，如果真正需要的是实时的一致性，那么即使采用事务补偿机制，也无法达到实时的一致性。即很可能在两个业务服务调用中间，客户前台业务操作对持久化的数据进行了其它额外的操作。在这种模式下，我们不得不考虑需要在数据库表增加业务状态锁的问题，即整个事务没有完整提交并成功前，第一个业务服务调用虽然持久化在数据库，但是仍然是一个中间状态，需要通过业务锁来标记，控制相关的业务操作和行为。但是在这种模式下无疑增加了整个分布式业务系统的复杂度。</p>
-<p>参考资料：<br><a href="http://wenku.baidu.com/view/be946bec0975f46527d3e104.html" target="_blank" rel="external">http://wenku.baidu.com/view/be946bec0975f46527d3e104.html</a><br><a href="http://coolshell.cn/articles/10910.html" target="_blank" rel="external">http://coolshell.cn/articles/10910.html</a><br><a href="http://zh.wikipedia.org/wiki/CAP%E5%AE%9A%E7%90%86" target="_blank" rel="external">http://zh.wikipedia.org/wiki/CAP%E5%AE%9A%E7%90%86</a>  </p>
+<p>参考资料：<br><a href="http://coolshell.cn/articles/10910.html" target="_blank" rel="external">http://coolshell.cn/articles/10910.html</a>  </p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2014/10/24/分布式事务处理总结/" data-id="citfkvrwr00113ysc2s8o9fhn" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2014/10/24/分布式事务处理总结/" data-id="cizhuvuwz000zimfykh6nroxb" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ACID/">ACID</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CAP/">CAP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/事务/">事务</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/分布式/">分布式</a></li></ul>
@@ -400,7 +373,7 @@
 
 
     
-      <article id="post-我在广告应用这三年" class="article article-type-post" itemscope itemprop="blogPost">
+      <article id="post-职业生涯的第一个三年" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
     
@@ -409,7 +382,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2014/07/07/我在广告应用这三年/">我在广告应用这三年</a>
+      <a class="article-title" href="/2014/07/07/职业生涯的第一个三年/">职业生涯的第一个三年</a>
     </h1>
   
 
@@ -417,7 +390,7 @@
           
   <div class="article-date">
     <i class="fa fa-calendar"></i>
-    <a href="/2014/07/07/我在广告应用这三年/">
+    <a href="/2014/07/07/职业生涯的第一个三年/">
       <time datetime="2014-07-07T07:22:22.000Z" itemprop="datePublished">2014-07-7</time>
     </a>
   </div>
@@ -441,10 +414,10 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2014/07/07/我在广告应用这三年/" data-id="citfkvrwk000m3yscsbera5xz" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2014/07/07/职业生涯的第一个三年/" data-id="cizhuvuvo0000imfytgtj2qdl" class="article-share-link">Share</a>
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/p4p/">p4p</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/工作/">工作</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/广告/">广告</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/开发/">开发</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/阿里/">阿里</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/工作/">工作</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/开发/">开发</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/职业规划/">职业规划</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/阿里/">阿里</a></li></ul>
 
     </footer>
   </div>
@@ -564,7 +537,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">tag cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/2014/" style="font-size: 10px;">2014</a> <a href="/tags/ACID/" style="font-size: 10px;">ACID</a> <a href="/tags/AOP/" style="font-size: 10px;">AOP</a> <a href="/tags/CAP/" style="font-size: 10px;">CAP</a> <a href="/tags/annotation/" style="font-size: 10px;">annotation</a> <a href="/tags/cache/" style="font-size: 10px;">cache</a> <a href="/tags/git/" style="font-size: 12.5px;">git</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/netty/" style="font-size: 12.5px;">netty</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/p4p/" style="font-size: 10px;">p4p</a> <a href="/tags/quartz/" style="font-size: 10px;">quartz</a> <a href="/tags/reactor/" style="font-size: 10px;">reactor</a> <a href="/tags/spring/" style="font-size: 10px;">spring</a> <a href="/tags/tips/" style="font-size: 10px;">tips</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/分布式/" style="font-size: 12.5px;">分布式</a> <a href="/tags/工作/" style="font-size: 15px;">工作</a> <a href="/tags/并发/" style="font-size: 15px;">并发</a> <a href="/tags/广告/" style="font-size: 10px;">广告</a> <a href="/tags/开发/" style="font-size: 17.5px;">开发</a> <a href="/tags/码农/" style="font-size: 12.5px;">码农</a> <a href="/tags/缓存/" style="font-size: 12.5px;">缓存</a> <a href="/tags/调度/" style="font-size: 10px;">调度</a> <a href="/tags/锁/" style="font-size: 12.5px;">锁</a> <a href="/tags/阿里/" style="font-size: 10px;">阿里</a>
+      <a href="/tags/ACID/" style="font-size: 10px;">ACID</a> <a href="/tags/AOP/" style="font-size: 10px;">AOP</a> <a href="/tags/CAP/" style="font-size: 10px;">CAP</a> <a href="/tags/annotation/" style="font-size: 10px;">annotation</a> <a href="/tags/git/" style="font-size: 12.5px;">git</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/netty/" style="font-size: 12.5px;">netty</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/quartz/" style="font-size: 10px;">quartz</a> <a href="/tags/reactor/" style="font-size: 10px;">reactor</a> <a href="/tags/spring/" style="font-size: 10px;">spring</a> <a href="/tags/tips/" style="font-size: 10px;">tips</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/分布式/" style="font-size: 12.5px;">分布式</a> <a href="/tags/工作/" style="font-size: 15px;">工作</a> <a href="/tags/并发/" style="font-size: 15px;">并发</a> <a href="/tags/开发/" style="font-size: 17.5px;">开发</a> <a href="/tags/缓存/" style="font-size: 15px;">缓存</a> <a href="/tags/职业规划/" style="font-size: 10px;">职业规划</a> <a href="/tags/调度/" style="font-size: 10px;">调度</a> <a href="/tags/锁/" style="font-size: 12.5px;">锁</a> <a href="/tags/阿里/" style="font-size: 12.5px;">阿里</a>
     </div>
   </div>
 
@@ -577,7 +550,7 @@
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2016 minotaur<br>
+      &copy; 2017 minotaur<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="https://github.com/minotaursu/hexo-theme-icarus">icarus</a>.
       
 <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1256401841'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s11.cnzz.com/z_stat.php%3Fid%3D1256401841%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
@@ -592,13 +565,8 @@
 
 
 
- <script src="//ajax.useso.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 
 
-
-
-  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
 
 
 <script src="/js/script.js" type="text/javascript"></script>
