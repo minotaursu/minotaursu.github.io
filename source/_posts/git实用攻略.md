@@ -3,13 +3,13 @@ date: 2014-07-01 16:03:36
 tags: git
 ---
 一直以来都是在mac的iterm2和windows的cygwin上通过命令行的方式使用git，今天决定整理下常用的git命令，作为简明实用的帮助手册，方便以后查找。
-##git 配置
+## git 配置
 1. 使用git config --global user.name/user.email 进行初始化配置
 2. 使用cat ~/.gitconfig 和 cat .git/config 查看存储的配置信息
 3. 配置[sshkey](https://help.github.com/articles/generating-ssh-keys) ，这样以后push就不再需要密码
 4. 对某个命令有疑惑，使用git help
 
-##git 基本命令 
+## git 基本命令 
 1. **git init**  
 本地生成git项目，会有一个.git的子目录产生
 2. **git clone**  
@@ -45,7 +45,6 @@ tags: git
 17. **git revert**  
 撤销某次commit
 
-##finally
+## finally
 复杂的操作和原理结构问题@**[git help](https://help.github.com/)**。
-
 
