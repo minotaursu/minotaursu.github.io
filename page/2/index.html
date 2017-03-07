@@ -82,11 +82,11 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        17
+        18
         <span>posts</span>
       </div>
       <div class="article-info-block">
-        24
+        26
         <span>tags</span>
       </div>
     </div>
@@ -115,6 +115,68 @@
 
       
       <section id="main">
+      <article id="post-小明的魔法调度框架之旅" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/12/12/小明的魔法调度框架之旅/">小明的魔法调度框架之旅</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2015/12/12/小明的魔法调度框架之旅/">
+      <time datetime="2015-12-12T04:01:24.000Z" itemprop="datePublished">2015-12-12</time>
+    </a>
+  </div>
+
+
+          
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <p><em>据说每个程序员上辈子都是法力高深的魔法师</em></p>
+<h2 id="crontab">crontab</h2><p>话说小明11年从新手村毕业，拿着一把等级为灰色的木剑就开始了打怪升级之路。小明发现怪并不好打，怪物都是在凌晨4点才出现的，好在小明在新手村的时候学会了一个叫crontab的静态魔法，该魔法虽然等级低但是不需要吟唱时间，小明将crontab附魔在自己的木剑上，木剑就可以每天凌晨4点定时去打怪了。</p>
+<h2 id="quartz">quartz</h2><p>虽然crontab这个静态魔法很NB，无奈小明的装备换的太频繁，每次更新装备都需要重新将crontab附魔到武器上才行；这个时候小明已经学会了一个叫quartz的中级魔法，相对不需要吟唱的crontab，quartz需要按照Job，JobDetail，Tigger，Scheduler的顺序进行吟唱才行，虽然过程是<br>复杂了一些，但是好处是显而易见的，魔法再也不需要和装备进行绑定，Scheduler是一个完全独立结界，Scheduler可以容纳多个JobDetail和Tigger,内部的固有魔法线程池可以并行调度多个任务。</p>
+<h2 id="quartz集群">quartz集群</h2><p>在使用了quartz这个中级魔法之后，小明轻松了很长一段时间，再也不必为换装备导致魔法失效而苦恼。在成为了一个合格的中级魔法师之后，学会了无限剑制这种BT魔法之后，小明决定向着中级副本进发，为了应付副本危险的环境，小明利用无限剑制将每个装备都附上了quartz这个魔法，现在问题来了，如果所有的quartz都发动，会产生魔法混乱现象，导致反噬；小明打开了《哈利波特》上面说需要使用魔法石进行魔法加持，例如红魔石mysql，绿魔石redis，蓝魔石zookeeper，只要魔石具有原子性锁操作机制就可以了，在红魔石mysql和quartz配合下，顺序的杀掉了怪物。</p>
+<h2 id="ttd/tbschedule">ttd/tbschedule</h2><p>在中级副本打怪升级一段时间后，小明购买了高级魔法ttd和tbschedule，相对于静态魔法crontab和中级魔法quartz，高级魔法的功能真是-碉堡了。</p>
+<ul>
+<li>支持剑系武器java，弓系武器shell等多种武器；</li>
+<li>支持对吟唱依赖，上一个魔法吟唱成功后才会出现下一个魔法；</li>
+<li>支持大规模魔法分拆，合并</li>
+<li>有着路由规则指定这种高级魔法；</li>
+<li>由蓝宝石zookeeper进行加持和魔法心跳检测，保证不会出现魔法阵的混乱；</li>
+<li>通过魔物netty进行大规模魔法阵的触发；</li>
+<li>通过魔法镜面可以看到魔法执行的效果，当遇到大boss导致魔法失效时还有魔法消息监控功能；</li>
+</ul>
+<h2 id="future">future</h2><p>在小明使用了购买的高级魔法TTD后，小明再也没有见过洛杉鸡凌晨4点的天空（其实是从来好么）。小明听说在山的那边海的那边有一群蓝精灵，他们快速又瞬移，他们筑墙又监禁，他们喽啰无敌生活在那绿色的大森林，他们亵渎溶火漩涡又结群……<br>不过小明并不惧怕，因为芝士就是力量。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://minotaursu.com/2015/12/12/小明的魔法调度框架之旅/" data-id="cizz2zc3u000xd6c438aor9mh" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/quartz/">quartz</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/调度/">调度</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
       <article id="post-git实用攻略二" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -170,7 +232,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2015/05/04/git实用攻略二/" data-id="cizi0e7p60023b1fyy7l3tgtk" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2015/05/04/git实用攻略二/" data-id="cizz2zc4h0029d6c4tas21k2p" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/git/">git</a></li></ul>
@@ -229,7 +291,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2015/04/13/我设计的12306/" data-id="cizi0e7oa000kb1fy2wqwwu13" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2015/04/13/我设计的12306/" data-id="cizz2zc3r000rd6c45sjhfi74" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/分布式/">分布式</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/开发/">开发</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/缓存/">缓存</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/锁/">锁</a></li></ul>
@@ -291,7 +353,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2015/01/09/缓存的使用/" data-id="cizi0e7nx0009b1fyu1s0rma0" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2015/01/09/缓存的使用/" data-id="cizz2zc370009d6c4qog3ptx3" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/并发/">并发</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/缓存/">缓存</a></li></ul>
@@ -351,69 +413,10 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2014/12/30/2014年终总结/" data-id="cizi0e7pd002bb1fydcdk1xfi" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2014/12/30/2014年终总结/" data-id="cizz2zc4s002hd6c4gcftvvme" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/工作/">工作</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/阿里/">阿里</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-jar包冲突与inode" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2014/12/24/jar包冲突与inode/">jar包冲突与inode</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2014/12/24/jar包冲突与inode/">
-      <time datetime="2014-12-24T06:20:40.000Z" itemprop="datePublished">2014-12-24</time>
-    </a>
-  </div>
-
-
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <h2 id="包冲突">包冲突</h2><p>几乎上点规模的java系统就会遇到jar冲突，不负责任的讲排除依赖成了每次发布上线前必做的工作。虽然问题的本质都是jar冲突，但是表现上却有很多不同，从NoSuchMethodError,ClassNotFoundException到field找不到,作用域错误；并且触发冲突条件也不相同，最好并且最常见的是在应用启动时抛出异常，比较恶心的是运行时是某些特殊的边界条件下抛出异常特别。<br>在某些领域，某些境界提出问题，发现问题比解决问题具有更高的价值，但应用开发显然不属于这种高端领域，对于一般的jar冲突我的做法如下。</p>
-<ol>
-<li>查看log中的异常堆栈信息，在idea中CTRL+N，一般会发现多个类。</li>
-<li>如果1搞不定，可以加入jvm参数-verbose:class，log里会打印出类的加载信息。</li>
-<li>确定jar包名，执行mvn dependency:tree&gt;tree.log。</li>
-<li>如果是lib中的包冲突就排除相应的jar。</li>
-<li>如果不能exclusion，声明一个路径最短，最靠前的dependency。告诉maven，畜生！用这个版本的jar。</li>
-<li>如果是容器||中间件的包和应用lib包冲突，就升级容器||中间件。</li>
-</ol>
-<h2 id="inode">inode</h2><p>在jar冲突中有一种情况就是日常是没问题的，生产环境存在冲突，甚至是生产环境中一部分机器存在冲突，这个是因为tomcat等容器的classLoader加载顺序是不排序的，依赖于底层文件系统的顺序，具体到*nix中就是inode的顺序，每个inode中保存了文件系统的一个文件对象的元信息存储，简单的将就是文件在扇区中的索引值。</p>
-<p>可以使用 ls -li 和 stat查看inode，鉴于安全等原因以免引起不必要的麻烦，就不截图了。</p>
-<h2 id="finally">finally</h2><p>实际上大部分的jar都是向后兼容的，如果maven能够按照最高版本依赖（其实也是有问题的），而不是最短路径依赖，相信这个问题会好很多。实际开发中，可以使用maven的依赖冲突检测插件进行事先排除；也可以在部署的lib中查找下进行事后处理；有些发布系统会提前告知本次发布相比与上次新增了那些jar，删除了那些jar，这是一个比较好的策略，毕竟更简单的方法具有更好的执行性。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2014/12/24/jar包冲突与inode/" data-id="cizi0e7p40020b1fytlwmov68" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/开发/">开发</a></li></ul>
 
     </footer>
   </div>
@@ -435,6 +438,23 @@
     <h3 class="widget-title">recents</h3>
     <div class="widget">
       <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/11/06/消息队列之简要设计/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"></p>
+              <p class="item-title"><a href="/2016/11/06/消息队列之简要设计/" class="title">消息队列之简要设计</a></p>
+              <p class="item-date"><time datetime="2016-11-06T02:03:36.000Z" itemprop="datePublished">2016-11-6</time></p>
+            </div>
+          </li>
         
           <li>
             
@@ -507,23 +527,6 @@
             </div>
           </li>
         
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2015/12/12/小明的魔法调度框架之旅/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"></p>
-              <p class="item-title"><a href="/2015/12/12/小明的魔法调度框架之旅/" class="title">小明的魔法调度框架之旅</a></p>
-              <p class="item-date"><time datetime="2015-12-12T04:01:24.000Z" itemprop="datePublished">2015-12-12</time></p>
-            </div>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -533,7 +536,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">tag cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/ACID/" style="font-size: 10px;">ACID</a> <a href="/tags/AOP/" style="font-size: 10px;">AOP</a> <a href="/tags/CAP/" style="font-size: 10px;">CAP</a> <a href="/tags/annotation/" style="font-size: 10px;">annotation</a> <a href="/tags/git/" style="font-size: 12.5px;">git</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/netty/" style="font-size: 12.5px;">netty</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/quartz/" style="font-size: 10px;">quartz</a> <a href="/tags/reactor/" style="font-size: 10px;">reactor</a> <a href="/tags/spring/" style="font-size: 10px;">spring</a> <a href="/tags/tips/" style="font-size: 10px;">tips</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/分布式/" style="font-size: 12.5px;">分布式</a> <a href="/tags/工作/" style="font-size: 15px;">工作</a> <a href="/tags/并发/" style="font-size: 15px;">并发</a> <a href="/tags/开发/" style="font-size: 17.5px;">开发</a> <a href="/tags/缓存/" style="font-size: 15px;">缓存</a> <a href="/tags/职业规划/" style="font-size: 10px;">职业规划</a> <a href="/tags/调度/" style="font-size: 10px;">调度</a> <a href="/tags/锁/" style="font-size: 12.5px;">锁</a> <a href="/tags/阿里/" style="font-size: 12.5px;">阿里</a>
+      <a href="/tags/ACID/" style="font-size: 10px;">ACID</a> <a href="/tags/AOP/" style="font-size: 10px;">AOP</a> <a href="/tags/CAP/" style="font-size: 10px;">CAP</a> <a href="/tags/annotation/" style="font-size: 10px;">annotation</a> <a href="/tags/git/" style="font-size: 12.5px;">git</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/netty/" style="font-size: 12.5px;">netty</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/quartz/" style="font-size: 10px;">quartz</a> <a href="/tags/reactor/" style="font-size: 10px;">reactor</a> <a href="/tags/spring/" style="font-size: 10px;">spring</a> <a href="/tags/tips/" style="font-size: 10px;">tips</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/分布式/" style="font-size: 15px;">分布式</a> <a href="/tags/工作/" style="font-size: 15px;">工作</a> <a href="/tags/并发/" style="font-size: 15px;">并发</a> <a href="/tags/开发/" style="font-size: 17.5px;">开发</a> <a href="/tags/消息队列/" style="font-size: 10px;">消息队列</a> <a href="/tags/缓存/" style="font-size: 15px;">缓存</a> <a href="/tags/职业规划/" style="font-size: 10px;">职业规划</a> <a href="/tags/调度/" style="font-size: 10px;">调度</a> <a href="/tags/软件开发/" style="font-size: 10px;">软件开发</a> <a href="/tags/锁/" style="font-size: 12.5px;">锁</a> <a href="/tags/阿里/" style="font-size: 12.5px;">阿里</a>
     </div>
   </div>
 
