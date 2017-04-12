@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://minotaursu.com/"/>
-  <updated>2017-03-07T05:17:03.000Z</updated>
+  <updated>2017-04-12T05:14:39.000Z</updated>
   <id>http://minotaursu.com/</id>
   
   <author>
@@ -15,11 +15,33 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title><![CDATA[使用AOP记录应用调用链开销]]></title>
+    <link href="http://minotaursu.com/2017/04/12/%E4%BD%BF%E7%94%A8AOP%E8%AE%B0%E5%BD%95%E5%BA%94%E7%94%A8%E8%B0%83%E7%94%A8%E9%93%BE%E5%BC%80%E9%94%80/"/>
+    <id>http://minotaursu.com/2017/04/12/使用AOP记录应用调用链开销/</id>
+    <published>2017-04-12T04:47:04.000Z</published>
+    <updated>2017-04-12T05:14:39.000Z</updated>
+    <content type="html"><![CDATA[<p>最近系统出现了一次线上的性能问题，本来以为目前的QPS应该是不会出现任何问题的，结果微服务还是比较容易因为某个点的问题导致雪崩的。。。出了性能问题就要做分析，正统的思路是要不断进行压测用JProfiler进行分析。后来自己简单搞了一下使用AOP抓取调用树和开销，看起来效果还不错，加上动态开关可以偶尔在线上用一下。代码提交到了<a href="https://github.com/minotaursu/profilerAop" target="_blank" rel="external">github</a>。本身的实现类似树的深度优先遍历，一个节点有多个子节点，在进入方法之前enter，在退出方法后release，都被release了就可以打印调用树日志了。而webx的profiler本身就提供了这种实现，大大的减少了开发时间。虽然之前在使用webx的时候总是觉得不爽，没有springmvc来的简洁，layout,action,screen也不适合移动时代的开发，现在都是rest服务或者使用api gateway配置api了，但不得不说webx的很多思想还是值得深入学习的，很多工具也很适合开源使用。一个框架能够稳定运行在各种业务场景，大范围推广使用本身就是了件不起的事情，这里给webx点个赞。<br>最后来看一下profiler的demo效果。<br><img src="http://hexo-tuchuan.qiniudn.com/profiler.png" alt=""></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>最近系统出现了一次线上的性能问题，本来以为目前的QPS应该是不会出现任何问题的，结果微服务还是比较容易因为某个点的问题导致雪崩的。。。出了性能问题就要做分析，正统的思路是要不断进行压测用JProfiler进行分析。后来自己简单搞了一下使用AOP抓取调用树和开销，看起来效果还]]>
+    </summary>
+    
+      <category term="AOP" scheme="http://minotaursu.com/tags/AOP/"/>
+    
+      <category term="java" scheme="http://minotaursu.com/tags/java/"/>
+    
+      <category term="spring" scheme="http://minotaursu.com/tags/spring/"/>
+    
+      <category term="性能" scheme="http://minotaursu.com/tags/%E6%80%A7%E8%83%BD/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[消息队列之简要设计]]></title>
     <link href="http://minotaursu.com/2016/11/06/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E4%B9%8B%E7%AE%80%E8%A6%81%E8%AE%BE%E8%AE%A1/"/>
     <id>http://minotaursu.com/2016/11/06/消息队列之简要设计/</id>
     <published>2016-11-06T02:03:36.000Z</published>
-    <updated>2017-03-07T05:17:03.000Z</updated>
+    <updated>2017-03-07T05:39:36.000Z</updated>
     <content type="html"><![CDATA[<h2 id="消息队列的基本功能">消息队列的基本功能</h2><p>消息队列作为系统解耦，流量控制的利器，成为分布式系统核心组件之一。在日常的开发我们享受了使用消息队列带来的便利，那么如果要自己实现一个消息队列应该入手。本文不深入讨论具体，成熟的消息队列如kafka，rocketmq等，主要介绍一下基本功能，思想和设计。<br>首先转换一下角色，作为产品经理给自己提出一个实现消息队列的需求，那么首先列一下消息队列必备的功能有哪些。</p>
 <ul>
 <li>消息堆积</li>
@@ -188,7 +210,7 @@
     <link href="http://minotaursu.com/2016/01/27/%E4%BD%BF%E7%94%A8AOP%E5%AE%9E%E7%8E%B0%E7%BC%93%E5%AD%98%E6%B3%A8%E8%A7%A3/"/>
     <id>http://minotaursu.com/2016/01/27/使用AOP实现缓存注解/</id>
     <published>2016-01-27T03:47:04.000Z</published>
-    <updated>2017-02-23T03:40:29.000Z</updated>
+    <updated>2017-04-12T03:46:09.000Z</updated>
     <content type="html"><![CDATA[<h2 id="为何重造轮子">为何重造轮子</h2><p>半年前写了一个注解驱动的缓存，最近提交到了<a href="https://github.com/minotaursu/cacheAnnotation" target="_blank" rel="external">github</a>。缓存大量的被使用在应用中的多个地方，简单的使用方式就是代码先查询缓存中是否存在数据，如果不存在或者缓存过期再查询数据库，并将查询的结果缓存一段时间，缓存key通常是入参的对象或者入参对象的某些属性，有些时候还需要按照某种条件判断是否缓存。可以看到这种功能性代码和具体的业务代码混合在一起的实现方式有很大的代码冗余，即不便于维护也不灵活。使用切面的方式可以很好的抽取功能相似代码冗余的缓存代码，将缓存代码和业务代码隔离开，这样既做到了对业务的无侵入又可以灵活更换具体缓存组件。<br>其实从spring3之后spring就提供了@Cacheable注解，但是用起来不爽的地方还是太多，例如缓存时间是由cache本身设置的而非在每个@Cacheable注解中指定，这个粒度有点太大了；没有缓存key的前缀设置，不同方法很容易出现key冲突。</p>
 <h2 id="怎样重造轮子">怎样重造轮子</h2><p>鉴于spring3提供的cache注解不太能满足需求，最后决定自己写一个。目标是构造一个简单好用而不是大而全的缓存注解，整个过程陆陆续续花了3天时间，第一天确定技术方案，构建对象和对象间的关系; 第二天写具体的实现和debug; 第三天写demo和test。<br>确定技术方案的时候看了spring3的cache注解实现和在阿里时使用过的2个cache注解实现。最大是不同点是创建代理类的方式和动态生成cacheKey的实现。<br>不同的创建代理类的方式：  </p>
 <ul>
@@ -364,36 +386,6 @@
       <category term="并发" scheme="http://minotaursu.com/tags/%E5%B9%B6%E5%8F%91/"/>
     
       <category term="缓存" scheme="http://minotaursu.com/tags/%E7%BC%93%E5%AD%98/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[2014年终总结]]></title>
-    <link href="http://minotaursu.com/2014/12/30/2014%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/"/>
-    <id>http://minotaursu.com/2014/12/30/2014年终总结/</id>
-    <published>2014-12-30T06:59:27.000Z</published>
-    <updated>2017-02-23T03:31:20.000Z</updated>
-    <content type="html"><![CDATA[<p>这算是工作以后第一次做年终总结。距离2011年末已经整整3年，距离毕业已经3.5年。毕业（前）后，一直过着随遇而安的生活，白天码代码，下班看书，动漫，电影，游戏。今年多了一个陪妹子的活动，实事求是的说陪妹子这个优先级太高抢占了不少资源。<br>过去的2011,2012,2013年就不说了，往事已矣。今年是变化很大的一年，4月初在厦门拍了婚纱照，月末和妹子领了证；十一回家办了婚礼；12月去巴厘岛度了蜜月。今年和妹子一起去了些周边的城市，期待明年去更远的地方。有妹纸照顾还是很幸福的，至少和妹子在一起之后就没有碰过洗衣机。。。<br>工作上今年申请了转岗，从阿里妈妈去了天猫，最开始是在天猫无线，师兄是一个有10年经验的架构师，做过多种不同的业务，由于在天猫无线的时间很短，基本没写什么代码，倒是参加了几次需求讨论，师兄也请了好几杯星巴克；后来开始做话费充值业务，架构和数据量上还是很NB的，打酱油的做了几个日常。比较下来，天猫是业务和市场驱动的部门，在天猫半年接触的运营比在阿里妈妈3年接触的还多（天猫的运营也更强势）；天猫一些系统的架构，稳定性，性能做的很不错，工作上是有收获和成长的；阿里妈妈则是产品驱动的部门，就我接触到的情况，代码细节和code review方面做的相对好一些。<br>今年也面了几家公司，拿到了几个offer，有的每月base要比现在高不少。这些都得益于TMT行业的高速发展，一个新兴，成长期的行业要比成熟，稳定的行业具有更多的机会。后面也没有离职，倒是选择了一次转岗。对于转岗这件事，我的想法是如果不喜欢现在的工作（例如工作没前途，内容没意思，同事合不来，不能实现自我价值，得不到尊重），转岗离职都没问题，同时对于未来也不要抱有太多的期待，毕竟问题在那里都会遇到，都需要解决，但解决问题的方式，时间，地点都可以由自己决定。<br>年中的时候预测了股市会上涨，可惜并没有行动。今后在业余时间更有行动力，做更多更有意义的事情。不能总是玩啊玩的了。  </p>
-<p>2015·wishlist</p>
-<ol>
-<li>欧洲/日本行一次，目的地视财力而定</li>
-<li>驾照</li>
-<li>车</li>
-<li>完成 <a href="http://book.douban.com/people/49806902/wish" target="_blank" rel="external">豆瓣阅读列表</a></li>
-<li>参加3次同城活动(segmentfault/豆瓣)</li>
-<li>为开源项目贡献一次代码</li>
-<li>2015年总结时，列出一件自己觉得NB的事情</li>
-<li>不使用工资收入，更换用了3年的mac pro</li>
-</ol>
-<p><img src="http://hexo-tuchuan.qiniudn.com/saber.jpg?imageView/1/w/670/h/900" alt="不因别人的好恶而改变自己的内心，这种性格其实也蛮好的。"></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>这算是工作以后第一次做年终总结。距离2011年末已经整整3年，距离毕业已经3.5年。毕业（前）后，一直过着随遇而安的生活，白天码代码，下班看书，动漫，电影，游戏。今年多了一个陪妹子的活动，实事求是的说陪妹子这个优先级太高抢占了不少资源。<br>过去的2011,2012,20]]>
-    </summary>
-    
-      <category term="工作" scheme="http://minotaursu.com/tags/%E5%B7%A5%E4%BD%9C/"/>
-    
-      <category term="阿里" scheme="http://minotaursu.com/tags/%E9%98%BF%E9%87%8C/"/>
     
   </entry>
   

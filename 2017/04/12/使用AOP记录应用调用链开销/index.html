@@ -3,18 +3,20 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Archives: 2014/11 | Minotaur story</title>
+  <title>使用AOP记录应用调用链开销 | Minotaur story</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="google-site-verification" content="bDBQbYqQqKkNOj4OxUu1rjxMw6nQqWpxzBffZ7yj2kA" />
-  <meta name="description" content="java developer life">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Minotaur story">
-<meta property="og:url" content="http://minotaursu.com/archives/2014/11/index.html">
+  <meta name="description" content="最近系统出现了一次线上的性能问题，本来以为目前的QPS应该是不会出现任何问题的，结果微服务还是比较容易因为某个点的问题导致雪崩的。。。出了性能问题就要做分析，正统的思路是要不断进行压测用JProfiler进行分析。后来自己简单搞了一下使用AOP抓取调用树和开销，看起来效果还不错，加上动态开关可以偶尔在线上用一下。代码提交到了github。本身的实现类似树的深度优先遍历，一个节点有多个子节点，在进入">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用AOP记录应用调用链开销">
+<meta property="og:url" content="http://minotaursu.com/2017/04/12/使用AOP记录应用调用链开销/index.html">
 <meta property="og:site_name" content="Minotaur story">
-<meta property="og:description" content="java developer life">
+<meta property="og:description" content="最近系统出现了一次线上的性能问题，本来以为目前的QPS应该是不会出现任何问题的，结果微服务还是比较容易因为某个点的问题导致雪崩的。。。出了性能问题就要做分析，正统的思路是要不断进行压测用JProfiler进行分析。后来自己简单搞了一下使用AOP抓取调用树和开销，看起来效果还不错，加上动态开关可以偶尔在线上用一下。代码提交到了github。本身的实现类似树的深度优先遍历，一个节点有多个子节点，在进入">
+<meta property="og:image" content="http://hexo-tuchuan.qiniudn.com/profiler.png">
+<meta property="og:updated_time" content="2017-04-12T05:14:39.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Minotaur story">
-<meta name="twitter:description" content="java developer life">
+<meta name="twitter:title" content="使用AOP记录应用调用链开销">
+<meta name="twitter:description" content="最近系统出现了一次线上的性能问题，本来以为目前的QPS应该是不会出现任何问题的，结果微服务还是比较容易因为某个点的问题导致雪崩的。。。出了性能问题就要做分析，正统的思路是要不断进行压测用JProfiler进行分析。后来自己简单搞了一下使用AOP抓取调用树和开销，看起来效果还不错，加上动态开关可以偶尔在线上用一下。代码提交到了github。本身的实现类似树的深度优先遍历，一个节点有多个子节点，在进入">
   
   
     <link rel="icon" href="/css/images/favicon.ico">
@@ -114,83 +116,66 @@
 </aside>
 
       
-      <section id="main">
-      <div class="archive-year-wrap">
-        <a href="/archives/2014" class="archive-year">2014</a>
-      </div>
-      <section class="archives-wrap">
-        <div class="archives">
+      <section id="main"><article id="post-使用AOP记录应用调用链开销" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
     
-    <div class="archive-article-thumbnail">
-      <a href="/2014/11/05/CAS/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-    </div>
     
-    <header class="archive-article-header">
-      
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2014/11/05/CAS/">CAS</a>
+    <h1 class="article-title" itemprop="name">
+      使用AOP记录应用调用链开销
     </h1>
   
 
-      
-        
-  <div class="archive-article-date">
+        <div class="article-meta">
+          
+  <div class="article-date">
     <i class="fa fa-calendar"></i>
-    <a href="/2014/11/05/CAS/">
-      <time datetime="2014-11-05T07:06:24.000Z" itemprop="datePublished">Nov 5</time>
+    <a href="/2017/04/12/使用AOP记录应用调用链开销/">
+      <time datetime="2017-04-12T04:47:04.000Z" itemprop="datePublished">2017-04-12</time>
     </a>
   </div>
 
 
-      
-    </header>
-  </div>
-</article>
-  
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
+          
+        </div>
+      </header>
     
-    <div class="archive-article-thumbnail">
-      <a href="/2014/11/03/java-Lock/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <p>最近系统出现了一次线上的性能问题，本来以为目前的QPS应该是不会出现任何问题的，结果微服务还是比较容易因为某个点的问题导致雪崩的。。。出了性能问题就要做分析，正统的思路是要不断进行压测用JProfiler进行分析。后来自己简单搞了一下使用AOP抓取调用树和开销，看起来效果还不错，加上动态开关可以偶尔在线上用一下。代码提交到了<a href="https://github.com/minotaursu/profilerAop" target="_blank" rel="external">github</a>。本身的实现类似树的深度优先遍历，一个节点有多个子节点，在进入方法之前enter，在退出方法后release，都被release了就可以打印调用树日志了。而webx的profiler本身就提供了这种实现，大大的减少了开发时间。虽然之前在使用webx的时候总是觉得不爽，没有springmvc来的简洁，layout,action,screen也不适合移动时代的开发，现在都是rest服务或者使用api gateway配置api了，但不得不说webx的很多思想还是值得深入学习的，很多工具也很适合开源使用。一个框架能够稳定运行在各种业务场景，大范围推广使用本身就是了件不起的事情，这里给webx点个赞。<br>最后来看一下profiler的demo效果。<br><img src="http://hexo-tuchuan.qiniudn.com/profiler.png" alt=""></p>
+
+      
     </div>
+    <footer class="article-footer">
+      <a data-url="http://minotaursu.com/2017/04/12/使用AOP记录应用调用链开销/" data-id="cj1eijwko0000fbc4e17uclav" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/AOP/">AOP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/spring/">spring</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/性能/">性能</a></li></ul>
+
+    </footer>
+  </div>
+  
     
-    <header class="archive-article-header">
-      
+<nav id="article-nav">
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2014/11/03/java-Lock/">java Lock</a>
-    </h1>
   
-
-      
-        
-  <div class="archive-article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2014/11/03/java-Lock/">
-      <time datetime="2014-11-02T23:57:08.000Z" itemprop="datePublished">Nov 3</time>
+    <a href="/2016/11/06/消息队列之简要设计/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">消息队列之简要设计</div>
     </a>
-  </div>
-
-
-      
-    </header>
-  </div>
-</article>
   
-    </div></section>
-  </section>
+</nav>
+
+
+  
+</article>
+
+
+</section>
       
         <aside id="sidebar">
   
