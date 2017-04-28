@@ -156,7 +156,7 @@
 <li>故障恢复</li>
 </ol>
 <h1 id="拆红包">拆红包</h1><p>拆红包有预拆包和实时拆包2种策略</p>
-<h2 id="预拆包策略">预拆包策略</h2><p>预拆包的策略在发红包时将金额M的红包拆分成N份，将分配好的结果放入内存队列或者cache，通过incr操作在用户抢红包时分配预算好的红包slot，预算的策略可以避免对共享资源的操作，减少了竞争，服务本身是无状态的，设计和实现相对简单，伸缩性较好。劣势是需要额外的存储空间，在存在大量活跃红包或者红包份数很多时会增加成本。</p>
+<h2 id="预拆包策略">预拆包策略</h2><p>预拆包的策略在发红包时将金额M的红包拆分成N份，将分配好的结果放入内存队列或者cache，通过incr操作在用户抢红包时分配预算好的红包slot，预算的策略可以避免对共享资源的操作，减少了锁竞争，服务本身是无状态的，设计和实现相对简单，伸缩性较好。劣势是需要额外的存储空间，如果存在大量活跃红包或者红包份数很多时会增加成本。</p>
 <h2 id="实时拆包">实时拆包</h2><p>实时拆包的策略在用户抢红包时实时拆包计算金额，这样只需要保存剩余红包数量和金额，不需要额外保存每个预拆包的红包金额。使用预拆包的策略会面临并发写的问题，如果多个拆红包的请求同时执行会导致数据不一致引起超发的问题，可以使用CAS操作实现乐观锁保证并发拆包不会出现问题。</p>
 <h1 id="高并发读">高并发读</h1><p>应对高并发读的通常思路是业务层拦截过滤无效请求，使用有效的缓存。可以使用Cache层decr功能记录请求红包的用户数，当decr到0后就拦截后面的请求直接返回，对DAO层也要增加相应的缓存减少数据库的压力。</p>
 <h1 id="并发写">并发写</h1><p>应对并发写的通常思路是串行化和乐观锁。在用户抢红包时实时拆包计算金额，每抢到一个红包，就cas更新剩余金额和红包个数，同时在DB中记录凭证，考虑到DB的写入压力，需要做分库分表，冷热分离。</p>
@@ -168,7 +168,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2017/04/27/谈谈微信红包的设计实现/" data-id="cj2196q5n000056c4pr6ru7c7" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2017/04/27/谈谈微信红包的设计实现/" data-id="cj21e1epp0000ddc47cv7j9nq" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/工作/">工作</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/开发/">开发</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/系统设计/">系统设计</a></li></ul>
@@ -190,7 +190,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/26/2016年终总结/">2016在年终总结</a>
+      <a class="article-title" href="/2017/04/26/2016年终总结/">2016年终总结</a>
     </h1>
   
 
@@ -211,7 +211,7 @@
     <div class="article-entry" itemprop="articleBody">
       
                 
-        <p>在2017年过去小半年之后，还是决定回顾一下过去的2016，写了这个2016年终总结。2016年初拿到了驾照，年底装修好了房子，看着勇士在总决赛被逆转痛失冠军，在G20期间出去玩了一趟，算是2016年比较重要的几件事情。 工作上运维了一整年的elasticsearch，支持了后台和BI的部分业务，在代驾订单系统中贡献了大量的代码，也重构了很多的代码。在代驾工作2年之后对系统大部分功能都比较熟悉，心理感觉有些疲倦，代驾也是一个拼内功，拼服务的行业，少会有爆发式的增长，市场的空间清晰可见。年后去前东家的云计算部门面试了一趟，希望能争取一个满意的offer，老东家给了一个base提升了一些，但算上滴滴的未固化的期权是降薪的offer。对于这种变化不大的offer最是难以选择，考虑了很久纠结了很久，有开心，有失落，最后还咨询了很多前同事的意见，大部分人是不建议我去。 工作上，行业，部门，老板，薪水都满意的情况实在难以出现。总体来说，2016年是变好的一年，并没有多少糟心的事情，日子很平静。2017年对自己的期待就是空杯心态，精益求精吧。</p>
+        <p>在2017年过去小半年之后，还是决定回顾一下过去的2016，写了这个年终总结。2016年初拿到了驾照，年底装修好了房子，看着勇士在总决赛被逆转痛失冠军，在G20期间出去玩了一趟，算是2016年比较重要的几件事情。 工作上运维了一整年的elasticsearch，支持了后台和BI的部分业务，贡献了大量的代码，也重构了很多的代码。在工作2年之后对系统大部分功能都比较熟悉，心理感觉有些疲倦，代驾也是一个拼内功，拼服务的行业，少会有爆发式的增长，市场的空间清晰可见。年后去前东家的云计算部门面试了一趟，希望能争取一个满意的offer，前东家给了一个base提升了一些，但算上滴滴的未固化的期权是降薪的offer。对于这种变化不大的offer最是难以选择，考虑了很久纠结了很久，最后还咨询了很多前同事的意见，大部分人是不建议我去。 工作上，行业，部门，老板，薪水都满意的情况实在难以出现。总体来说，2016年是变好的一年，并没有多少糟心的事情，日子很平静。2017年对自己的期待就是空杯心态，精益求精吧。</p>
 <p>2017·wishlist</p>
 <ol>
 <li>日本/九寨沟行一次，目的地视财力而定</li>
@@ -226,7 +226,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2017/04/26/2016年终总结/" data-id="cj2196q7u002t56c4m5kld2jt" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2017/04/26/2016年终总结/" data-id="cj21e1es6002tddc4t6qw9q1a" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/工作/">工作</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/滴滴/">滴滴</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/阿里/">阿里</a></li></ul>
@@ -274,7 +274,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2017/04/12/使用AOP记录应用调用链开销/" data-id="cj2196q76001g56c4fdcot4qp" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2017/04/12/使用AOP记录应用调用链开销/" data-id="cj21e1er8001gddc4of3lzekx" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/AOP/">AOP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/spring/">spring</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/性能/">性能</a></li></ul>
@@ -356,7 +356,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2016/11/06/消息队列之简要设计/" data-id="cj2196q6p000l56c4zvu1e64j" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2016/11/06/消息队列之简要设计/" data-id="cj21e1eqr000lddc4anvkhysz" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/分布式/">分布式</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/消息队列/">消息队列</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/软件开发/">软件开发</a></li></ul>
@@ -406,14 +406,14 @@
               <a href="/2017/04/26/2016年终总结/" class="thumbnail">
   
     <span style="background-image:url(http://hexo-tuchuan.qiniudn.com/cup.jpeg
-)" alt="2016在年终总结" class="thumbnail-image"></span>
+)" alt="2016年终总结" class="thumbnail-image"></span>
   
 </a>
             </div>
             
             <div class="item-inner">
               <p class="item-category"></p>
-              <p class="item-title"><a href="/2017/04/26/2016年终总结/" class="title">2016在年终总结</a></p>
+              <p class="item-title"><a href="/2017/04/26/2016年终总结/" class="title">2016年终总结</a></p>
               <p class="item-date"><time datetime="2017-04-26T11:38:08.000Z" itemprop="datePublished">2017-04-26</time></p>
             </div>
           </li>
