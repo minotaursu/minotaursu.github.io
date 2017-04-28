@@ -82,11 +82,11 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        19
+        21
         <span>posts</span>
       </div>
       <div class="article-info-block">
-        27
+        29
         <span>tags</span>
       </div>
     </div>
@@ -115,6 +115,201 @@
 
       
       <section id="main">
+      <article id="post-netty详解之reactor模型" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/09/23/netty详解之reactor模型/">netty详解之reactor模型</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2016/09/23/netty详解之reactor模型/">
+      <time datetime="2016-09-23T09:41:41.000Z" itemprop="datePublished">2016-09-23</time>
+    </a>
+  </div>
+
+
+          
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <p>假设在办理各种证件时分为填表，审核，制作3个过程，每个过程用时10分钟，这样一个工作人员需要30分钟办理一个证件。那么有没有办法提供效率，减少等待时间呢。可以让一个专门的工作人员，每个顾客到来时就负责让顾客填表，在顾客填好表后交给其他工作人员审核。这样其他功能人员的工作效率就从30分钟提高到了20分钟。</p>
+<h2 id="Reactor模式">Reactor模式</h2><p>Reactor模式就是这样一种机制，利用事件驱动减少工作线程的等待时间。Reactor模式是处理并发I/O比较常见的一种模式，用于同步I/O，中心思想是将所有要处理的I/O事件注册到一个中心I/O多路复用器上，同时主线程阻塞在多路复用器上；一旦有I/O事件<strong>准备就绪</strong>(区别在于多路复用器是边沿触发还是水平触发)，多路复用器返回并将相应I/O事件分发到对应的处理器中。</p>
+<h2 id="单线程模型">单线程模型</h2><p>这是最简单的单Reactor单线程模型。Reactor线程是个多面手，负责多路分离套接字，Accept新连接，并分派请求到处理器链中。该模型适用于处理器链中业务处理组件能快速完成的场景。不过这种单线程模型不能充分利用多核资源，所以实际使用的不多。 </p>
+<p><img src="http://hexo-tuchuan.qiniudn.com/reactor3.png" alt=""></p>
+<h2 id="多线程模型（单Reactor）">多线程模型（单Reactor）</h2><p>相比上一种模型，该模型在事件处理器（Handler）链部分采用了多线程（线程池），也是后端程序常用的模型。 </p>
+<p><img src="http://hexo-tuchuan.qiniudn.com/reactor4.png" alt=""></p>
+<h2 id="多线程模型（多Reactor）">多线程模型（多Reactor）</h2><p>这个模型比起第二种模型，它是将Reactor分成两部分，mainReactor负责监听并accept新连接，然后将建立的socket通过多路复用器（Acceptor）分派给subReactor。subReactor负责多路分离已连接的socket，读写网络数据；业务处理功能，其交给worker线程池完成。通常，subReactor个数上可与CPU个数等同。</p>
+<p><img src="http://hexo-tuchuan.qiniudn.com/reactor5.png" alt="">  </p>
+<h2 id="服务端通信时序">服务端通信时序</h2><p><img src="http://hexo-tuchuan.qiniudn.com/reactor1.png" alt="服务端通信序列图"></p>
+<h2 id="客户端通信时序">客户端通信时序</h2><p><img src="http://hexo-tuchuan.qiniudn.com/reactor2.png" alt="客户端通信序列图"></p>
+<p>Netty的IO线程NioEventLoop由于聚合了多路复用器Selector，可以同时并发处理成百上千个客户端Channel，由于读写操作都是非阻塞的，这就可以充分提升IO线程的运行效率，避免由于频繁IO阻塞导致的线程挂起。这从根本上解决了传统同步阻塞IO一连接一线程模型，架构的性能、弹性伸缩能力和可靠性都得到了极大的提升。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://minotaursu.com/2016/09/23/netty详解之reactor模型/" data-id="cj2196q7c001y56c444edewbq" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/io/">io</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/netty/">netty</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/reactor/">reactor</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
+      <article id="post-netty详解之io模型" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/09/23/netty详解之io模型/">netty详解之io模型</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2016/09/23/netty详解之io模型/">
+      <time datetime="2016-09-23T08:12:54.000Z" itemprop="datePublished">2016-09-23</time>
+    </a>
+  </div>
+
+
+          
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <p>提起IO模型首先想到的就是同步，异步，阻塞，非阻塞这几个概念。每个概念的含义，解释，概念间的区别这些都是好理解，这里深入*nix系统讲一下IO模型。  </p>
+<p>在*nix中将IO模型分为5类。  </p>
+<ol>
+<li>Blocking I/O   </li>
+<li>Nonblocking I/O  </li>
+<li>I/O Multiplexing (select and poll)  </li>
+<li>Signal Driven I/O (SIGIO)  </li>
+<li>Asynchronous I/O (the POSIX aio_functions)  </li>
+</ol>
+<h2 id="阻塞_I/O（blocking_IO）">阻塞 I/O（blocking IO）</h2><p><img src="http://hexo-tuchuan.qiniudn.com/bio.png" alt=""></p>
+<p>如图所示，系统调用recvfrom，内核kernel等待数据数据准备完成，在数据准备完成后将数据从内核态拷贝到用户态，recvfrom直到整个过程结束后才完成，在整个过程中经历2次阻塞。</p>
+<h2 id="非阻塞_I/O（nonblocking_IO）">非阻塞 I/O（nonblocking IO）</h2><p><img src="http://hexo-tuchuan.qiniudn.com/nio.png" alt=""></p>
+<p>如图所示，系统调用recvfrom，内核kernel在数据没有准备完成时直接返回，系统会不断轮询，在kernel准备完成数据后将数据从内核态拷贝到用户态，在等待数据完成的过程中并不阻塞。</p>
+<h2 id="I/O_多路复用（_IO_multiplexing）">I/O 多路复用（ IO multiplexing）</h2><p><img src="http://hexo-tuchuan.qiniudn.com/mio.png" alt=""></p>
+<p>如图所示，IO multiplexing 使用select，poll，epoll等实现单个kernel的进程/线程处理多个IO请求，IO复用将等待数据准备和将数据拷贝给应用这两个阶段分开处理，让一个线程（而且是内核级别的线程）来处理所有的等待，一旦有相应的IO事件发生就通知继续完成IO操作，虽然仍然有阻塞和等待，但是等待总是发生在一个线程，这时使用多线程可以保证其他线程一旦唤醒就是处理数据。</p>
+<h2 id="信号驱动_I/O_(Signal_Driven_I/O)">信号驱动 I/O (Signal Driven I/O)</h2><p><img src="http://hexo-tuchuan.qiniudn.com/sio.png" alt=""></p>
+<p>如图所示，系统调用recvfrom试图读取数据，并且直接返回，不管是否有数据可读，内核线程读完数据，给发信号通知应用线程，应用线程收到信息，等待内核线程将数据拷贝给应用线程。</p>
+<h2 id="异步_I/O（asynchronous_IO）">异步 I/O（asynchronous IO）</h2><p><img src="http://hexo-tuchuan.qiniudn.com/aio.png" alt=""></p>
+<p>如图所示，系统调用aio_read，内核kernel直接返回，系统不需要阻塞，继续做其他事情。kernel则进行等待数据准备完成，并将数据拷贝到用户态后，发送signal信号通知系统已经完成。</p>
+<h2 id="各个IO模型的对比">各个IO模型的对比</h2><p><img src="http://hexo-tuchuan.qiniudn.com/dio.png" alt=""></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://minotaursu.com/2016/09/23/netty详解之io模型/" data-id="cj2196q7g002556c4pleiee31" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/netty/">netty</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nio/">nio</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
+      <article id="post-构建可靠的系统" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/05/25/构建可靠的系统/">构建可靠的系统</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2016/05/25/构建可靠的系统/">
+      <time datetime="2016-05-25T03:38:00.000Z" itemprop="datePublished">2016-05-25</time>
+    </a>
+  </div>
+
+
+          
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <p>编写的代码能否在线上持续的提供稳定可靠的服务是区分普通程序员，文艺程序员，2B程序员的重要标准之一。持续的提供稳定可靠的服务说起来简单，实际影响的因素有很多，数据的量级，请求的峰值，并发的影响，架构的设计，系统的复杂度，外部依赖，线上的运维，单测和CR的执行，这些都一定程度影响着系统能否持续的提供稳定可靠的服务。和所有的工程类似，软件工程的质量也不是由单一因素就能决定的，这里我们不谈这些因素的影响，只站在开发者的角度说一下如何构造可靠的系统，在可控的范围内实现一个能够提供稳定可靠服务的系统。软件有风险，开发需谨慎，一家之言仅供参考。</p>
+<h2 id="区分可靠和不可靠的操作">区分可靠和不可靠的操作</h2><p>区分可靠和不可靠的操作，是编写可靠代码的基本要求。只有理解了什么是可靠与不可靠才能做出正确的应对，使可靠的代码简洁，不可靠的代码健壮，例如从缓存中获取数据，更新数据库，这些就是不可靠的操作，可能因为网络，软件，硬件等各种原因失败，代码需要根据不同的情况记录异常或者进行重试等操作，因为更新数据库可能失败，需要在有一致性要求的情况加上事务。除了第三方不可靠之外，代码在不同的环境也可能是不可靠的，例如单线程安全的代码在多线程可能就是不可靠的，串行访问可靠的代码在并发时可能就是不可靠的，单机可靠的代码在分布式环境可能就是不可靠的，小数据量时可靠的代码在数据量变大时可能就是不可靠的。知道了遇到的是老虎还是Hello Kitty，才知道是要逃还是微笑。</p>
+<h2 id="快速失败，抛出异常">快速失败，抛出异常</h2><p>fail fast做为一个设计开发原则往往和我们的直觉背道而驰，为了系统的健壮性我们往往将错误自动处理掉，希望系统进行运行下去，减少错误的产生。其实这种做法往往会滋生出隐藏很深的bug，编写很多magic code，导致维护代码和查找错误都很困难。快速失败的原则让错误尽早被发现，避免导致更大的错误，有人觉得程序有很多assert语句和抛出异常很不安全，事实上fail fast不会导致系统的crash，反而因为出现什么bug和bug在哪里都一目了然增加了系统的健壮性，fail fast就像创业一样快速的试错，如果发现方向不可行就赶紧打住避免更大的损失。比较典型的fail fast使用就是接口入参时的各种assert和调用第三方时的超时设置，这样即使第三方出现故障也不会导致线程打满拖垮我们的系统。</p>
+<h2 id="兜底与降级">兜底与降级</h2><p>提到了快速失败就不能不说兜底，快速失败是为了尽快的发现错误，避免错误的隐藏和扩大。兜底是为了错误容忍，避免因为非核心流程的失败导致整体功能的不可用。例如我们在获取商品详情时，不能因为获取商品评价信息失败就导致整个商品详情失败；获取某些配置信息时本地也要有一份兜底配置，避免因为配置信息获取不到导致核心业务的失败。如果说兜底是在错误发生时的被动防御，那么降级就是对错误的主动预防了，同样以商品详情为例，在某次活动期间流量暴增，那么可以主动放弃获取商品评价信息，展示商品是否有库存代替具体的库存数量，减小服务器的鸭梨，加快响应速度。</p>
+<h2 id="良好的api设计">良好的api设计</h2><p>设计一个良好的api从来都不是件容易的事情，设计一个良好的RPC调用的api就更加困难。假设有一个通过商品id获取商品详情的需求。<br>最开始我们的api可能是这样的</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Item <span class="function"><span class="title">getItemById</span><span class="params">(Long id)</span></span></span><br></pre></td></tr></table></figure>
+<p>因为是RPC调用，当返回是null的时候调用方懵逼了，这啥情况，是出错了？是超时？是没有商品？，于是对返回的对象进行一次封装，api变成介样</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RpcResult&lt;Item&gt; <span class="function"><span class="title">getItemById</span><span class="params">(Long id)</span></span></span><br></pre></td></tr></table></figure>
+<p>后面产品狗说需要批量获取商品，于是变成批量查询，api变成介样</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RpcResult&lt;Item&gt; <span class="function"><span class="title">getItemsByIds</span><span class="params">(List&lt;Long&gt; ids)</span></span></span><br></pre></td></tr></table></figure>
+<p>后面有个2B调用方一次性传了10W个id过来，几十秒也没能查出来，于是限制最多一次传100个避免长时间执行，api变成介样。</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RpcResult&lt;Item&gt; <span class="function"><span class="title">getItemsByIdsWithLimit</span><span class="params">(Long id)</span></span></span><br></pre></td></tr></table></figure>
+<p>可见良好的RPC的api设计需要考虑   </p>
+<ol>
+<li>返回值需要包含错误码，是业务异常还是网络异常，是否可以重试。   </li>
+<li>减少业务方的调用，将业务方多次调用才能完成的事情封装成一个接口。  </li>
+<li>api的命名和注释要规范，毕竟调用方不清楚实现细节，能够直观看到就是api和注释。</li>
+</ol>
+<p>同时作为调用方也要对接口进行wrapper，解决接口不规范的问题，隔离提供方api升级变更的影响。</p>
+<h2 id="避免单点">避免单点</h2><p>系统不是只运行一次，人生也不是赌博，不要总想着All in。一般对于无状态的就采用多活方案，对于任务调度这种只有一个能运行的可以考虑redis，zookeeper做锁控制，某些系统也会采用一台服务器运行，一台standby的方案，通过心跳检查的方式发现运行的主机挂掉后拉起备机的方案。</p>
+<h2 id="做好提前量">做好提前量</h2><p>考虑到业务的发展，流量爆发的突然性，业界有着系统架构支持10倍增长，系统设计支持5倍增长，系统实现支持2倍增长的说法。数据存储，服务规划这些改动比较麻烦的事情最好在设计之初的考虑清楚，随着业务的发展也要<br>做好提前量，不要等到服务不可用了才想到堆机器。</p>
+<h2 id="预热与发布过程">预热与发布过程</h2><p>除了设计和实现时遵循良好的原则规范，平滑发布也是需要考虑的一点，发布过程的兼容，稳定，可回滚都是在开发之时就要考虑清楚的。除了发布过程之外，还需要考虑发布后活动前的预热，需要通过预热请求提高缓存的命中率，保证热点数据都在缓存中，系统没有经过预热，大促活动来临之时请求瞬间就击穿了空空如也的缓存直接击垮了数据库。</p>
+<p><img src="http://hexo-tuchuan.qiniudn.com/towers.jpg?imageView/1/w/670/h/400" alt=""></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://minotaursu.com/2016/05/25/构建可靠的系统/" data-id="cj2196q6t000s56c42agant5b" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/工作/">工作</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/开发/">开发</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/系统设计/">系统设计</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
       <article id="post-使用AOP实现缓存注解" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -172,7 +367,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2016/01/27/使用AOP实现缓存注解/" data-id="cj1eihmxs001jdac47zf9h2dz" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2016/01/27/使用AOP实现缓存注解/" data-id="cj2196q78001o56c4xt60la13" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/AOP/">AOP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/annotation/">annotation</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/spring/">spring</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/缓存/">缓存</a></li></ul>
@@ -185,259 +380,8 @@
 
 
     
-      <article id="post-小明的魔法调度框架之旅" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/12/12/小明的魔法调度框架之旅/">小明的魔法调度框架之旅</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2015/12/12/小明的魔法调度框架之旅/">
-      <time datetime="2015-12-12T04:01:24.000Z" itemprop="datePublished">2015-12-12</time>
-    </a>
-  </div>
-
-
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <p><em>据说每个程序员上辈子都是法力高深的魔法师</em></p>
-<h2 id="crontab">crontab</h2><p>话说小明11年从新手村毕业，拿着一把等级为灰色的木剑就开始了打怪升级之路。小明发现怪并不好打，怪物都是在凌晨4点才出现的，好在小明在新手村的时候学会了一个叫crontab的静态魔法，该魔法虽然等级低但是不需要吟唱时间，小明将crontab附魔在自己的木剑上，木剑就可以每天凌晨4点定时去打怪了。</p>
-<h2 id="quartz">quartz</h2><p>虽然crontab这个静态魔法很NB，无奈小明的装备换的太频繁，每次更新装备都需要重新将crontab附魔到武器上才行；这个时候小明已经学会了一个叫quartz的中级魔法，相对不需要吟唱的crontab，quartz需要按照Job，JobDetail，Tigger，Scheduler的顺序进行吟唱才行，虽然过程是<br>复杂了一些，但是好处是显而易见的，魔法再也不需要和装备进行绑定，Scheduler是一个完全独立结界，Scheduler可以容纳多个JobDetail和Tigger,内部的固有魔法线程池可以并行调度多个任务。</p>
-<h2 id="quartz集群">quartz集群</h2><p>在使用了quartz这个中级魔法之后，小明轻松了很长一段时间，再也不必为换装备导致魔法失效而苦恼。在成为了一个合格的中级魔法师之后，学会了无限剑制这种BT魔法之后，小明决定向着中级副本进发，为了应付副本危险的环境，小明利用无限剑制将每个装备都附上了quartz这个魔法，现在问题来了，如果所有的quartz都发动，会产生魔法混乱现象，导致反噬；小明打开了《哈利波特》上面说需要使用魔法石进行魔法加持，例如红魔石mysql，绿魔石redis，蓝魔石zookeeper，只要魔石具有原子性锁操作机制就可以了，在红魔石mysql和quartz配合下，顺序的杀掉了怪物。</p>
-<h2 id="ttd/tbschedule">ttd/tbschedule</h2><p>在中级副本打怪升级一段时间后，小明购买了高级魔法ttd和tbschedule，相对于静态魔法crontab和中级魔法quartz，高级魔法的功能真是-碉堡了。</p>
-<ul>
-<li>支持剑系武器java，弓系武器shell等多种武器；</li>
-<li>支持对吟唱依赖，上一个魔法吟唱成功后才会出现下一个魔法；</li>
-<li>支持大规模魔法分拆，合并</li>
-<li>有着路由规则指定这种高级魔法；</li>
-<li>由蓝宝石zookeeper进行加持和魔法心跳检测，保证不会出现魔法阵的混乱；</li>
-<li>通过魔物netty进行大规模魔法阵的触发；</li>
-<li>通过魔法镜面可以看到魔法执行的效果，当遇到大boss导致魔法失效时还有魔法消息监控功能；</li>
-</ul>
-<h2 id="future">future</h2><p>在小明使用了购买的高级魔法TTD后，小明再也没有见过洛杉鸡凌晨4点的天空（其实是从来好么）。小明听说在山的那边海的那边有一群蓝精灵，他们快速又瞬移，他们筑墙又监禁，他们喽啰无敌生活在那绿色的大森林，他们亵渎溶火漩涡又结群……<br>不过小明并不惧怕，因为芝士就是力量。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2015/12/12/小明的魔法调度框架之旅/" data-id="cj1eihmxg000xdac45qjp8amx" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/quartz/">quartz</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/调度/">调度</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-git实用攻略二" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/05/04/git实用攻略二/">git实用攻略（二）</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2015/05/04/git实用攻略二/">
-      <time datetime="2015-05-04T09:30:55.000Z" itemprop="datePublished">2015-05-4</time>
-    </a>
-  </div>
-
-
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <p>最近团队的版本控制从svn切换到了git，虽说已经使用git有2年多了，也写了一个<a href="http://minotaursu.com/2014/07/01/git%E5%AE%9E%E7%94%A8%E6%94%BB%E7%95%A5/">实用攻略</a>，但是github上的项目使用经验和公司内部团队协作的使用经验还有很多不同。补充下新的使用体会。<br><img src="http://7jpo4q.com1.z0.glb.clouddn.com/gitflow.png?imageView/1/w/670/h/280" alt=""><br>首先还是看一下git的3个区：working，stage，commit，心中有个概念。</p>
-<ol>
-<li><p><strong>github和gitlab账户的共存</strong><br>配置sshkey登录的时候，git只能识别默认的id_rsa的秘钥文件，只有一个账户能够免登，在bash启动脚本中增加ssh-add file 实现多个账户的免登。</p>
-</li>
-<li><p><strong>迁出新的远程分支代码</strong><br>本地已经有了master分支和develop分支代码，假设有一个project1的远程项目分支需要开发，使用git checkout -b project1 origin/project1迁出新的远程分支代码。</p>
-</li>
-<li><p><strong>使用git pull —rebase拉取代码</strong><br>使用pull —rebase拉取最新代码可以保持一颗干净的commit树。</p>
-</li>
-<li><p><strong>使用merge，不要使用rebase合并不同的分支</strong><br>使用rebase合并不同的分支会导致很多的冲突。 </p>
-</li>
-<li><p><strong>git reflog</strong><br>可以看到本地仓库的操作记录，在reset操作后进行恢复特别有用。</p>
-</li>
-<li><p><strong>git commit —amend</strong><br>补救提交，不产生commit log。</p>
-</li>
-<li><p><strong>git reset —hard HEAD</strong><br>使用HEAD的内容覆盖工作区，放弃暂缓区的内容。</p>
-</li>
-<li><p><strong>git reset HEAD</strong><br>退回暂缓区的内容，和git reset commitId一样，都是指针操作。</p>
-</li>
-<li><p><strong>alias命令</strong><br>编辑 ~/.gitconfig，赋予复杂的命令一个简单的别名</p>
-</li>
-</ol>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2015/05/04/git实用攻略二/" data-id="cj1eihmy8002fdac4i0n3lobf" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/git/">git</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-我设计的12306" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/04/13/我设计的12306/">我设计的12306</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2015/04/13/我设计的12306/">
-      <time datetime="2015-04-13T14:49:30.000Z" itemprop="datePublished">2015-04-13</time>
-    </a>
-  </div>
-
-
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <p>feed系统和火车票售卖系统是2个高访问高并发情况下具体很大挑战的系统。<br>在低访问，低并发的情况下feed系统会变的非常简单，数据模型和业务功能都比较容易设计和实现，主要的挑战就剩如何面对层出不穷的敏感词和花样百出的广告语。相比之下，火车票售卖系统在低并发时也很有趣，假设我是12306的架构师，我会如何设计12306那。</p>
-<h2 id="数据模型">数据模型</h2><p>先将系统进行拆分，独立成用户，车票，下单3个系统，每个系统内部封闭成多个服务，运行在独立的集群上面。这里只对车票系统进行数据模型设计。</p>
-<p>先上ER图 <img src="http://hexo-tuchuan.qiniudn.com/tickets.jpg" alt="数据模型"></p>
-<p>数据分成动静2部分，车次，站点，座位的数据都是静态的基本不会变，可以通过运营系统提前进行录入生成；车票则根据以上三张表每天动态生成，每条车票记录一个车次上的一个座位号，初始化的始发站，终点站为该车次的始发站和终点站，数据在下单时进行更新。确定了数据模型后进行数据库的垂直和水平拆分，首先按照车次进行分库，将不同的车次hash到几个数据库中，减少每个数据库的负载；然后车票表按天拆分，提前生成3个月的车票表，每张车票表只存储当天发车的车票。</p>
-<h2 id="用例">用例</h2><ul>
-<li>case1：查询<br>假设有一列从北京到深圳的火车D911，途经共20站。用户查询北京到杭州的列车，从cache中取出符合用户查询条件的车次（车次类型，始发站，终点站，始发时间，到站时间），按照车次从cache中取出北京和杭州的站点id和站序，北京站序为0，杭州站序为11。车票表中用<br>‘始发站序&lt;=0 and 终点站序&gt;=11 and 车次=D911 group by 座位类型’<br>的查询条件即可得到每种座位的剩余票数，可以将查询的结果做一个10s的缓存，如果前端展示的不是具体的剩余票量，而是有无票，可以使用一个更长时间的缓存，缓存的失效由服务端控制。</li>
-<li>case2：车票分拆<br>假设有一列从北京到深圳的火车D911，用户购买了一张从北京到杭州的车票，按照规则优先级随机取出一张车票，车票数据为 北京-深圳，始发站序0，终点站序20，将该车票状态置为无效，插入一张数据为杭州-深圳，始发站序11，终点站序20的车票，向下单系统发起请求，写入一张北京-杭州的订单。</li>
-<li>case3：车票合并<br>假设有一列从北京到深圳的火车D911，用户预订了北京-杭州的车票，从下单系统收到该订单失败或者超时或者退票的消息，取出其中和车票相关的信息，车次D911，北京-杭州，始发站序0，终点站序11，和车票表中该车次该座位的数据进行关联，合并数据，重新生成一条北京-深圳的车票。</li>
-</ul>
-<h2 id="队列·流控·异步·无锁实现">队列·流控·异步·无锁实现</h2><p>系统的抗压能力和是吞吐量成正比的，这也就是为什么静态页面可以支持超高的QPS，查询的性能优化也比较容易，事务处理的性能提升最困难，系统处理时会保持tcp链接，占用系统资源，最终导致系统的崩溃，响应时间越快，资源的占用时间越短，吞吐能力也就越强，系统的可用性也就越高。<br>在某宝某猫做话费充值系统的思路完全可以用来做火车售票系统，将下单请求持久化，系统间通过消息解耦，通过多线程队列异步处理请求。具体的实现可以在收到下单购票请求后持久化，返回给用户一个排队中的提示(1-x分钟处理完成)，按照车次放到不同的队列中进行排队(期间可以做过滤/去重/合并处理），系统从队列中取数据进行处理。最终一致性就可以满足业务需求的地方，服务尽量减少事务和锁的使用，提高并发处理能力。</p>
-<h2 id="降级">降级</h2><p>为啥要把降级单独拉出来说，我觉得本质上讲降级并不是由于架构设计上的充分考虑带来的可用性和伸缩性的提高，而是牺牲一部分的用户体验换来的系统的可用性，是对峰值事件的应对策略。基本实现就是在系统埋好各种开关，可以由人工控制也可以由系统触发，保证最基本的核心功能可用，其他的非核心功能和部分用户体验可以暂时舍弃。</p>
-<p>数据模型和业务功能就是这样，不论实现的多扭曲基本上大家都可以做出来，功能实现之后无bug是一个挑战，能够满足未来变化是一个挑战，在某个量级之后依然可用又是一个挑战。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2015/04/13/我设计的12306/" data-id="cj1eihmxa000rdac42ottaq2y" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/分布式/">分布式</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/开发/">开发</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/缓存/">缓存</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/锁/">锁</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-缓存的使用" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/01/09/缓存的使用/">缓存的使用</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2015/01/09/缓存的使用/">
-      <time datetime="2015-01-09T10:07:37.000Z" itemprop="datePublished">2015-01-9</time>
-    </a>
-  </div>
-
-
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <p><img src="http://7jpo4q.com1.z0.glb.clouddn.com/speed.jpg?imageView/1/w/670/h/450" alt=""><br>缓存一直是web2.0应用的性能核心，缓存大幅提高了应用QPS，减少了数据库的压力，降低了RT，让应用能够飞起来。缓存具有易于上手，难于精通的特点，缓存失效的设计是整个缓存应用的难点，在某些复杂情况，不适合的缓存设计增加了系统出错的可能。下面对缓存使用的几种典型情况做下分析。</p>
-<h2 id="本地缓存">本地缓存</h2><ol>
-<li>用于缓存复杂算法的不可变计算结果。</li>
-<li>在单机或者数据变化率极低的情况下，本地缓存是一个良好的策略，因为本地缓存的效率最高，相比于分布式缓存，具有更少的网络开销，响应时间也更短，使用更加的灵活。例如邮政编码，报表数据，或者离线处理后的中奖用户名单等场景非常适合使用本地缓存。</li>
-<li>在某些场景，本地缓存作为分布式缓存的前置缓存使用，可以设置一个过期时间较长的分布式缓存，同时设置一个过期时间较短的本地缓存。</li>
-<li>数据变化率极低的情况下（例如按天更新）；往往也使用定时任务或者对象内置一个定时器从数据库获取最新的数据更新过期数据，相比按时间过期这种失效策略，这种定时更新的策略具有更好的性能。</li>
-</ol>
-<h2 id="分布式缓存">分布式缓存</h2><ol>
-<li>分布式缓存是应用开发中最常见的技术，分布式缓存解决了本地缓存的不一致问题，也避免了本地缓存可能带来的内存泄露问题。通常使用annotation的方式指定CRUD操作如何进行缓存，在annotation中指定key，过期时间，缓存策略（ehcache，memcache，分级缓存），在缓存具有高命中率的情况下可以极大的减少数据库压力，大大提高了系统的吞吐量。</li>
-<li>当缓存失效，请求不能从缓存中取出数据时，一般查询数据库获取，当并发量很高的时候，会给数据库带来极高的压力甚至雪崩，导致服务不可用。一般有几种做法，1）增加一个锁，缓存失效时获取锁，只有获取锁的请求才去查询数据库。2）增加一个存活缓存，当存活缓存为空时，重置存活缓存，然后获取数据，这样只有第一个检查到存活缓存为空的请求会访问数据库。<br>3） 优雅降级，对于某些不重要的数据（例如文章浏览量），当缓存失效时，可以直接返回空，前端不做展示。</li>
-</ol>
-<h2 id="缓存分页数据">缓存分页数据</h2><p>在某些条件下，获取到的数据是list，并且需要（必然）进行分页展示。缓存在几种情况下不适合使用，其中一种就是缓存大对象，大对象会导致缓存的性能降低，网络开销和计算开销也比较大。按照每页的Key缓存数据也是不合适的，当有写操作时需要失效所有的key。对于需要缓存分页数据的需求，视情况可以 1）只缓存前2页数据，绝大部分的流量都集中在前2页。2）只缓存id的list，获取到id的list后进行分页，然后通过service获取每个id的缓存数据。</p>
-<h2 id="缓存写操作">缓存写操作</h2><p>在某些场景，具有高频的写操作（例如记录浏览数，游戏领域）如果对数据的准确性要求不高，可以通过缓存写操作，定时存盘的方式大幅提高性能。例如所有的浏览数都记录在缓存中，每分钟更新一次数据库，在某些关键操作后（例如击杀BOSS），可以强制更新数据库一次，保证数据不因为宕机而丢失。</p>
-<h2 id="分布式缓存计数器">分布式缓存计数器</h2><p>分布式缓存提供了统一的存储和原子操作，便于集群环境下的使用。库存计算是分布式缓存的一个典型应用场景，在用户购买商品前会进行减库存，虽然在高并发时会将库存减为负数，但只要保证缓存中的数值大于等于0时才能购买就能防止超卖。<br>在秒杀的场景中可以本地缓存配合分布式缓存使用，因为秒杀的时间太短，用户并不关心秒杀过程中的库存数，例如秒杀商品只有5件，可以在每台服务器做一个库存数等于5的原子计数器，这样将极大减少分布式缓存的请求数。甚至在秒杀的场景中，可以完全使用内存缓存，通过zookeeper提前指定一台机器的内存库存数等于5，其他机器都设置为0。</p>
-<p>参考：<br><a href="http://book.douban.com/subject/10756899/" target="_blank" rel="external">高扩展性网站的50条原则</a><br><a href="http://book.douban.com/subject/3924175/" target="_blank" rel="external">构建高性能web站点</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2015/01/09/缓存的使用/" data-id="cj1eihmwt0009dac4x7twk4ww" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/并发/">并发</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/缓存/">缓存</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
       <nav id="page-nav">
-        <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
+        <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
       </nav>
     </section>
       
@@ -448,6 +392,42 @@
     <h3 class="widget-title">recents</h3>
     <div class="widget">
       <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2017/04/27/谈谈微信红包的设计实现/" class="thumbnail">
+  
+    <span style="background-image:url(http://hexo-tuchuan.qiniudn.com/wechat-small.jpg
+)" alt="微信红包的设计实现" class="thumbnail-image"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"></p>
+              <p class="item-title"><a href="/2017/04/27/谈谈微信红包的设计实现/" class="title">微信红包的设计实现</a></p>
+              <p class="item-date"><time datetime="2017-04-27T07:19:48.000Z" itemprop="datePublished">2017-04-27</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2017/04/26/2016年终总结/" class="thumbnail">
+  
+    <span style="background-image:url(http://hexo-tuchuan.qiniudn.com/cup.jpeg
+)" alt="2016在年终总结" class="thumbnail-image"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"></p>
+              <p class="item-title"><a href="/2017/04/26/2016年终总结/" class="title">2016在年终总结</a></p>
+              <p class="item-date"><time datetime="2017-04-26T11:38:08.000Z" itemprop="datePublished">2017-04-26</time></p>
+            </div>
+          </li>
         
           <li>
             
@@ -502,42 +482,6 @@
             </div>
           </li>
         
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2016/09/23/netty详解之io模型/" class="thumbnail">
-  
-    <span style="background-image:url(http://hexo-tuchuan.qiniudn.com/bio.png
-)" alt="netty详解之io模型" class="thumbnail-image"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"></p>
-              <p class="item-title"><a href="/2016/09/23/netty详解之io模型/" class="title">netty详解之io模型</a></p>
-              <p class="item-date"><time datetime="2016-09-23T08:12:54.000Z" itemprop="datePublished">2016-09-23</time></p>
-            </div>
-          </li>
-        
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2016/05/25/构建可靠的系统/" class="thumbnail">
-  
-    <span style="background-image:url(http://hexo-tuchuan.qiniudn.com/towers.jpg?imageView/1/w/670/h/400
-)" alt="构建可靠的系统" class="thumbnail-image"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"></p>
-              <p class="item-title"><a href="/2016/05/25/构建可靠的系统/" class="title">构建可靠的系统</a></p>
-              <p class="item-date"><time datetime="2016-05-25T03:38:00.000Z" itemprop="datePublished">2016-05-25</time></p>
-            </div>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -547,7 +491,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">tag cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/ACID/" style="font-size: 10px;">ACID</a> <a href="/tags/AOP/" style="font-size: 12.5px;">AOP</a> <a href="/tags/CAP/" style="font-size: 10px;">CAP</a> <a href="/tags/annotation/" style="font-size: 10px;">annotation</a> <a href="/tags/git/" style="font-size: 12.5px;">git</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/netty/" style="font-size: 12.5px;">netty</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/quartz/" style="font-size: 10px;">quartz</a> <a href="/tags/reactor/" style="font-size: 10px;">reactor</a> <a href="/tags/spring/" style="font-size: 12.5px;">spring</a> <a href="/tags/tips/" style="font-size: 10px;">tips</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/分布式/" style="font-size: 15px;">分布式</a> <a href="/tags/工作/" style="font-size: 15px;">工作</a> <a href="/tags/并发/" style="font-size: 15px;">并发</a> <a href="/tags/开发/" style="font-size: 17.5px;">开发</a> <a href="/tags/性能/" style="font-size: 10px;">性能</a> <a href="/tags/消息队列/" style="font-size: 10px;">消息队列</a> <a href="/tags/缓存/" style="font-size: 15px;">缓存</a> <a href="/tags/职业规划/" style="font-size: 10px;">职业规划</a> <a href="/tags/调度/" style="font-size: 10px;">调度</a> <a href="/tags/软件开发/" style="font-size: 10px;">软件开发</a> <a href="/tags/锁/" style="font-size: 12.5px;">锁</a> <a href="/tags/阿里/" style="font-size: 12.5px;">阿里</a>
+      <a href="/tags/ACID/" style="font-size: 10px;">ACID</a> <a href="/tags/AOP/" style="font-size: 12px;">AOP</a> <a href="/tags/CAP/" style="font-size: 10px;">CAP</a> <a href="/tags/annotation/" style="font-size: 10px;">annotation</a> <a href="/tags/git/" style="font-size: 12px;">git</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/netty/" style="font-size: 12px;">netty</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/quartz/" style="font-size: 10px;">quartz</a> <a href="/tags/reactor/" style="font-size: 10px;">reactor</a> <a href="/tags/spring/" style="font-size: 12px;">spring</a> <a href="/tags/tips/" style="font-size: 10px;">tips</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/分布式/" style="font-size: 14px;">分布式</a> <a href="/tags/工作/" style="font-size: 18px;">工作</a> <a href="/tags/并发/" style="font-size: 14px;">并发</a> <a href="/tags/开发/" style="font-size: 16px;">开发</a> <a href="/tags/性能/" style="font-size: 10px;">性能</a> <a href="/tags/消息队列/" style="font-size: 10px;">消息队列</a> <a href="/tags/滴滴/" style="font-size: 10px;">滴滴</a> <a href="/tags/系统设计/" style="font-size: 14px;">系统设计</a> <a href="/tags/缓存/" style="font-size: 12px;">缓存</a> <a href="/tags/职业规划/" style="font-size: 10px;">职业规划</a> <a href="/tags/调度/" style="font-size: 10px;">调度</a> <a href="/tags/软件开发/" style="font-size: 10px;">软件开发</a> <a href="/tags/锁/" style="font-size: 10px;">锁</a> <a href="/tags/阿里/" style="font-size: 14px;">阿里</a>
     </div>
   </div>
 

@@ -82,11 +82,11 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        19
+        21
         <span>posts</span>
       </div>
       <div class="article-info-block">
-        27
+        29
         <span>tags</span>
       </div>
     </div>
@@ -115,6 +115,130 @@
 
       
       <section id="main">
+      <article id="post-谈谈微信红包的设计实现" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/04/27/谈谈微信红包的设计实现/">微信红包的设计实现</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2017/04/27/谈谈微信红包的设计实现/">
+      <time datetime="2017-04-27T07:19:48.000Z" itemprop="datePublished">2017-04-27</time>
+    </a>
+  </div>
+
+
+          
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <p>红包功能的设计实现是一个很有趣的话题，主要的功能是P个人抢总金额M的N个红包，满足先抢的N个人能抢到红包。如果这是一个leetcode的算法题目难度应该是easy，只要保证Ni抢到的金额区间在[0.01,2倍剩余金额平均值）就能ac。<br>将算法带入到真实的工程实现，问题就要复杂得多，如果达到微信的量级，明显要考虑的有以下几点。</p>
+<ol>
+<li>拆红包</li>
+<li>高并发读</li>
+<li>并发写</li>
+<li>网络流量峰值</li>
+<li>对账</li>
+<li>降级</li>
+<li>故障恢复</li>
+</ol>
+<h1 id="拆红包">拆红包</h1><p>拆红包有预拆包和实时拆包2种策略</p>
+<h2 id="预拆包策略">预拆包策略</h2><p>预拆包的策略在发红包时将金额M的红包拆分成N份，将分配好的结果放入内存队列或者cache，通过incr操作在用户抢红包时分配预算好的红包slot，预算的策略可以避免对共享资源的操作，减少了竞争，服务本身是无状态的，设计和实现相对简单，伸缩性较好。劣势是需要额外的存储空间，在存在大量活跃红包或者红包份数很多时会增加成本。</p>
+<h2 id="实时拆包">实时拆包</h2><p>实时拆包的策略在用户抢红包时实时拆包计算金额，这样只需要保存剩余红包数量和金额，不需要额外保存每个预拆包的红包金额。使用预拆包的策略会面临并发写的问题，如果多个拆红包的请求同时执行会导致数据不一致引起超发的问题，可以使用CAS操作实现乐观锁保证并发拆包不会出现问题。</p>
+<h1 id="高并发读">高并发读</h1><p>应对高并发读的通常思路是业务层拦截过滤无效请求，使用有效的缓存。可以使用Cache层decr功能记录请求红包的用户数，当decr到0后就拦截后面的请求直接返回，对DAO层也要增加相应的缓存减少数据库的压力。</p>
+<h1 id="并发写">并发写</h1><p>应对并发写的通常思路是串行化和乐观锁。在用户抢红包时实时拆包计算金额，每抢到一个红包，就cas更新剩余金额和红包个数，同时在DB中记录凭证，考虑到DB的写入压力，需要做分库分表，冷热分离。</p>
+<h1 id="网络流量峰值">网络流量峰值</h1><p>大量用户同时抢红包是否会造成网络拥塞，发红包和抢红包最好在同一个IDC。</p>
+<h1 id="对账">对账</h1><p>考虑到拆红包凭证和入账是异步的2套系统，以及出现故障的可能，需要定时对账保证数据的一致性。</p>
+<h1 id="降级">降级</h1><p>在cache故障时有限流的使用DB进行服务，在资源紧张的时候关闭掉非核心流程，在实时入账请求量过大时，延迟批量入账。</p>
+<p><img src="http://hexo-tuchuan.qiniudn.com/wechat-small.jpg" alt=""><br>Reference:<br><a href="https://www.zybuluo.com/yulin718/note/93148" target="_blank" rel="external">https://www.zybuluo.com/yulin718/note/93148</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://minotaursu.com/2017/04/27/谈谈微信红包的设计实现/" data-id="cj2196q5n000056c4pr6ru7c7" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/工作/">工作</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/开发/">开发</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/系统设计/">系统设计</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
+      <article id="post-2016年终总结" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/04/26/2016年终总结/">2016在年终总结</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2017/04/26/2016年终总结/">
+      <time datetime="2017-04-26T11:38:08.000Z" itemprop="datePublished">2017-04-26</time>
+    </a>
+  </div>
+
+
+          
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <p>在2017年过去小半年之后，还是决定回顾一下过去的2016，写了这个2016年终总结。2016年初拿到了驾照，年底装修好了房子，看着勇士在总决赛被逆转痛失冠军，在G20期间出去玩了一趟，算是2016年比较重要的几件事情。 工作上运维了一整年的elasticsearch，支持了后台和BI的部分业务，在代驾订单系统中贡献了大量的代码，也重构了很多的代码。在代驾工作2年之后对系统大部分功能都比较熟悉，心理感觉有些疲倦，代驾也是一个拼内功，拼服务的行业，少会有爆发式的增长，市场的空间清晰可见。年后去前东家的云计算部门面试了一趟，希望能争取一个满意的offer，老东家给了一个base提升了一些，但算上滴滴的未固化的期权是降薪的offer。对于这种变化不大的offer最是难以选择，考虑了很久纠结了很久，有开心，有失落，最后还咨询了很多前同事的意见，大部分人是不建议我去。 工作上，行业，部门，老板，薪水都满意的情况实在难以出现。总体来说，2016年是变好的一年，并没有多少糟心的事情，日子很平静。2017年对自己的期待就是空杯心态，精益求精吧。</p>
+<p>2017·wishlist</p>
+<ol>
+<li>日本/九寨沟行一次，目的地视财力而定</li>
+<li>为知名开源项目贡献一次代码，例如elasticsearch，netty等</li>
+<li>完成 <a href="http://book.douban.com/people/49806902/wish" target="_blank" rel="external">豆瓣阅读列表</a></li>
+<li>blog的最高uv到达100</li>
+<li>改进计费系统的持续集成方案</li>
+<li>2017年总结时，列出一件自己觉得NB的事情</li>
+</ol>
+<p><img src="http://hexo-tuchuan.qiniudn.com/cup.jpeg" alt="空杯心态,精益求精"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://minotaursu.com/2017/04/26/2016年终总结/" data-id="cj2196q7u002t56c4m5kld2jt" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/工作/">工作</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/滴滴/">滴滴</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/阿里/">阿里</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
       <article id="post-使用AOP记录应用调用链开销" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -150,7 +274,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2017/04/12/使用AOP记录应用调用链开销/" data-id="cj1eijwko0000fbc4e17uclav" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2017/04/12/使用AOP记录应用调用链开销/" data-id="cj2196q76001g56c4fdcot4qp" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/AOP/">AOP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/spring/">spring</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/性能/">性能</a></li></ul>
@@ -232,7 +356,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2016/11/06/消息队列之简要设计/" data-id="cj1eihmx2000gdac4fm8vf7d6" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2016/11/06/消息队列之简要设计/" data-id="cj2196q6p000l56c4zvu1e64j" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/分布式/">分布式</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/消息队列/">消息队列</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/软件开发/">软件开发</a></li></ul>
@@ -245,203 +369,8 @@
 
 
     
-      <article id="post-netty详解之reactor模型" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/09/23/netty详解之reactor模型/">netty详解之reactor模型</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2016/09/23/netty详解之reactor模型/">
-      <time datetime="2016-09-23T09:41:41.000Z" itemprop="datePublished">2016-09-23</time>
-    </a>
-  </div>
-
-
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <p>假设在办理各种证件时分为填表，审核，制作3个过程，每个过程用时10分钟，这样一个工作人员需要30分钟办理一个证件。那么有没有办法提供效率，减少等待时间呢。可以让一个专门的工作人员，每个顾客到来时就负责让顾客填表，在顾客填好表后交给其他工作人员审核。这样其他功能人员的工作效率就从30分钟提高到了20分钟。</p>
-<h2 id="Reactor模式">Reactor模式</h2><p>Reactor模式就是这样一种机制，利用事件驱动减少工作线程的等待时间。Reactor模式是处理并发I/O比较常见的一种模式，用于同步I/O，中心思想是将所有要处理的I/O事件注册到一个中心I/O多路复用器上，同时主线程阻塞在多路复用器上；一旦有I/O事件<strong>准备就绪</strong>(区别在于多路复用器是边沿触发还是水平触发)，多路复用器返回并将相应I/O事件分发到对应的处理器中。</p>
-<h2 id="单线程模型">单线程模型</h2><p>这是最简单的单Reactor单线程模型。Reactor线程是个多面手，负责多路分离套接字，Accept新连接，并分派请求到处理器链中。该模型适用于处理器链中业务处理组件能快速完成的场景。不过这种单线程模型不能充分利用多核资源，所以实际使用的不多。 </p>
-<p><img src="http://hexo-tuchuan.qiniudn.com/reactor3.png" alt=""></p>
-<h2 id="多线程模型（单Reactor）">多线程模型（单Reactor）</h2><p>相比上一种模型，该模型在事件处理器（Handler）链部分采用了多线程（线程池），也是后端程序常用的模型。 </p>
-<p><img src="http://hexo-tuchuan.qiniudn.com/reactor4.png" alt=""></p>
-<h2 id="多线程模型（多Reactor）">多线程模型（多Reactor）</h2><p>这个模型比起第二种模型，它是将Reactor分成两部分，mainReactor负责监听并accept新连接，然后将建立的socket通过多路复用器（Acceptor）分派给subReactor。subReactor负责多路分离已连接的socket，读写网络数据；业务处理功能，其交给worker线程池完成。通常，subReactor个数上可与CPU个数等同。</p>
-<p><img src="http://hexo-tuchuan.qiniudn.com/reactor5.png" alt="">  </p>
-<h2 id="服务端通信时序">服务端通信时序</h2><p><img src="http://hexo-tuchuan.qiniudn.com/reactor1.png" alt="服务端通信序列图"></p>
-<h2 id="客户端通信时序">客户端通信时序</h2><p><img src="http://hexo-tuchuan.qiniudn.com/reactor2.png" alt="客户端通信序列图"></p>
-<p>Netty的IO线程NioEventLoop由于聚合了多路复用器Selector，可以同时并发处理成百上千个客户端Channel，由于读写操作都是非阻塞的，这就可以充分提升IO线程的运行效率，避免由于频繁IO阻塞导致的线程挂起。这从根本上解决了传统同步阻塞IO一连接一线程模型，架构的性能、弹性伸缩能力和可靠性都得到了极大的提升。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2016/09/23/netty详解之reactor模型/" data-id="cj1eihmxw001tdac4mp10typz" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/io/">io</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/netty/">netty</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/reactor/">reactor</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-netty详解之io模型" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/09/23/netty详解之io模型/">netty详解之io模型</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2016/09/23/netty详解之io模型/">
-      <time datetime="2016-09-23T08:12:54.000Z" itemprop="datePublished">2016-09-23</time>
-    </a>
-  </div>
-
-
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <p>提起IO模型首先想到的就是同步，异步，阻塞，非阻塞这几个概念。每个概念的含义，解释，概念间的区别这些都是好理解，这里深入*nix系统讲一下IO模型。  </p>
-<p>在*nix中将IO模型分为5类。  </p>
-<ol>
-<li>Blocking I/O   </li>
-<li>Nonblocking I/O  </li>
-<li>I/O Multiplexing (select and poll)  </li>
-<li>Signal Driven I/O (SIGIO)  </li>
-<li>Asynchronous I/O (the POSIX aio_functions)  </li>
-</ol>
-<h2 id="阻塞_I/O（blocking_IO）">阻塞 I/O（blocking IO）</h2><p><img src="http://hexo-tuchuan.qiniudn.com/bio.png" alt=""></p>
-<p>如图所示，系统调用recvfrom，内核kernel等待数据数据准备完成，在数据准备完成后将数据从内核态拷贝到用户态，recvfrom直到整个过程结束后才完成，在整个过程中经历2次阻塞。</p>
-<h2 id="非阻塞_I/O（nonblocking_IO）">非阻塞 I/O（nonblocking IO）</h2><p><img src="http://hexo-tuchuan.qiniudn.com/nio.png" alt=""></p>
-<p>如图所示，系统调用recvfrom，内核kernel在数据没有准备完成时直接返回，系统会不断轮询，在kernel准备完成数据后将数据从内核态拷贝到用户态，在等待数据完成的过程中并不阻塞。</p>
-<h2 id="I/O_多路复用（_IO_multiplexing）">I/O 多路复用（ IO multiplexing）</h2><p><img src="http://hexo-tuchuan.qiniudn.com/mio.png" alt=""></p>
-<p>如图所示，IO multiplexing 使用select，poll，epoll等实现单个kernel的进程/线程处理多个IO请求，IO复用将等待数据准备和将数据拷贝给应用这两个阶段分开处理，让一个线程（而且是内核级别的线程）来处理所有的等待，一旦有相应的IO事件发生就通知继续完成IO操作，虽然仍然有阻塞和等待，但是等待总是发生在一个线程，这时使用多线程可以保证其他线程一旦唤醒就是处理数据。</p>
-<h2 id="信号驱动_I/O_(Signal_Driven_I/O)">信号驱动 I/O (Signal Driven I/O)</h2><p><img src="http://hexo-tuchuan.qiniudn.com/sio.png" alt=""></p>
-<p>如图所示，系统调用recvfrom试图读取数据，并且直接返回，不管是否有数据可读，内核线程读完数据，给发信号通知应用线程，应用线程收到信息，等待内核线程将数据拷贝给应用线程。</p>
-<h2 id="异步_I/O（asynchronous_IO）">异步 I/O（asynchronous IO）</h2><p><img src="http://hexo-tuchuan.qiniudn.com/aio.png" alt=""></p>
-<p>如图所示，系统调用aio_read，内核kernel直接返回，系统不需要阻塞，继续做其他事情。kernel则进行等待数据准备完成，并将数据拷贝到用户态后，发送signal信号通知系统已经完成。</p>
-<h2 id="各个IO模型的对比">各个IO模型的对比</h2><p><img src="http://hexo-tuchuan.qiniudn.com/dio.png" alt=""></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2016/09/23/netty详解之io模型/" data-id="cj1eihmxz0020dac49qrjpjly" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/netty/">netty</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nio/">nio</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-构建可靠的系统" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/05/25/构建可靠的系统/">构建可靠的系统</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2016/05/25/构建可靠的系统/">
-      <time datetime="2016-05-25T03:38:00.000Z" itemprop="datePublished">2016-05-25</time>
-    </a>
-  </div>
-
-
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <p>编写的代码能否在线上持续的提供稳定可靠的服务是区分普通程序员，文艺程序员，2B程序员的重要标准之一。持续的提供稳定可靠的服务说起来简单，实际影响的因素有很多，数据的量级，请求的峰值，并发的影响，架构的设计，系统的复杂度，外部依赖，线上的运维，单测和CR的执行，这些都一定程度影响着系统能否持续的提供稳定可靠的服务。和所有的工程类似，软件工程的质量也不是由单一因素就能决定的，这里我们不谈这些因素的影响，只站在开发者的角度说一下如何构造可靠的系统，在可控的范围内实现一个能够提供稳定可靠服务的系统。软件有风险，开发需谨慎，一家之言仅供参考。</p>
-<h2 id="区分可靠和不可靠的操作">区分可靠和不可靠的操作</h2><p>区分可靠和不可靠的操作，是编写可靠代码的基本要求。只有理解了什么是可靠与不可靠才能做出正确的应对，使可靠的代码简洁，不可靠的代码健壮，例如从缓存中获取数据，更新数据库，这些就是不可靠的操作，可能因为网络，软件，硬件等各种原因失败，代码需要根据不同的情况记录异常或者进行重试等操作，因为更新数据库可能失败，需要在有一致性要求的情况加上事务。除了第三方不可靠之外，代码在不同的环境也可能是不可靠的，例如单线程安全的代码在多线程可能就是不可靠的，串行访问可靠的代码在并发时可能就是不可靠的，单机可靠的代码在分布式环境可能就是不可靠的，小数据量时可靠的代码在数据量变大时可能就是不可靠的。知道了遇到的是老虎还是Hello Kitty，才知道是要逃还是微笑。</p>
-<h2 id="快速失败，抛出异常">快速失败，抛出异常</h2><p>fail fast做为一个设计开发原则往往和我们的直觉背道而驰，为了系统的健壮性我们往往将错误自动处理掉，希望系统进行运行下去，减少错误的产生。其实这种做法往往会滋生出隐藏很深的bug，编写很多magic code，导致维护代码和查找错误都很困难。快速失败的原则让错误尽早被发现，避免导致更大的错误，有人觉得程序有很多assert语句和抛出异常很不安全，事实上fail fast不会导致系统的crash，反而因为出现什么bug和bug在哪里都一目了然增加了系统的健壮性，fail fast就像创业一样快速的试错，如果发现方向不可行就赶紧打住避免更大的损失。比较典型的fail fast使用就是接口入参时的各种assert和调用第三方时的超时设置，这样即使第三方出现故障也不会导致线程打满拖垮我们的系统。</p>
-<h2 id="兜底与降级">兜底与降级</h2><p>提到了快速失败就不能不说兜底，快速失败是为了尽快的发现错误，避免错误的隐藏和扩大。兜底是为了错误容忍，避免因为非核心流程的失败导致整体功能的不可用。例如我们在获取商品详情时，不能因为获取商品评价信息失败就导致整个商品详情失败；获取某些配置信息时本地也要有一份兜底配置，避免因为配置信息获取不到导致核心业务的失败。如果说兜底是在错误发生时的被动防御，那么降级就是对错误的主动预防了，同样以商品详情为例，在某次活动期间流量暴增，那么可以主动放弃获取商品评价信息，展示商品是否有库存代替具体的库存数量，减小服务器的鸭梨，加快响应速度。</p>
-<h2 id="良好的api设计">良好的api设计</h2><p>设计一个良好的api从来都不是件容易的事情，设计一个良好的RPC调用的api就更加困难。假设有一个通过商品id获取商品详情的需求。<br>最开始我们的api可能是这样的</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Item <span class="function"><span class="title">getItemById</span><span class="params">(Long id)</span></span></span><br></pre></td></tr></table></figure>
-<p>因为是RPC调用，当返回是null的时候调用方懵逼了，这啥情况，是出错了？是超时？是没有商品？，于是对返回的对象进行一次封装，api变成介样</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RpcResult&lt;Item&gt; <span class="function"><span class="title">getItemById</span><span class="params">(Long id)</span></span></span><br></pre></td></tr></table></figure>
-<p>后面产品狗说需要批量获取商品，于是变成批量查询，api变成介样</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RpcResult&lt;Item&gt; <span class="function"><span class="title">getItemsByIds</span><span class="params">(List&lt;Long&gt; ids)</span></span></span><br></pre></td></tr></table></figure>
-<p>后面有个2B调用方一次性传了10W个id过来，几十秒也没能查出来，于是限制最多一次传100个避免长时间执行，api变成介样。</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RpcResult&lt;Item&gt; <span class="function"><span class="title">getItemsByIdsWithLimit</span><span class="params">(Long id)</span></span></span><br></pre></td></tr></table></figure>
-<p>可见良好的RPC的api设计需要考虑   </p>
-<ol>
-<li>返回值需要包含错误码，是业务异常还是网络异常，是否可以重试。   </li>
-<li>减少业务方的调用，将业务方多次调用才能完成的事情封装成一个接口。  </li>
-<li>api的命名和注释要规范，毕竟调用方不清楚实现细节，能够直观看到就是api和注释。</li>
-</ol>
-<p>同时作为调用方也要对接口进行wrapper，解决接口不规范的问题，隔离提供方api升级变更的影响。</p>
-<h2 id="避免单点">避免单点</h2><p>系统不是只运行一次，人生也不是赌博，不要总想着All in。一般对于无状态的就采用多活方案，对于任务调度这种只有一个能运行的可以考虑redis，zookeeper做锁控制，某些系统也会采用一台服务器运行，一台standby的方案，通过心跳检查的方式发现运行的主机挂掉后拉起备机的方案。</p>
-<h2 id="做好提前量">做好提前量</h2><p>考虑到业务的发展，流量爆发的突然性，业界有着系统架构支持10倍增长，系统设计支持5倍增长，系统实现支持2倍增长的说法。数据存储，服务规划这些改动比较麻烦的事情最好在设计之初的考虑清楚，随着业务的发展也要<br>做好提前量，不要等到服务不可用了才想到堆机器。</p>
-<h2 id="预热与发布过程">预热与发布过程</h2><p>除了设计和实现时遵循良好的原则规范，平滑发布也是需要考虑的一点，发布过程的兼容，稳定，可回滚都是在开发之时就要考虑清楚的。除了发布过程之外，还需要考虑发布后活动前的预热，需要通过预热请求提高缓存的命中率，保证热点数据都在缓存中，系统没有经过预热，大促活动来临之时请求瞬间就击穿了空空如也的缓存直接击垮了数据库。</p>
-<p><img src="http://hexo-tuchuan.qiniudn.com/towers.jpg?imageView/1/w/670/h/400" alt=""></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2016/05/25/构建可靠的系统/" data-id="cj1eihmx7000ndac4f4eav75l" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/工作/">工作</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/开发/">开发</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
       <nav id="page-nav">
-        <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+        <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
       </nav>
     </section>
       
@@ -452,6 +381,42 @@
     <h3 class="widget-title">recents</h3>
     <div class="widget">
       <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2017/04/27/谈谈微信红包的设计实现/" class="thumbnail">
+  
+    <span style="background-image:url(http://hexo-tuchuan.qiniudn.com/wechat-small.jpg
+)" alt="微信红包的设计实现" class="thumbnail-image"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"></p>
+              <p class="item-title"><a href="/2017/04/27/谈谈微信红包的设计实现/" class="title">微信红包的设计实现</a></p>
+              <p class="item-date"><time datetime="2017-04-27T07:19:48.000Z" itemprop="datePublished">2017-04-27</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2017/04/26/2016年终总结/" class="thumbnail">
+  
+    <span style="background-image:url(http://hexo-tuchuan.qiniudn.com/cup.jpeg
+)" alt="2016在年终总结" class="thumbnail-image"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"></p>
+              <p class="item-title"><a href="/2017/04/26/2016年终总结/" class="title">2016在年终总结</a></p>
+              <p class="item-date"><time datetime="2017-04-26T11:38:08.000Z" itemprop="datePublished">2017-04-26</time></p>
+            </div>
+          </li>
         
           <li>
             
@@ -506,42 +471,6 @@
             </div>
           </li>
         
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2016/09/23/netty详解之io模型/" class="thumbnail">
-  
-    <span style="background-image:url(http://hexo-tuchuan.qiniudn.com/bio.png
-)" alt="netty详解之io模型" class="thumbnail-image"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"></p>
-              <p class="item-title"><a href="/2016/09/23/netty详解之io模型/" class="title">netty详解之io模型</a></p>
-              <p class="item-date"><time datetime="2016-09-23T08:12:54.000Z" itemprop="datePublished">2016-09-23</time></p>
-            </div>
-          </li>
-        
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2016/05/25/构建可靠的系统/" class="thumbnail">
-  
-    <span style="background-image:url(http://hexo-tuchuan.qiniudn.com/towers.jpg?imageView/1/w/670/h/400
-)" alt="构建可靠的系统" class="thumbnail-image"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"></p>
-              <p class="item-title"><a href="/2016/05/25/构建可靠的系统/" class="title">构建可靠的系统</a></p>
-              <p class="item-date"><time datetime="2016-05-25T03:38:00.000Z" itemprop="datePublished">2016-05-25</time></p>
-            </div>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -551,7 +480,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">tag cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/ACID/" style="font-size: 10px;">ACID</a> <a href="/tags/AOP/" style="font-size: 12.5px;">AOP</a> <a href="/tags/CAP/" style="font-size: 10px;">CAP</a> <a href="/tags/annotation/" style="font-size: 10px;">annotation</a> <a href="/tags/git/" style="font-size: 12.5px;">git</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/netty/" style="font-size: 12.5px;">netty</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/quartz/" style="font-size: 10px;">quartz</a> <a href="/tags/reactor/" style="font-size: 10px;">reactor</a> <a href="/tags/spring/" style="font-size: 12.5px;">spring</a> <a href="/tags/tips/" style="font-size: 10px;">tips</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/分布式/" style="font-size: 15px;">分布式</a> <a href="/tags/工作/" style="font-size: 15px;">工作</a> <a href="/tags/并发/" style="font-size: 15px;">并发</a> <a href="/tags/开发/" style="font-size: 17.5px;">开发</a> <a href="/tags/性能/" style="font-size: 10px;">性能</a> <a href="/tags/消息队列/" style="font-size: 10px;">消息队列</a> <a href="/tags/缓存/" style="font-size: 15px;">缓存</a> <a href="/tags/职业规划/" style="font-size: 10px;">职业规划</a> <a href="/tags/调度/" style="font-size: 10px;">调度</a> <a href="/tags/软件开发/" style="font-size: 10px;">软件开发</a> <a href="/tags/锁/" style="font-size: 12.5px;">锁</a> <a href="/tags/阿里/" style="font-size: 12.5px;">阿里</a>
+      <a href="/tags/ACID/" style="font-size: 10px;">ACID</a> <a href="/tags/AOP/" style="font-size: 12px;">AOP</a> <a href="/tags/CAP/" style="font-size: 10px;">CAP</a> <a href="/tags/annotation/" style="font-size: 10px;">annotation</a> <a href="/tags/git/" style="font-size: 12px;">git</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/netty/" style="font-size: 12px;">netty</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/quartz/" style="font-size: 10px;">quartz</a> <a href="/tags/reactor/" style="font-size: 10px;">reactor</a> <a href="/tags/spring/" style="font-size: 12px;">spring</a> <a href="/tags/tips/" style="font-size: 10px;">tips</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/分布式/" style="font-size: 14px;">分布式</a> <a href="/tags/工作/" style="font-size: 18px;">工作</a> <a href="/tags/并发/" style="font-size: 14px;">并发</a> <a href="/tags/开发/" style="font-size: 16px;">开发</a> <a href="/tags/性能/" style="font-size: 10px;">性能</a> <a href="/tags/消息队列/" style="font-size: 10px;">消息队列</a> <a href="/tags/滴滴/" style="font-size: 10px;">滴滴</a> <a href="/tags/系统设计/" style="font-size: 14px;">系统设计</a> <a href="/tags/缓存/" style="font-size: 12px;">缓存</a> <a href="/tags/职业规划/" style="font-size: 10px;">职业规划</a> <a href="/tags/调度/" style="font-size: 10px;">调度</a> <a href="/tags/软件开发/" style="font-size: 10px;">软件开发</a> <a href="/tags/锁/" style="font-size: 10px;">锁</a> <a href="/tags/阿里/" style="font-size: 14px;">阿里</a>
     </div>
   </div>
 
