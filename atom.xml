@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://minotaursu.com/"/>
-  <updated>2017-05-23T11:39:51.000Z</updated>
+  <updated>2017-04-28T05:15:30.000Z</updated>
   <id>http://minotaursu.com/</id>
   
   <author>
@@ -13,32 +13,6 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
-  
-  <entry>
-    <title><![CDATA[kylin]]></title>
-    <link href="http://minotaursu.com/2017/05/23/kylin/"/>
-    <id>http://minotaursu.com/2017/05/23/kylin/</id>
-    <published>2017-05-23T11:39:51.000Z</published>
-    <updated>2017-05-23T11:39:51.000Z</updated>
-    <content type="html"></content>
-    <summary type="html">
-    
-    </summary>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[kylin部署之hadoop分布式环境搭建]]></title>
-    <link href="http://minotaursu.com/2017/05/23/kylin%E9%83%A8%E7%BD%B2%E4%B9%8Bhadoop%E5%88%86%E5%B8%83%E5%BC%8F%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/"/>
-    <id>http://minotaursu.com/2017/05/23/kylin部署之hadoop分布式环境搭建/</id>
-    <published>2017-05-23T09:41:07.000Z</published>
-    <updated>2017-05-23T09:41:07.000Z</updated>
-    <content type="html"></content>
-    <summary type="html">
-    
-    </summary>
-    
-  </entry>
   
   <entry>
     <title><![CDATA[微信红包的设计实现]]></title>
@@ -349,6 +323,75 @@
       <category term="quartz" scheme="http://minotaursu.com/tags/quartz/"/>
     
       <category term="调度" scheme="http://minotaursu.com/tags/%E8%B0%83%E5%BA%A6/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[git实用攻略（二）]]></title>
+    <link href="http://minotaursu.com/2015/05/04/git%E5%AE%9E%E7%94%A8%E6%94%BB%E7%95%A5%E4%BA%8C/"/>
+    <id>http://minotaursu.com/2015/05/04/git实用攻略二/</id>
+    <published>2015-05-04T09:30:55.000Z</published>
+    <updated>2016-05-04T09:36:18.000Z</updated>
+    <content type="html"><![CDATA[<p>最近团队的版本控制从svn切换到了git，虽说已经使用git有2年多了，也写了一个<a href="http://minotaursu.com/2014/07/01/git%E5%AE%9E%E7%94%A8%E6%94%BB%E7%95%A5/">实用攻略</a>，但是github上的项目使用经验和公司内部团队协作的使用经验还有很多不同。补充下新的使用体会。<br><img src="http://7jpo4q.com1.z0.glb.clouddn.com/gitflow.png?imageView/1/w/670/h/280" alt=""><br>首先还是看一下git的3个区：working，stage，commit，心中有个概念。</p>
+<ol>
+<li><p><strong>github和gitlab账户的共存</strong><br>配置sshkey登录的时候，git只能识别默认的id_rsa的秘钥文件，只有一个账户能够免登，在bash启动脚本中增加ssh-add file 实现多个账户的免登。</p>
+</li>
+<li><p><strong>迁出新的远程分支代码</strong><br>本地已经有了master分支和develop分支代码，假设有一个project1的远程项目分支需要开发，使用git checkout -b project1 origin/project1迁出新的远程分支代码。</p>
+</li>
+<li><p><strong>使用git pull —rebase拉取代码</strong><br>使用pull —rebase拉取最新代码可以保持一颗干净的commit树。</p>
+</li>
+<li><p><strong>使用merge，不要使用rebase合并不同的分支</strong><br>使用rebase合并不同的分支会导致很多的冲突。 </p>
+</li>
+<li><p><strong>git reflog</strong><br>可以看到本地仓库的操作记录，在reset操作后进行恢复特别有用。</p>
+</li>
+<li><p><strong>git commit —amend</strong><br>补救提交，不产生commit log。</p>
+</li>
+<li><p><strong>git reset —hard HEAD</strong><br>使用HEAD的内容覆盖工作区，放弃暂缓区的内容。</p>
+</li>
+<li><p><strong>git reset HEAD</strong><br>退回暂缓区的内容，和git reset commitId一样，都是指针操作。</p>
+</li>
+<li><p><strong>alias命令</strong><br>编辑 ~/.gitconfig，赋予复杂的命令一个简单的别名</p>
+</li>
+</ol>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>最近团队的版本控制从svn切换到了git，虽说已经使用git有2年多了，也写了一个<a href="http://minotaursu.com/2014/07/01/git%E5%AE%9E%E7%94%A8%E6%94%BB%E7%95%A5/">实用攻略</a>，但是g]]>
+    </summary>
+    
+      <category term="git" scheme="http://minotaursu.com/tags/git/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[我设计的12306]]></title>
+    <link href="http://minotaursu.com/2015/04/13/%E6%88%91%E8%AE%BE%E8%AE%A1%E7%9A%8412306/"/>
+    <id>http://minotaursu.com/2015/04/13/我设计的12306/</id>
+    <published>2015-04-13T14:49:30.000Z</published>
+    <updated>2017-04-27T07:16:01.000Z</updated>
+    <content type="html"><![CDATA[<p>feed系统和火车票售卖系统是2个高访问高并发情况下具体很大挑战的系统。<br>在低访问，低并发的情况下feed系统会变的非常简单，数据模型和业务功能都比较容易设计和实现，主要的挑战就剩如何面对层出不穷的敏感词和花样百出的广告语。相比之下，火车票售卖系统在低并发时也很有趣，假设我是12306的架构师，我会如何设计12306那。</p>
+<h2 id="数据模型">数据模型</h2><p>先将系统进行拆分，独立成用户，车票，下单3个系统，每个系统内部封闭成多个服务，运行在独立的集群上面。这里只对车票系统进行数据模型设计。</p>
+<p>先上ER图 <img src="http://hexo-tuchuan.qiniudn.com/tickets.jpg" alt="数据模型"></p>
+<p>数据分成动静2部分，车次，站点，座位的数据都是静态的基本不会变，可以通过运营系统提前进行录入生成；车票则根据以上三张表每天动态生成，每条车票记录一个车次上的一个座位号，初始化的始发站，终点站为该车次的始发站和终点站，数据在下单时进行更新。确定了数据模型后进行数据库的垂直和水平拆分，首先按照车次进行分库，将不同的车次hash到几个数据库中，减少每个数据库的负载；然后车票表按天拆分，提前生成3个月的车票表，每张车票表只存储当天发车的车票。</p>
+<h2 id="用例">用例</h2><ul>
+<li>case1：查询<br>假设有一列从北京到深圳的火车D911，途经共20站。用户查询北京到杭州的列车，从cache中取出符合用户查询条件的车次（车次类型，始发站，终点站，始发时间，到站时间），按照车次从cache中取出北京和杭州的站点id和站序，北京站序为0，杭州站序为11。车票表中用<br>‘始发站序&lt;=0 and 终点站序&gt;=11 and 车次=D911 group by 座位类型’<br>的查询条件即可得到每种座位的剩余票数，可以将查询的结果做一个10s的缓存，如果前端展示的不是具体的剩余票量，而是有无票，可以使用一个更长时间的缓存，缓存的失效由服务端控制。</li>
+<li>case2：车票分拆<br>假设有一列从北京到深圳的火车D911，用户购买了一张从北京到杭州的车票，按照规则优先级随机取出一张车票，车票数据为 北京-深圳，始发站序0，终点站序20，将该车票状态置为无效，插入一张数据为杭州-深圳，始发站序11，终点站序20的车票，向下单系统发起请求，写入一张北京-杭州的订单。</li>
+<li>case3：车票合并<br>假设有一列从北京到深圳的火车D911，用户预订了北京-杭州的车票，从下单系统收到该订单失败或者超时或者退票的消息，取出其中和车票相关的信息，车次D911，北京-杭州，始发站序0，终点站序11，和车票表中该车次该座位的数据进行关联，合并数据，重新生成一条北京-深圳的车票。</li>
+</ul>
+<h2 id="队列·流控·异步·无锁实现">队列·流控·异步·无锁实现</h2><p>系统的抗压能力和是吞吐量成正比的，这也就是为什么静态页面可以支持超高的QPS，查询的性能优化也比较容易，事务处理的性能提升最困难，系统处理时会保持tcp链接，占用系统资源，最终导致系统的崩溃，响应时间越快，资源的占用时间越短，吞吐能力也就越强，系统的可用性也就越高。<br>在某宝某猫做话费充值系统的思路完全可以用来做火车售票系统，将下单请求持久化，系统间通过消息解耦，通过多线程队列异步处理请求。具体的实现可以在收到下单购票请求后持久化，返回给用户一个排队中的提示(1-x分钟处理完成)，按照车次放到不同的队列中进行排队(期间可以做过滤/去重/合并处理），系统从队列中取数据进行处理。最终一致性就可以满足业务需求的地方，服务尽量减少事务和锁的使用，提高并发处理能力。</p>
+<h2 id="降级">降级</h2><p>为啥要把降级单独拉出来说，我觉得本质上讲降级并不是由于架构设计上的充分考虑带来的可用性和伸缩性的提高，而是牺牲一部分的用户体验换来的系统的可用性，是对峰值事件的应对策略。基本实现就是在系统埋好各种开关，可以由人工控制也可以由系统触发，保证最基本的核心功能可用，其他的非核心功能和部分用户体验可以暂时舍弃。</p>
+<p>数据模型和业务功能就是这样，不论实现的多扭曲基本上大家都可以做出来，功能实现之后无bug是一个挑战，能够满足未来变化是一个挑战，在某个量级之后依然可用又是一个挑战。</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>feed系统和火车票售卖系统是2个高访问高并发情况下具体很大挑战的系统。<br>在低访问，低并发的情况下feed系统会变的非常简单，数据模型和业务功能都比较容易设计和实现，主要的挑战就剩如何面对层出不穷的敏感词和花样百出的广告语。相比之下，火车票售卖系统在低并发时也很有趣，]]>
+    </summary>
+    
+      <category term="分布式" scheme="http://minotaursu.com/tags/%E5%88%86%E5%B8%83%E5%BC%8F/"/>
+    
+      <category term="工作" scheme="http://minotaursu.com/tags/%E5%B7%A5%E4%BD%9C/"/>
+    
+      <category term="开发" scheme="http://minotaursu.com/tags/%E5%BC%80%E5%8F%91/"/>
+    
+      <category term="系统设计" scheme="http://minotaursu.com/tags/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/"/>
     
   </entry>
   
