@@ -2,13 +2,6 @@
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
     <url>
-        <loc>http://minotaursu.com/tags/git/</loc>
-        <lastmod>2017-02-23T03:33:24.000Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
         <loc>http://minotaursu.com/tags/%E9%94%81/</loc>
         <lastmod>2017-02-23T03:36:57.000Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -46,13 +39,6 @@
     <url>
         <loc>http://minotaursu.com/tags/reactor/</loc>
         <lastmod>2017-02-23T03:39:30.000Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
-        <loc>http://minotaursu.com/tags/%E5%B9%B6%E5%8F%91/</loc>
-        <lastmod>2017-02-23T03:42:25.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
@@ -107,13 +93,6 @@
     </url>
 
     <url>
-        <loc>http://minotaursu.com/tags/%E7%BC%93%E5%AD%98/</loc>
-        <lastmod>2017-04-12T03:46:09.000Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
         <loc>http://minotaursu.com/tags/annotation/</loc>
         <lastmod>2017-04-12T03:46:09.000Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -137,13 +116,6 @@
     <url>
         <loc>http://minotaursu.com/tags/spring/</loc>
         <lastmod>2017-04-12T05:14:39.000Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
-        <loc>http://minotaursu.com/tags/java/</loc>
-        <lastmod>2017-04-27T07:15:43.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
@@ -191,8 +163,50 @@
     </url>
 
     <url>
+        <loc>http://minotaursu.com/tags/java/</loc>
+        <lastmod>2017-12-13T09:57:48.352Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://minotaursu.com/tags/%E5%B9%B6%E5%8F%91/</loc>
+        <lastmod>2017-12-13T09:57:48.352Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://minotaursu.com/tags/%E7%BC%93%E5%AD%98/</loc>
+        <lastmod>2017-12-13T09:57:48.352Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://minotaursu.com/tags/git/</loc>
+        <lastmod>2017-12-13T09:58:59.277Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
         <loc>http://minotaursu.com/tags/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/</loc>
-        <lastmod>2017-04-28T05:15:30.000Z</lastmod>
+        <lastmod>2017-12-13T12:37:17.430Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://minotaursu.com/tags/archsummit/</loc>
+        <lastmod>2017-12-13T12:37:17.430Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://minotaursu.com/tags/Cloud-native/</loc>
+        <lastmod>2017-12-13T12:37:17.430Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>

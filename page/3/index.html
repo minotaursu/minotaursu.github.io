@@ -82,11 +82,11 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        20
+        21
         <span>posts</span>
       </div>
       <div class="article-info-block">
-        29
+        31
         <span>tags</span>
       </div>
     </div>
@@ -115,6 +115,68 @@
 
       
       <section id="main">
+      <article id="post-小明的魔法调度框架之旅" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/12/12/小明的魔法调度框架之旅/">小明的魔法调度框架之旅</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2015/12/12/小明的魔法调度框架之旅/">
+      <time datetime="2015-12-12T04:01:24.000Z" itemprop="datePublished">2015-12-12</time>
+    </a>
+  </div>
+
+
+          
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <p><em>据说每个程序员上辈子都是法力高深的魔法师</em></p>
+<h2 id="crontab">crontab</h2><p>话说小明11年从新手村毕业，拿着一把等级为灰色的木剑就开始了打怪升级之路。小明发现怪并不好打，怪物都是在凌晨4点才出现的，好在小明在新手村的时候学会了一个叫crontab的静态魔法，该魔法虽然等级低但是不需要吟唱时间，小明将crontab附魔在自己的木剑上，木剑就可以每天凌晨4点定时去打怪了。</p>
+<h2 id="quartz">quartz</h2><p>虽然crontab这个静态魔法很NB，无奈小明的装备换的太频繁，每次更新装备都需要重新将crontab附魔到武器上才行；这个时候小明已经学会了一个叫quartz的中级魔法，相对不需要吟唱的crontab，quartz需要按照Job，JobDetail，Tigger，Scheduler的顺序进行吟唱才行，虽然过程是<br>复杂了一些，但是好处是显而易见的，魔法再也不需要和装备进行绑定，Scheduler是一个完全独立结界，Scheduler可以容纳多个JobDetail和Tigger,内部的固有魔法线程池可以并行调度多个任务。</p>
+<h2 id="quartz集群">quartz集群</h2><p>在使用了quartz这个中级魔法之后，小明轻松了很长一段时间，再也不必为换装备导致魔法失效而苦恼。在成为了一个合格的中级魔法师之后，学会了无限剑制这种BT魔法之后，小明决定向着中级副本进发，为了应付副本危险的环境，小明利用无限剑制将每个装备都附上了quartz这个魔法，现在问题来了，如果所有的quartz都发动，会产生魔法混乱现象，导致反噬；小明打开了《哈利波特》上面说需要使用魔法石进行魔法加持，例如红魔石mysql，绿魔石redis，蓝魔石zookeeper，只要魔石具有原子性锁操作机制就可以了，在红魔石mysql和quartz配合下，顺序的杀掉了怪物。</p>
+<h2 id="ttd/tbschedule">ttd/tbschedule</h2><p>在中级副本打怪升级一段时间后，小明购买了高级魔法ttd和tbschedule，相对于静态魔法crontab和中级魔法quartz，高级魔法的功能真是-碉堡了。</p>
+<ul>
+<li>支持剑系武器java，弓系武器shell等多种武器；</li>
+<li>支持对吟唱依赖，上一个魔法吟唱成功后才会出现下一个魔法；</li>
+<li>支持大规模魔法分拆，合并</li>
+<li>有着路由规则指定这种高级魔法；</li>
+<li>由蓝宝石zookeeper进行加持和魔法心跳检测，保证不会出现魔法阵的混乱；</li>
+<li>通过魔物netty进行大规模魔法阵的触发；</li>
+<li>通过魔法镜面可以看到魔法执行的效果，当遇到大boss导致魔法失效时还有魔法消息监控功能；</li>
+</ul>
+<h2 id="future">future</h2><p>在小明使用了购买的高级魔法TTD后，小明再也没有见过洛杉鸡凌晨4点的天空（其实是从来好么）。小明听说在山的那边海的那边有一群蓝精灵，他们快速又瞬移，他们筑墙又监禁，他们喽啰无敌生活在那绿色的大森林，他们亵渎溶火漩涡又结群……<br>不过小明并不惧怕，因为芝士就是力量。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://minotaursu.com/2015/12/12/小明的魔法调度框架之旅/" data-id="cjb4vyb2o0012phc42qugshxc" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/quartz/">quartz</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/调度/">调度</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
       <article id="post-git实用攻略二" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -145,7 +207,7 @@
     <div class="article-entry" itemprop="articleBody">
       
                 
-        <p>最近团队的版本控制从svn切换到了git，虽说已经使用git有2年多了，也写了一个<a href="http://minotaursu.com/2014/07/01/git%E5%AE%9E%E7%94%A8%E6%94%BB%E7%95%A5/">实用攻略</a>，但是github上的项目使用经验和公司内部团队协作的使用经验还有很多不同。补充下新的使用体会。<br><img src="http://7jpo4q.com1.z0.glb.clouddn.com/gitflow.png?imageView/1/w/670/h/280" alt=""><br>首先还是看一下git的3个区：working，stage，commit，心中有个概念。</p>
+        <p>最近团队的版本控制从svn切换到了git，虽说已经使用git有2年多了，也写了一个<a href="http://minotaursu.com/2014/07/01/git%E5%AE%9E%E7%94%A8%E6%94%BB%E7%95%A5/">实用攻略</a>，但是github上的项目使用经验和公司内部团队协作的使用经验还有很多不同。补充下新的使用体会。<br><img src="http://hexo-tuchuan.qiniudn.com/gitflow.png?imageView/1/w/670/h/280" alt=""><br>首先还是看一下git的3个区：working，stage，commit，心中有个概念。</p>
 <ol>
 <li><p><strong>github和gitlab账户的共存</strong><br>配置sshkey登录的时候，git只能识别默认的id_rsa的秘钥文件，只有一个账户能够免登，在bash启动脚本中增加ssh-add file 实现多个账户的免登。</p>
 </li>
@@ -170,7 +232,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2015/05/04/git实用攻略二/" data-id="cj8v80pxv002lwifypq7d5dzd" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2015/05/04/git实用攻略二/" data-id="cjb4vyb3i002lphc47y9l5v65" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/git/">git</a></li></ul>
@@ -229,7 +291,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2015/04/13/我设计的12306/" data-id="cj8v80px1000xwifydlnjtob8" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2015/04/13/我设计的12306/" data-id="cjb4vyb2m000xphc4qpffpacc" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/分布式/">分布式</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/工作/">工作</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/开发/">开发</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/系统设计/">系统设计</a></li></ul>
@@ -272,7 +334,7 @@
     <div class="article-entry" itemprop="articleBody">
       
                 
-        <p><img src="http://7jpo4q.com1.z0.glb.clouddn.com/speed.jpg?imageView/1/w/670/h/450" alt=""><br>缓存一直是web2.0应用的性能核心，缓存大幅提高了应用QPS，减少了数据库的压力，降低了RT，让应用能够飞起来。缓存具有易于上手，难于精通的特点，缓存失效的设计是整个缓存应用的难点，在某些复杂情况，不适合的缓存设计增加了系统出错的可能。下面对缓存使用的几种典型情况做下分析。</p>
+        <p><img src="http://hexo-tuchuan.qiniudn.com/speed.jpg?imageView/1/w/670/h/450" alt=""><br>缓存一直是web2.0应用的性能核心，缓存大幅提高了应用QPS，减少了数据库的压力，降低了RT，让应用能够飞起来。缓存具有易于上手，难于精通的特点，缓存失效的设计是整个缓存应用的难点，在某些复杂情况，不适合的缓存设计增加了系统出错的可能。下面对缓存使用的几种典型情况做下分析。</p>
 <h2 id="本地缓存">本地缓存</h2><ol>
 <li>用于缓存复杂算法的不可变计算结果。</li>
 <li>在单机或者数据变化率极低的情况下，本地缓存是一个良好的策略，因为本地缓存的效率最高，相比于分布式缓存，具有更少的网络开销，响应时间也更短，使用更加的灵活。例如邮政编码，报表数据，或者离线处理后的中奖用户名单等场景非常适合使用本地缓存。</li>
@@ -291,7 +353,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2015/01/09/缓存的使用/" data-id="cj8v80pwr000ewify99dkfn9g" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2015/01/09/缓存的使用/" data-id="cjb4vyb2b000ephc4s8rhs7vi" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/并发/">并发</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/缓存/">缓存</a></li></ul>
@@ -304,68 +366,8 @@
 
 
     
-      <article id="post-2014年终总结" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2014/12/30/2014年终总结/">2014年终总结</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2014/12/30/2014年终总结/">
-      <time datetime="2014-12-30T06:59:27.000Z" itemprop="datePublished">2014-12-30</time>
-    </a>
-  </div>
-
-
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <p>这算是工作以后第一次做年终总结。距离2011年末已经整整3年，距离毕业已经3.5年。毕业（前）后，一直过着随遇而安的生活，白天码代码，下班看书，动漫，电影，游戏。今年多了一个陪妹子的活动，实事求是的说陪妹子这个优先级太高抢占了不少资源。<br>过去的2011,2012,2013年就不说了，往事已矣。今年是变化很大的一年，4月初在厦门拍了婚纱照，月末和妹子领了证；十一回家办了婚礼；12月去巴厘岛度了蜜月。今年和妹子一起去了些周边的城市，期待明年去更远的地方。有妹纸照顾还是很幸福的，至少和妹子在一起之后就没有碰过洗衣机。。。<br>工作上今年申请了转岗，从阿里妈妈去了天猫，最开始是在天猫无线，师兄是一个有10年经验的架构师，做过多种不同的业务，由于在天猫无线的时间很短，基本没写什么代码，倒是参加了几次需求讨论，师兄也请了好几杯星巴克；后来开始做话费充值业务，架构和数据量上还是很NB的，打酱油的做了几个日常。比较下来，天猫是业务和市场驱动的部门，在天猫半年接触的运营比在阿里妈妈3年接触的还多（天猫的运营也更强势）；天猫一些系统的架构，稳定性，性能做的很不错，工作上是有收获和成长的；阿里妈妈则是产品驱动的部门，就我接触到的情况，代码细节和code review方面做的相对好一些。<br>今年也面了几家公司，拿到了几个offer，有的每月base要比现在高不少。这些都得益于TMT行业的高速发展，一个新兴，成长期的行业要比成熟，稳定的行业具有更多的机会。后面也没有离职，倒是选择了一次转岗。对于转岗这件事，我的想法是如果不喜欢现在的工作（例如工作没前途，内容没意思，同事合不来，不能实现自我价值，得不到尊重），转岗离职都没问题，同时对于未来也不要抱有太多的期待，毕竟问题在那里都会遇到，都需要解决，但解决问题的方式，时间，地点都可以由自己决定。<br>年中的时候预测了股市会上涨，可惜并没有行动。今后在业余时间更有行动力，做更多更有意义的事情。不能总是玩啊玩的了。  </p>
-<p>2015·wishlist</p>
-<ol>
-<li>欧洲/日本行一次，目的地视财力而定</li>
-<li>驾照</li>
-<li>车</li>
-<li>完成 <a href="http://book.douban.com/people/49806902/wish" target="_blank" rel="external">豆瓣阅读列表</a></li>
-<li>参加3次同城活动(segmentfault/豆瓣)</li>
-<li>为开源项目贡献一次代码</li>
-<li>2015年总结时，列出一件自己觉得NB的事情</li>
-<li>不使用工资收入，更换用了3年的mac pro</li>
-</ol>
-<p><img src="http://hexo-tuchuan.qiniudn.com/saber.jpg?imageView/1/w/670/h/900" alt="不因别人的好恶而改变自己的内心，这种性格其实也蛮好的。"></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2014/12/30/2014年终总结/" data-id="cj8v80py2002twifyvyaso49z" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/工作/">工作</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/阿里/">阿里</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
       <nav id="page-nav">
-        <a class="extend prev" rel="prev" href="/page/2/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/4/">Next &raquo;</a>
+        <a class="extend prev" rel="prev" href="/page/2/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/4/">Next &raquo;</a>
       </nav>
     </section>
       
@@ -376,6 +378,24 @@
     <h3 class="widget-title">recents</h3>
     <div class="widget">
       <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2017/12/13/archsummit2017见闻和思考/" class="thumbnail">
+  
+    <span style="background-image:url(http://hexo-tuchuan.qiniudn.com/archsummit.jpeg
+)" alt="archsummit2017见闻和思考" class="thumbnail-image"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"></p>
+              <p class="item-title"><a href="/2017/12/13/archsummit2017见闻和思考/" class="title">archsummit2017见闻和思考</a></p>
+              <p class="item-date"><time datetime="2017-12-13T10:31:39.000Z" itemprop="datePublished">2017-12-13</time></p>
+            </div>
+          </li>
         
           <li>
             
@@ -448,24 +468,6 @@
             </div>
           </li>
         
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2016/09/23/netty详解之io模型/" class="thumbnail">
-  
-    <span style="background-image:url(http://hexo-tuchuan.qiniudn.com/bio.png
-)" alt="netty详解之io模型" class="thumbnail-image"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"></p>
-              <p class="item-title"><a href="/2016/09/23/netty详解之io模型/" class="title">netty详解之io模型</a></p>
-              <p class="item-date"><time datetime="2016-09-23T08:12:54.000Z" itemprop="datePublished">2016-09-23</time></p>
-            </div>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -475,7 +477,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">tag cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/ACID/" style="font-size: 10px;">ACID</a> <a href="/tags/AOP/" style="font-size: 12.5px;">AOP</a> <a href="/tags/CAP/" style="font-size: 10px;">CAP</a> <a href="/tags/annotation/" style="font-size: 10px;">annotation</a> <a href="/tags/git/" style="font-size: 12.5px;">git</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/netty/" style="font-size: 12.5px;">netty</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/quartz/" style="font-size: 10px;">quartz</a> <a href="/tags/reactor/" style="font-size: 10px;">reactor</a> <a href="/tags/spring/" style="font-size: 12.5px;">spring</a> <a href="/tags/tips/" style="font-size: 10px;">tips</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/分布式/" style="font-size: 15px;">分布式</a> <a href="/tags/工作/" style="font-size: 17.5px;">工作</a> <a href="/tags/并发/" style="font-size: 15px;">并发</a> <a href="/tags/开发/" style="font-size: 17.5px;">开发</a> <a href="/tags/性能/" style="font-size: 10px;">性能</a> <a href="/tags/消息队列/" style="font-size: 10px;">消息队列</a> <a href="/tags/系统设计/" style="font-size: 15px;">系统设计</a> <a href="/tags/缓存/" style="font-size: 12.5px;">缓存</a> <a href="/tags/职业规划/" style="font-size: 10px;">职业规划</a> <a href="/tags/调度/" style="font-size: 10px;">调度</a> <a href="/tags/软件开发/" style="font-size: 10px;">软件开发</a> <a href="/tags/锁/" style="font-size: 10px;">锁</a> <a href="/tags/阿里/" style="font-size: 12.5px;">阿里</a>
+      <a href="/tags/ACID/" style="font-size: 10px;">ACID</a> <a href="/tags/AOP/" style="font-size: 12px;">AOP</a> <a href="/tags/CAP/" style="font-size: 10px;">CAP</a> <a href="/tags/Cloud-native/" style="font-size: 10px;">Cloud native</a> <a href="/tags/annotation/" style="font-size: 10px;">annotation</a> <a href="/tags/archsummit/" style="font-size: 10px;">archsummit</a> <a href="/tags/git/" style="font-size: 12px;">git</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/netty/" style="font-size: 12px;">netty</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/quartz/" style="font-size: 10px;">quartz</a> <a href="/tags/reactor/" style="font-size: 10px;">reactor</a> <a href="/tags/spring/" style="font-size: 12px;">spring</a> <a href="/tags/tips/" style="font-size: 10px;">tips</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/分布式/" style="font-size: 14px;">分布式</a> <a href="/tags/工作/" style="font-size: 18px;">工作</a> <a href="/tags/并发/" style="font-size: 14px;">并发</a> <a href="/tags/开发/" style="font-size: 18px;">开发</a> <a href="/tags/性能/" style="font-size: 10px;">性能</a> <a href="/tags/消息队列/" style="font-size: 10px;">消息队列</a> <a href="/tags/系统设计/" style="font-size: 16px;">系统设计</a> <a href="/tags/缓存/" style="font-size: 12px;">缓存</a> <a href="/tags/职业规划/" style="font-size: 10px;">职业规划</a> <a href="/tags/调度/" style="font-size: 10px;">调度</a> <a href="/tags/软件开发/" style="font-size: 10px;">软件开发</a> <a href="/tags/锁/" style="font-size: 10px;">锁</a> <a href="/tags/阿里/" style="font-size: 12px;">阿里</a>
     </div>
   </div>
 
