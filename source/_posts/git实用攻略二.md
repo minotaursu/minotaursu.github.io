@@ -4,7 +4,7 @@ date: 2015-05-04 17:30:55
 ---
 
 最近团队的版本控制从svn切换到了git，虽说已经使用git有2年多了，也写了一个[实用攻略](http://minotaursu.com/2014/07/01/git%E5%AE%9E%E7%94%A8%E6%94%BB%E7%95%A5/)，但是github上的项目使用经验和公司内部团队协作的使用经验还有很多不同。补充下新的使用体会。
-![](http://7jpo4q.com1.z0.glb.clouddn.com/gitflow.png?imageView/1/w/670/h/280)
+![](http://hexo-tuchuan.qiniudn.com/gitflow.png?imageView/1/w/670/h/280)
 首先还是看一下git的3个区：working，stage，commit，心中有个概念。
 
 1. **github和gitlab账户的共存**   
