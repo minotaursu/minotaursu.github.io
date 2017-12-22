@@ -3,22 +3,22 @@
 <head>
   <meta charset="utf-8">
   
-  <title>CAS | Minotaur story</title>
+  <title>jackson使用setDateFormat后反序列化错误 | Minotaur story</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="google-site-verification" content="bDBQbYqQqKkNOj4OxUu1rjxMw6nQqWpxzBffZ7yj2kA" />
-  <meta name="description" content="CAS 是什么CAS是单词compare and set的缩写，意思是指在set之前先比较该值有没有变化，只有在没变的情况下才对其赋值。在java.util.concurrent包中，CAS提供了一种不同于互斥锁，读写锁的乐观锁机制，CAS和volatile一起构成了整个concurrent包的基石。
-CAS 原理我们都知道，在java语言之前，并发就已经广泛存在并在服务器领域得到了大量的应用。所">
+  <meta name="description" content="最近marketing-activity系统在接入降级服务，出现启动时可以正确获取到降级配置，系统运行一段时间后修改降级策略不生效的问题，之前订单系统，用户系统和其他系统的接入都没问题出现这个问题，肯定是触发了某种特定的case。营销的同学联系我进行排查，排查日志发现是降级服务反序列化Date类型异常，接收到的数据格式是yyyy-MM-dd HH:mm:ss，并不在jackson支持的反序列化格式">
 <meta property="og:type" content="article">
-<meta property="og:title" content="CAS">
-<meta property="og:url" content="http://minotaursu.com/2014/11/05/CAS/index.html">
+<meta property="og:title" content="jackson使用setDateFormat后反序列化错误">
+<meta property="og:url" content="http://minotaursu.com/2017/12/22/jackson使用setDateFormat后反序列化错误/index.html">
 <meta property="og:site_name" content="Minotaur story">
-<meta property="og:description" content="CAS 是什么CAS是单词compare and set的缩写，意思是指在set之前先比较该值有没有变化，只有在没变的情况下才对其赋值。在java.util.concurrent包中，CAS提供了一种不同于互斥锁，读写锁的乐观锁机制，CAS和volatile一起构成了整个concurrent包的基石。
-CAS 原理我们都知道，在java语言之前，并发就已经广泛存在并在服务器领域得到了大量的应用。所">
-<meta property="og:updated_time" content="2017-02-23T03:32:14.000Z">
+<meta property="og:description" content="最近marketing-activity系统在接入降级服务，出现启动时可以正确获取到降级配置，系统运行一段时间后修改降级策略不生效的问题，之前订单系统，用户系统和其他系统的接入都没问题出现这个问题，肯定是触发了某种特定的case。营销的同学联系我进行排查，排查日志发现是降级服务反序列化Date类型异常，接收到的数据格式是yyyy-MM-dd HH:mm:ss，并不在jackson支持的反序列化格式">
+<meta property="og:image" content="http://hexo-tuchuan.qiniudn.com/jackson.png">
+<meta property="og:image" content="http://hexo-tuchuan.qiniudn.com/sds-log.png">
+<meta property="og:image" content="http://hexo-tuchuan.qiniudn.com/jsonutil.png">
+<meta property="og:updated_time" content="2017-12-22T04:11:15.181Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="CAS">
-<meta name="twitter:description" content="CAS 是什么CAS是单词compare and set的缩写，意思是指在set之前先比较该值有没有变化，只有在没变的情况下才对其赋值。在java.util.concurrent包中，CAS提供了一种不同于互斥锁，读写锁的乐观锁机制，CAS和volatile一起构成了整个concurrent包的基石。
-CAS 原理我们都知道，在java语言之前，并发就已经广泛存在并在服务器领域得到了大量的应用。所">
+<meta name="twitter:title" content="jackson使用setDateFormat后反序列化错误">
+<meta name="twitter:description" content="最近marketing-activity系统在接入降级服务，出现启动时可以正确获取到降级配置，系统运行一段时间后修改降级策略不生效的问题，之前订单系统，用户系统和其他系统的接入都没问题出现这个问题，肯定是触发了某种特定的case。营销的同学联系我进行排查，排查日志发现是降级服务反序列化Date类型异常，接收到的数据格式是yyyy-MM-dd HH:mm:ss，并不在jackson支持的反序列化格式">
   
   
     <link rel="icon" href="/css/images/favicon.ico">
@@ -118,7 +118,7 @@ CAS 原理我们都知道，在java语言之前，并发就已经广泛存在并
 </aside>
 
       
-      <section id="main"><article id="post-CAS" class="article article-type-post" itemscope itemprop="blogPost">
+      <section id="main"><article id="post-jackson使用setDateFormat后反序列化错误" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
     
@@ -127,7 +127,7 @@ CAS 原理我们都知道，在java语言之前，并发就已经广泛存在并
         
   
     <h1 class="article-title" itemprop="name">
-      CAS
+      jackson使用setDateFormat后反序列化错误
     </h1>
   
 
@@ -135,8 +135,8 @@ CAS 原理我们都知道，在java语言之前，并发就已经广泛存在并
           
   <div class="article-date">
     <i class="fa fa-calendar"></i>
-    <a href="/2014/11/05/CAS/">
-      <time datetime="2014-11-05T07:06:24.000Z" itemprop="datePublished">2014-11-5</time>
+    <a href="/2017/12/22/jackson使用setDateFormat后反序列化错误/">
+      <time datetime="2017-12-22T04:08:57.000Z" itemprop="datePublished">2017-12-22</time>
     </a>
   </div>
 
@@ -148,20 +148,18 @@ CAS 原理我们都知道，在java语言之前，并发就已经广泛存在并
     <div class="article-entry" itemprop="articleBody">
       
                 
-        <h2 id="CAS_是什么">CAS 是什么</h2><p>CAS是单词compare and set的缩写，意思是指在set之前先比较该值有没有变化，只有在没变的情况下才对其赋值。在java.util.concurrent包中，CAS提供了一种不同于互斥锁，读写锁的乐观锁机制，CAS和volatile一起构成了整个concurrent包的基石。</p>
-<h2 id="CAS_原理">CAS 原理</h2><p>我们都知道，在java语言之前，并发就已经广泛存在并在服务器领域得到了大量的应用。所以硬件厂商老早就在芯片中加入了大量直至并发操作的原语，从而在硬件层面提升效率。在intel的CPU中，使用cmpxchg指令,程序会根据当前处理器的类型来决定是否为cmpxchg指令添加lock前缀。如果程序是在多处理器上运行，就为cmpxchg指令加上lock前缀（lock cmpxchg）。反之，如果程序是在单处理器上运行，就省略lock前缀（单处理器自身会维护单处理器内的顺序一致性，不需要lock前缀提供的内存屏障效果）。<br>CAS 操作包含三个操作数 —— 内存位置（V）、预期原值（A）和新值(B)。 如果内存位置的值与预期原值相匹配，那么处理器会自动将该位置值更新为新值 。否则，处理器不做任何操作。无论哪种情况，它都会在 CAS 指令之前返回该 位置的值。（在 CAS 的一些特殊情况下将仅返回 CAS 是否成功，而不提取当前 值。）CAS 有效地说明了“我认为位置 V 应该包含值 A；如果包含该值，则将 B 放到这个位置；否则，不要更改该位置，只告诉我这个位置现在的值即可。”<br>通常将 CAS 用于同步的方式是从地址 V 读取值 A，执行多步计算来获得新 值 B，然后使用 CAS 将 V 的值从 A 改为 B。如果 V 处的值尚未同时更改，则 CAS 操作成功。<br>类似于 CAS 的指令允许算法执行读-修改-写操作，而无需害怕其他线程同时 修改变量，因为如果其他线程修改变量，那么 CAS 会检测它（并失败），算法可以对该操作重新计算。</p>
-<h2 id="CAS缺点">CAS缺点</h2><ol>
-<li>ABA问题<br>因为CAS需要在操作值的时候检查下值有没有发生变化，如果没有发生变化则更新，但是如果一个值原来是A，变成了B，又变成了A，那么使用CAS进行检查时会发现它的值没有发生变化，但是实际上却变化了。ABA问题的解决思路就是使用版本号。在变量前面追加上版本号，每次变量更新的时候把版本号加一，那么A－B－A 就会变成1A-2B－3A。</li>
-<li>CPU开销大<br>自旋CAS如果长时间不成功，会给CPU带来非常大的执行开销。</li>
-</ol>
+        <p><img src="http://hexo-tuchuan.qiniudn.com/jackson.png" alt=""></p>
+<p>最近marketing-activity系统在接入降级服务，出现启动时可以正确获取到降级配置，系统运行一段时间后修改降级策略不生效的问题，之前订单系统，用户系统和其他系统的接入都没问题出现这个问题，肯定是触发了某种特定的case。营销的同学联系我进行排查，排查日志发现是降级服务反序列化Date类型异常，接收到的数据格式是yyyy-MM-dd HH:mm:ss，并不在jackson支持的反序列化格式之内。降级服务的sdk也是使用的jackson进行序列化的，为什么会出现jackson序列化后的数据却不能使用jackson反序列化。<br>接着查看marketing-activity系统的降级服务sdk日志发现一个很诡异的现象，最初发送的序列化后的请求还是时间戳格式的，运行一段时间后就变成了yyyy-MM-dd HH:mm:ss格式，也就是说系统的行为在运行时被改变了。<br><img src="http://hexo-tuchuan.qiniudn.com/sds-log.png" alt=""></p>
+<p>那么到底是什么可以改变系统运行时的序列化逻辑呢？可能出现的主要原因有2种。一种是字节码技术，也就是btrace，greys这些。另一种就是调用jackson本身的api改变了一些属性。显然第二种的可能性更大一些，果然在jsonUitl里发现了蛛丝马迹，toObject允许设置特定的时间格式进行反序列化，调用setDateFormat会导致后续全部的Date类型的序列化都会是yyyy-MM-dd HH:mm:ss格式，自然不能默认设置的jackson反序列化。<br><img src="http://hexo-tuchuan.qiniudn.com/jsonutil.png" alt=""></p>
+<p>至此降级服务改变策略后不生效的根本原因就得到了解答，那么如果某个对象就是要使用yyyy-MM-dd HH:mm:ss 进行序列化和反序列化怎么办，建议使用@JsonFormat 单独对属性进行注释。<br>最后谈谈fastjson和jackson，貌似jackson的各种坑遇到过很多，而fastjson的坑很少，那么为什么jackson还是要比fastjson更流行，真的只是国外的月亮更圆，空气更甜？这个主要是json框架的设计理念偏重点不同，fastjson偏重的是简单和快速，内部实现有很多的hack和magic code。而jackson偏重的是标准和强大，格式支持json，xml，有很多的属性可以设置非常的灵活，也有很多的接口可以自定义进行扩展，导致学习成本比较高，需要详细看过jackson文档才能上手。</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2014/11/05/CAS/" data-id="cjbhj4ymt0033zic4qzitzgg7" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2017/12/22/jackson使用setDateFormat后反序列化错误/" data-id="cjbhj4ymh002lzic4pzksb3x6" class="article-share-link">Share</a>
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/并发/">并发</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/jackson/">jackson</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/json/">json</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/工作/">工作</a></li></ul>
 
     </footer>
   </div>
@@ -169,19 +167,10 @@ CAS 原理我们都知道，在java语言之前，并发就已经广泛存在并
     
 <nav id="article-nav">
   
-    <a href="/2014/12/24/jar包冲突与inode/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          jar包冲突与inode
-        
-      </div>
-    </a>
   
-  
-    <a href="/2014/11/03/java-Lock/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2017/12/13/archsummit2017见闻和思考/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">java Lock</div>
+      <div class="article-nav-title">archsummit2017见闻和思考</div>
     </a>
   
 </nav>

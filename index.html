@@ -82,11 +82,11 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        21
+        22
         <span>posts</span>
       </div>
       <div class="article-info-block">
-        31
+        33
         <span>tags</span>
       </div>
     </div>
@@ -115,6 +115,57 @@
 
       
       <section id="main">
+      <article id="post-jackson使用setDateFormat后反序列化错误" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/12/22/jackson使用setDateFormat后反序列化错误/">jackson使用setDateFormat后反序列化错误</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2017/12/22/jackson使用setDateFormat后反序列化错误/">
+      <time datetime="2017-12-22T04:08:57.000Z" itemprop="datePublished">2017-12-22</time>
+    </a>
+  </div>
+
+
+          
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <p><img src="http://hexo-tuchuan.qiniudn.com/jackson.png" alt=""></p>
+<p>最近marketing-activity系统在接入降级服务，出现启动时可以正确获取到降级配置，系统运行一段时间后修改降级策略不生效的问题，之前订单系统，用户系统和其他系统的接入都没问题出现这个问题，肯定是触发了某种特定的case。营销的同学联系我进行排查，排查日志发现是降级服务反序列化Date类型异常，接收到的数据格式是yyyy-MM-dd HH:mm:ss，并不在jackson支持的反序列化格式之内。降级服务的sdk也是使用的jackson进行序列化的，为什么会出现jackson序列化后的数据却不能使用jackson反序列化。<br>接着查看marketing-activity系统的降级服务sdk日志发现一个很诡异的现象，最初发送的序列化后的请求还是时间戳格式的，运行一段时间后就变成了yyyy-MM-dd HH:mm:ss格式，也就是说系统的行为在运行时被改变了。<br><img src="http://hexo-tuchuan.qiniudn.com/sds-log.png" alt=""></p>
+<p>那么到底是什么可以改变系统运行时的序列化逻辑呢？可能出现的主要原因有2种。一种是字节码技术，也就是btrace，greys这些。另一种就是调用jackson本身的api改变了一些属性。显然第二种的可能性更大一些，果然在jsonUitl里发现了蛛丝马迹，toObject允许设置特定的时间格式进行反序列化，调用setDateFormat会导致后续全部的Date类型的序列化都会是yyyy-MM-dd HH:mm:ss格式，自然不能默认设置的jackson反序列化。<br><img src="http://hexo-tuchuan.qiniudn.com/jsonutil.png" alt=""></p>
+<p>至此降级服务改变策略后不生效的根本原因就得到了解答，那么如果某个对象就是要使用yyyy-MM-dd HH:mm:ss 进行序列化和反序列化怎么办，建议使用@JsonFormat 单独对属性进行注释。<br>最后谈谈fastjson和jackson，貌似jackson的各种坑遇到过很多，而fastjson的坑很少，那么为什么jackson还是要比fastjson更流行，真的只是国外的月亮更圆，空气更甜？这个主要是json框架的设计理念偏重点不同，fastjson偏重的是简单和快速，内部实现有很多的hack和magic code。而jackson偏重的是标准和强大，格式支持json，xml，有很多的属性可以设置非常的灵活，也有很多的接口可以自定义进行扩展，导致学习成本比较高，需要详细看过jackson文档才能上手。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://minotaursu.com/2017/12/22/jackson使用setDateFormat后反序列化错误/" data-id="cjbhj4ymh002lzic4pzksb3x6" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/jackson/">jackson</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/json/">json</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/工作/">工作</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
       <article id="post-archsummit2017见闻和思考" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -163,7 +214,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2017/12/13/archsummit2017见闻和思考/" data-id="cjb51uqm5002q6rc422c02xza" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2017/12/13/archsummit2017见闻和思考/" data-id="cjbhj4ymp002xzic4msm73hdr" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Cloud-native/">Cloud native</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/archsummit/">archsummit</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/系统设计/">系统设计</a></li></ul>
@@ -229,7 +280,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2017/04/27/谈谈微信红包的设计实现/" data-id="cjb51uqk200006rc404afhfvz" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2017/04/27/谈谈微信红包的设计实现/" data-id="cjbhj4yk20000zic4b6001byj" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/工作/">工作</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/开发/">开发</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/系统设计/">系统设计</a></li></ul>
@@ -277,92 +328,10 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2017/04/12/使用AOP记录应用调用链开销/" data-id="cjb51uqle001g6rc48cjjg7c8" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2017/04/12/使用AOP记录应用调用链开销/" data-id="cjbhj4yls001gzic4v0hrxjsh" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/AOP/">AOP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/spring/">spring</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/性能/">性能</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-消息队列之简要设计" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/11/06/消息队列之简要设计/">消息队列之简要设计</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2016/11/06/消息队列之简要设计/">
-      <time datetime="2016-11-06T02:03:36.000Z" itemprop="datePublished">2016-11-6</time>
-    </a>
-  </div>
-
-
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <h2 id="消息队列的基本功能">消息队列的基本功能</h2><p>消息队列作为系统解耦，流量控制的利器，成为分布式系统核心组件之一。在日常的开发我们享受了使用消息队列带来的便利，那么如果要自己实现一个消息队列应该入手。本文不深入讨论具体，成熟的消息队列如kafka，rocketmq等，主要介绍一下基本功能，思想和设计。<br>首先转换一下角色，作为产品经理给自己提出一个实现消息队列的需求，那么首先列一下消息队列必备的功能有哪些。</p>
-<ul>
-<li>消息堆积</li>
-<li>消息持久化</li>
-<li>消息顺序</li>
-<li>消息最少投递一次</li>
-<li>支持多topic</li>
-<li>相同topic支持多consumer</li>
-<li>消息回溯</li>
-<li>集群功能</li>
-<li>负载均衡</li>
-</ul>
-<p>一个简单的消息队列基本功能如上，在某些特殊的场景还需要支持事务，消息重试等功能。此外除了功能部分，还需要尽可能优化性能，提供监控功能帮助报警和排查问题。</p>
-<h2 id="消息队列的设计实现">消息队列的设计实现</h2><p>明确了功能需求，接下来就要考虑如何实现一个消息列队。<br>消息队列主要涉及到三个部分，通信协议+存储+消费关系维护。</p>
-<h4 id="通信协议">通信协议</h4><p>极简版的消息队列甚至只需要一个redis就可以，按照topic将序列化的数据存储到redis，消费端使用redis的incr功能获取锁，获取到锁的consumer不断的轮询获取消息。当然这种极简版的消息队列是不能通过复杂的生产环境检验的，系统的可靠性也不能保证。这里将极简版的消息队列升级一下，使用成熟的RPC框架实现通信协议，将一次同步RPC调用变成2次PRC+存储，PRC框架帮我们解决了负载均衡，服务发现，通信协议，序列化/反序列化等问题。同时RPC框架也保证了通信层面的高可用。</p>
-<h4 id="存储选择">存储选择</h4><p>对于分布式系统，存储的选择有以下几种</p>
-<ul>
-<li>内存</li>
-<li>本地文件系统</li>
-<li>分布式文件系统</li>
-<li>nosql</li>
-<li>rdbms<br>从速度上内存显然是最快的，对于允许消息丢失，消息堆积能力要求不高的场景(例如日志)，内存会是比较好的选择。rdbms则是最简单的实现可靠存储的方案，很适合用在可靠性要求很高，最终一致性的场景(例如交易消息)，对于不需要100%保证数据完整性的场景，要求性能和消息堆积的场景，hbase也是一个很好的选择。</li>
-</ul>
-<h4 id="消费关系">消费关系</h4><p>在消息存储在broker上后，需要的就是将消息正确的投递到消费者，消息的投递分为广播和单播, 最常见的使用场景是组内单播，组间广播，同一个集群使用相同的group注册订阅，通常消息队列本身不维护消费订阅关系，使用例如zookeeper等成熟的系统维护消费关系，在消费关系发生变化时下发通知。</p>
-<h2 id="队列特性">队列特性</h2><p>确定了消息队列的模块功能需求后，还需要考虑队列的特性需求，这里重点考虑消息丢失，消息确认，消息重复，消息顺序性，投递方式</p>
-<h4 id="消息丢失">消息丢失</h4><p>消息丢失可能发生在3种情况</p>
-<ul>
-<li>生产者-&gt; 队列</li>
-<li>队列-&gt; 消费者</li>
-<li>队列持久化本身<br>在生产者产生消息到队列的过程可能由于网络问题，宕机等原因没有达到消息队列，或者到达队列后并没有返回消息，这时可以通过重试等方式解决。队列到消费者时也会存在同样的问题，可以通过增加一个标识，投递消息前先标记成待完成状态，在收到消费者确认成功的回复后标记成完成。可以看到消息丢失和消息重复是一个硬币的2面, 保证消息不丢失也会带来消息重复的问题。</li>
-</ul>
-<h4 id="消息确认">消息确认</h4><p>消息确认就是将2次RPC变成3次RPC。在某些场景默认auto ack是可以的，但也需要支持消息者主动ack，在之后的某个时间重新投递</p>
-<h4 id="消息重复">消息重复</h4><p>上面提到，在需要保证消息不丢失的场景，因为对投递失败的情况不可确定是失败，还是超时，需要进行重发，一定会带来消息的重复，这里要考虑的是如何减少重复，可以根据一定的规则(业务id+业务名)，数据库唯一主键，分布式主键等产生messageId（为了方便排查问题，一定要有messageId）, 对比清除周期内记录的messageId，如果messageId相同就认为是重复的消息。</p>
-<h4 id="消息顺序性">消息顺序性</h4><p>比较简单有效的实现消息顺序性的方式就是单线程生产者+单线程消费者+每个消费线程对应一个单独队列, 排除消息丢失的情况，可以做到严格有序。</p>
-<h4 id="投递方式">投递方式</h4><p>消息队列的投递方式可以分为push和pull2种，一种模型的某些场景下的优点，在另一些场景就可能是缺点。无论是push还是pull，都存在各种的利弊。<br>push的优点就是及时性，缺点就是受限于消费者的消费能力，可能造成消息的堆积，broker会不断给消费者发送不能处理的消息。<br>pull的优点的就是主动权掌握在消费方，可以根据自己的消息速度进行消息拉取，缺点就是消费方不知道什么时候可以获取的最新的消息，会有消息延迟和忙等。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2016/11/06/消息队列之简要设计/" data-id="cjb51uqky000l6rc4sahyhjp0" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/分布式/">分布式</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/消息队列/">消息队列</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/软件开发/">软件开发</a></li></ul>
 
     </footer>
   </div>
@@ -384,6 +353,24 @@
     <h3 class="widget-title">recents</h3>
     <div class="widget">
       <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2017/12/22/jackson使用setDateFormat后反序列化错误/" class="thumbnail">
+  
+    <span style="background-image:url(http://hexo-tuchuan.qiniudn.com/jackson.png
+)" alt="jackson使用setDateFormat后反序列化错误" class="thumbnail-image"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"></p>
+              <p class="item-title"><a href="/2017/12/22/jackson使用setDateFormat后反序列化错误/" class="title">jackson使用setDateFormat后反序列化错误</a></p>
+              <p class="item-date"><time datetime="2017-12-22T04:08:57.000Z" itemprop="datePublished">2017-12-22</time></p>
+            </div>
+          </li>
         
           <li>
             
@@ -456,24 +443,6 @@
             </div>
           </li>
         
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2016/09/23/netty详解之reactor模型/" class="thumbnail">
-  
-    <span style="background-image:url(http://hexo-tuchuan.qiniudn.com/reactor3.png
-)" alt="netty详解之reactor模型" class="thumbnail-image"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"></p>
-              <p class="item-title"><a href="/2016/09/23/netty详解之reactor模型/" class="title">netty详解之reactor模型</a></p>
-              <p class="item-date"><time datetime="2016-09-23T09:41:41.000Z" itemprop="datePublished">2016-09-23</time></p>
-            </div>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -483,7 +452,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">tag cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/ACID/" style="font-size: 10px;">ACID</a> <a href="/tags/AOP/" style="font-size: 12px;">AOP</a> <a href="/tags/CAP/" style="font-size: 10px;">CAP</a> <a href="/tags/Cloud-native/" style="font-size: 10px;">Cloud native</a> <a href="/tags/annotation/" style="font-size: 10px;">annotation</a> <a href="/tags/archsummit/" style="font-size: 10px;">archsummit</a> <a href="/tags/git/" style="font-size: 12px;">git</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/netty/" style="font-size: 12px;">netty</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/quartz/" style="font-size: 10px;">quartz</a> <a href="/tags/reactor/" style="font-size: 10px;">reactor</a> <a href="/tags/spring/" style="font-size: 12px;">spring</a> <a href="/tags/tips/" style="font-size: 10px;">tips</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/分布式/" style="font-size: 14px;">分布式</a> <a href="/tags/工作/" style="font-size: 18px;">工作</a> <a href="/tags/并发/" style="font-size: 14px;">并发</a> <a href="/tags/开发/" style="font-size: 18px;">开发</a> <a href="/tags/性能/" style="font-size: 10px;">性能</a> <a href="/tags/消息队列/" style="font-size: 10px;">消息队列</a> <a href="/tags/系统设计/" style="font-size: 16px;">系统设计</a> <a href="/tags/缓存/" style="font-size: 12px;">缓存</a> <a href="/tags/职业规划/" style="font-size: 10px;">职业规划</a> <a href="/tags/调度/" style="font-size: 10px;">调度</a> <a href="/tags/软件开发/" style="font-size: 10px;">软件开发</a> <a href="/tags/锁/" style="font-size: 10px;">锁</a> <a href="/tags/阿里/" style="font-size: 12px;">阿里</a>
+      <a href="/tags/ACID/" style="font-size: 10px;">ACID</a> <a href="/tags/AOP/" style="font-size: 11.67px;">AOP</a> <a href="/tags/CAP/" style="font-size: 10px;">CAP</a> <a href="/tags/Cloud-native/" style="font-size: 10px;">Cloud native</a> <a href="/tags/annotation/" style="font-size: 10px;">annotation</a> <a href="/tags/archsummit/" style="font-size: 10px;">archsummit</a> <a href="/tags/git/" style="font-size: 11.67px;">git</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/jackson/" style="font-size: 10px;">jackson</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/json/" style="font-size: 10px;">json</a> <a href="/tags/netty/" style="font-size: 11.67px;">netty</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/quartz/" style="font-size: 10px;">quartz</a> <a href="/tags/reactor/" style="font-size: 10px;">reactor</a> <a href="/tags/spring/" style="font-size: 11.67px;">spring</a> <a href="/tags/tips/" style="font-size: 10px;">tips</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/分布式/" style="font-size: 13.33px;">分布式</a> <a href="/tags/工作/" style="font-size: 18.33px;">工作</a> <a href="/tags/并发/" style="font-size: 13.33px;">并发</a> <a href="/tags/开发/" style="font-size: 16.67px;">开发</a> <a href="/tags/性能/" style="font-size: 10px;">性能</a> <a href="/tags/消息队列/" style="font-size: 10px;">消息队列</a> <a href="/tags/系统设计/" style="font-size: 15px;">系统设计</a> <a href="/tags/缓存/" style="font-size: 11.67px;">缓存</a> <a href="/tags/职业规划/" style="font-size: 10px;">职业规划</a> <a href="/tags/调度/" style="font-size: 10px;">调度</a> <a href="/tags/软件开发/" style="font-size: 10px;">软件开发</a> <a href="/tags/锁/" style="font-size: 10px;">锁</a> <a href="/tags/阿里/" style="font-size: 11.67px;">阿里</a>
     </div>
   </div>
 

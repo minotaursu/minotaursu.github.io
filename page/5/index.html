@@ -82,11 +82,11 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        21
+        22
         <span>posts</span>
       </div>
       <div class="article-info-block">
-        31
+        33
         <span>tags</span>
       </div>
     </div>
@@ -115,6 +115,69 @@
 
       
       <section id="main">
+      <article id="post-java-Lock" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2014/11/03/java-Lock/">java Lock</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2014/11/03/java-Lock/">
+      <time datetime="2014-11-02T23:57:08.000Z" itemprop="datePublished">2014-11-3</time>
+    </a>
+  </div>
+
+
+          
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <p>在jdk5中，新增了Lock接口来提供一种比synchronized更灵活的锁机制。</p>
+<h2 id="ReentrantLock">ReentrantLock</h2><p>ReentrantLock是被最广泛使用来替代synchronized的Lock接口实现，ReentrantLock的代码使用非常简单，只要记得将unlock写在finally方法中就可以了。<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">Lock</span> <span class="keyword">lock</span> = new ReentrantLock();</span></span><br><span class="line"><span class="operator"><span class="keyword">lock</span>.<span class="keyword">lock</span>();</span></span><br><span class="line">try &#123;</span><br><span class="line">&#125; finally &#123;</span><br><span class="line">	<span class="operator"><span class="keyword">lock</span>.<span class="keyword">unlock</span>();</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>相比synchronied，ReentrantLock具有以下特性：</p>
+<ul>
+<li>非阻塞的tryLock，可以进行锁的轮询。</li>
+<li>能被中断的lockInterruptibly，可以进行锁中断。</li>
+<li>有超时时间的tryLock</li>
+</ul>
+<p>ReentrantLock的默认构造函数是非公平的，公平的锁机制会对锁的请求进行排队，按照FIFO的原则进行锁的获取，造成JVM对于等待中的线程调度次序和操作系统对线程的调度不匹配，所以公平锁的性能要小于非公平锁的性能；在大多数场景下我们都可以使用ReentrantLock的默认构造函数，而在某些需要避免‘饥饿’发生的场景下，我们可以使用ReentrantLock(true)。</p>
+<h2 id="ReentrantReadWriteLock">ReentrantReadWriteLock</h2><p>ReentrantReadWriteLock实现了ReadWriteLock接口，提供了一对锁：readLock与writeLock。读锁可以由多个线程同时保持，读锁则是独占的。比较适合读多写少高并发的场景，相比于ReentrantLock，ReentrantReadWriteLock的使用场景并不广泛，性能也要差一点。</p>
+<p>ReadWriteLock的互斥性：</p>
+<ul>
+<li>读读不互斥</li>
+<li>读写互斥</li>
+<li>写写互斥</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://minotaursu.com/2014/11/03/java-Lock/" data-id="cjbhj4yme002dzic48fixjn9w" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/并发/">并发</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/锁/">锁</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
       <article id="post-jdk7jdk8新特性概述" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -172,7 +235,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2014/10/27/jdk7jdk8新特性概述/" data-id="cjb51uqlv002a6rc47l9b09r8" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2014/10/27/jdk7jdk8新特性概述/" data-id="cjbhj4ymc002azic4rxbnr4i8" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/jdk/">jdk</a></li></ul>
@@ -244,7 +307,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2014/10/24/分布式事务处理总结/" data-id="cjb51uqlb00186rc4ym14jgdk" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2014/10/24/分布式事务处理总结/" data-id="cjbhj4ylp0018zic47em27otz" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ACID/">ACID</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CAP/">CAP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/事务/">事务</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/分布式/">分布式</a></li></ul>
@@ -298,84 +361,10 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2014/07/07/职业生涯的第一个三年/" data-id="cjb51uqkr00076rc4ym6xn8q4" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2014/07/07/职业生涯的第一个三年/" data-id="cjbhj4yky0007zic4p7idasdj" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/工作/">工作</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/开发/">开发</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/职业规划/">职业规划</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/阿里/">阿里</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-git实用攻略" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2014/07/01/git实用攻略/">git实用攻略</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2014/07/01/git实用攻略/">
-      <time datetime="2014-07-01T08:03:36.000Z" itemprop="datePublished">2014-07-1</time>
-    </a>
-  </div>
-
-
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <p>一直以来都是在mac的iterm2和windows的cygwin上通过命令行的方式使用git，今天决定整理下常用的git命令，作为简明实用的帮助手册，方便以后查找。</p>
-<h2 id="git_配置">git 配置</h2><ol>
-<li>使用git config —global user.name/user.email 进行初始化配置</li>
-<li>使用cat ~/.gitconfig 和 cat .git/config 查看存储的配置信息</li>
-<li>配置<a href="https://help.github.com/articles/generating-ssh-keys" target="_blank" rel="external">sshkey</a> ，这样以后push就不再需要密码</li>
-<li>对某个命令有疑惑，使用git help</li>
-</ol>
-<h2 id="git_基本命令">git 基本命令</h2><ol>
-<li><strong>git init</strong><br>本地生成git项目，会有一个.git的子目录产生</li>
-<li><strong>git clone</strong><br>签出分支</li>
-<li><strong>git add</strong><br>将本地修改/新增加入到git的index中，支持<strong>git add file1 file2</strong>，<strong>git add dir</strong>，<strong>git add .</strong>等多种形式</li>
-<li><strong>git rm</strong><br>删除本地文件&amp;index中存储的修改, <strong>git rm file1 file2</strong> 删除文件，<strong>git rm -r dir</strong> 递归删除，<strong>git rm —cached file1</strong> 只从index中删除，适用于<strong>git add</strong>了一个不想提交的文件</li>
-<li><strong>git commit -m “message”</strong><br>提交index到head</li>
-<li><strong>git status</strong><br>查看状态</li>
-<li><strong>git log</strong><br>查看log</li>
-<li><strong>git diff</strong><br>比较本地文件和index</li>
-<li><strong>git checkout</strong><br>切换分支，<strong>git checkout -b new_branch</strong> 创建并切换到新分支</li>
-<li><strong>git branch</strong><br>列出本地所有分支，<strong>git branch -r</strong> 列出所有远程分支，<strong>git branch -D new_branch</strong> 删除某个分支</li>
-<li><strong>git push origin master</strong><br>将head更新到名为origin的远程版本库的master分支</li>
-<li><strong>git fetch</strong><br>从远程获取最新版本到本地</li>
-<li><strong>git merge</strong><br>远程/本地分支合并</li>
-<li><strong>git pull</strong><br>获取并合并分支 <strong>git fetch</strong>+<strong>git merged</strong></li>
-<li><strong>git rebase</strong><br>回退变更到上次pull，更新最新pull的变更，将本地修改合并到变更上，额，解释起来比较复杂，建议看官方文档</li>
-<li><strong>git reset</strong><br>回退到上次commit时的状态</li>
-<li><strong>git revert</strong><br>撤销某次commit</li>
-</ol>
-<h2 id="finally">finally</h2><p>复杂的操作和原理结构问题@<strong><a href="https://help.github.com/" target="_blank" rel="external">git help</a></strong>。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2014/07/01/git实用攻略/" data-id="cjb51uqm3002o6rc4lehqnu2e" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/git/">git</a></li></ul>
 
     </footer>
   </div>
@@ -397,6 +386,24 @@
     <h3 class="widget-title">recents</h3>
     <div class="widget">
       <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2017/12/22/jackson使用setDateFormat后反序列化错误/" class="thumbnail">
+  
+    <span style="background-image:url(http://hexo-tuchuan.qiniudn.com/jackson.png
+)" alt="jackson使用setDateFormat后反序列化错误" class="thumbnail-image"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"></p>
+              <p class="item-title"><a href="/2017/12/22/jackson使用setDateFormat后反序列化错误/" class="title">jackson使用setDateFormat后反序列化错误</a></p>
+              <p class="item-date"><time datetime="2017-12-22T04:08:57.000Z" itemprop="datePublished">2017-12-22</time></p>
+            </div>
+          </li>
         
           <li>
             
@@ -469,24 +476,6 @@
             </div>
           </li>
         
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2016/09/23/netty详解之reactor模型/" class="thumbnail">
-  
-    <span style="background-image:url(http://hexo-tuchuan.qiniudn.com/reactor3.png
-)" alt="netty详解之reactor模型" class="thumbnail-image"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"></p>
-              <p class="item-title"><a href="/2016/09/23/netty详解之reactor模型/" class="title">netty详解之reactor模型</a></p>
-              <p class="item-date"><time datetime="2016-09-23T09:41:41.000Z" itemprop="datePublished">2016-09-23</time></p>
-            </div>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -496,7 +485,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">tag cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/ACID/" style="font-size: 10px;">ACID</a> <a href="/tags/AOP/" style="font-size: 12px;">AOP</a> <a href="/tags/CAP/" style="font-size: 10px;">CAP</a> <a href="/tags/Cloud-native/" style="font-size: 10px;">Cloud native</a> <a href="/tags/annotation/" style="font-size: 10px;">annotation</a> <a href="/tags/archsummit/" style="font-size: 10px;">archsummit</a> <a href="/tags/git/" style="font-size: 12px;">git</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/netty/" style="font-size: 12px;">netty</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/quartz/" style="font-size: 10px;">quartz</a> <a href="/tags/reactor/" style="font-size: 10px;">reactor</a> <a href="/tags/spring/" style="font-size: 12px;">spring</a> <a href="/tags/tips/" style="font-size: 10px;">tips</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/分布式/" style="font-size: 14px;">分布式</a> <a href="/tags/工作/" style="font-size: 18px;">工作</a> <a href="/tags/并发/" style="font-size: 14px;">并发</a> <a href="/tags/开发/" style="font-size: 18px;">开发</a> <a href="/tags/性能/" style="font-size: 10px;">性能</a> <a href="/tags/消息队列/" style="font-size: 10px;">消息队列</a> <a href="/tags/系统设计/" style="font-size: 16px;">系统设计</a> <a href="/tags/缓存/" style="font-size: 12px;">缓存</a> <a href="/tags/职业规划/" style="font-size: 10px;">职业规划</a> <a href="/tags/调度/" style="font-size: 10px;">调度</a> <a href="/tags/软件开发/" style="font-size: 10px;">软件开发</a> <a href="/tags/锁/" style="font-size: 10px;">锁</a> <a href="/tags/阿里/" style="font-size: 12px;">阿里</a>
+      <a href="/tags/ACID/" style="font-size: 10px;">ACID</a> <a href="/tags/AOP/" style="font-size: 11.67px;">AOP</a> <a href="/tags/CAP/" style="font-size: 10px;">CAP</a> <a href="/tags/Cloud-native/" style="font-size: 10px;">Cloud native</a> <a href="/tags/annotation/" style="font-size: 10px;">annotation</a> <a href="/tags/archsummit/" style="font-size: 10px;">archsummit</a> <a href="/tags/git/" style="font-size: 11.67px;">git</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/jackson/" style="font-size: 10px;">jackson</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/json/" style="font-size: 10px;">json</a> <a href="/tags/netty/" style="font-size: 11.67px;">netty</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/quartz/" style="font-size: 10px;">quartz</a> <a href="/tags/reactor/" style="font-size: 10px;">reactor</a> <a href="/tags/spring/" style="font-size: 11.67px;">spring</a> <a href="/tags/tips/" style="font-size: 10px;">tips</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/分布式/" style="font-size: 13.33px;">分布式</a> <a href="/tags/工作/" style="font-size: 18.33px;">工作</a> <a href="/tags/并发/" style="font-size: 13.33px;">并发</a> <a href="/tags/开发/" style="font-size: 16.67px;">开发</a> <a href="/tags/性能/" style="font-size: 10px;">性能</a> <a href="/tags/消息队列/" style="font-size: 10px;">消息队列</a> <a href="/tags/系统设计/" style="font-size: 15px;">系统设计</a> <a href="/tags/缓存/" style="font-size: 11.67px;">缓存</a> <a href="/tags/职业规划/" style="font-size: 10px;">职业规划</a> <a href="/tags/调度/" style="font-size: 10px;">调度</a> <a href="/tags/软件开发/" style="font-size: 10px;">软件开发</a> <a href="/tags/锁/" style="font-size: 10px;">锁</a> <a href="/tags/阿里/" style="font-size: 11.67px;">阿里</a>
     </div>
   </div>
 
