@@ -3,25 +3,18 @@
 <head>
   <meta charset="utf-8">
   
-  <title>分布式事务处理总结 | Minotaur story</title>
+  <title>Minotaur story</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="google-site-verification" content="bDBQbYqQqKkNOj4OxUu1rjxMw6nQqWpxzBffZ7yj2kA" />
-  <meta name="description" content="最近看了一段涉及到事务处理的代码，正好去年做过的一个项目也有强一致性的要求，当时做过比较长时间的调研，决定把学习到的知识都总结一遍加深记忆，也方便后续遇到事务处理问题时寻找解决方案。
-其实大多数互联网应用对事务性要求都不高，更多的挑战在于更好的性能和更高的可扩展性，只有少数涉及到账户和交易的系统才对事务和一致性有着强烈的要求。
-事务机制： ACID原则当我们对2个及以上的数据实体进行写操作，这些数">
-<meta property="og:type" content="article">
-<meta property="og:title" content="分布式事务处理总结">
-<meta property="og:url" content="http://minotaursu.com/2014/10/24/分布式事务处理总结/index.html">
+  <meta name="description" content="java developer life">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Minotaur story">
+<meta property="og:url" content="http://minotaursu.com/page/7/index.html">
 <meta property="og:site_name" content="Minotaur story">
-<meta property="og:description" content="最近看了一段涉及到事务处理的代码，正好去年做过的一个项目也有强一致性的要求，当时做过比较长时间的调研，决定把学习到的知识都总结一遍加深记忆，也方便后续遇到事务处理问题时寻找解决方案。
-其实大多数互联网应用对事务性要求都不高，更多的挑战在于更好的性能和更高的可扩展性，只有少数涉及到账户和交易的系统才对事务和一致性有着强烈的要求。
-事务机制： ACID原则当我们对2个及以上的数据实体进行写操作，这些数">
-<meta property="og:updated_time" content="2017-04-27T07:35:11.000Z">
+<meta property="og:description" content="java developer life">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="分布式事务处理总结">
-<meta name="twitter:description" content="最近看了一段涉及到事务处理的代码，正好去年做过的一个项目也有强一致性的要求，当时做过比较长时间的调研，决定把学习到的知识都总结一遍加深记忆，也方便后续遇到事务处理问题时寻找解决方案。
-其实大多数互联网应用对事务性要求都不高，更多的挑战在于更好的性能和更高的可扩展性，只有少数涉及到账户和交易的系统才对事务和一致性有着强烈的要求。
-事务机制： ACID原则当我们对2个及以上的数据实体进行写操作，这些数">
+<meta name="twitter:title" content="Minotaur story">
+<meta name="twitter:description" content="java developer life">
   
   
     <link rel="icon" href="/css/images/favicon.ico">
@@ -121,7 +114,8 @@
 </aside>
 
       
-      <section id="main"><article id="post-分布式事务处理总结" class="article article-type-post" itemscope itemprop="blogPost">
+      <section id="main">
+      <article id="post-jdk7jdk8新特性概述" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
     
@@ -129,8 +123,78 @@
       <header class="article-header">
         
   
-    <h1 class="article-title" itemprop="name">
-      分布式事务处理总结
+    <h1 itemprop="name">
+      <a class="article-title" href="/2014/10/27/jdk7jdk8新特性概述/">jdk7jdk8新特性概述</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2014/10/27/jdk7jdk8新特性概述/">
+      <time datetime="2014-10-27T13:43:38.000Z" itemprop="datePublished">2014-10-27</time>
+    </a>
+  </div>
+
+
+          
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <p>在oracle停止对jdk6更新，jdk8发布之后，公司终于要把生产环境更新到jdk7，下面列一下jdk7,8的可能需要关注的新特性。</p>
+<h2 id="jdk7">jdk7</h2><ul>
+<li>G1垃圾回收</li>
+<li>fork-join框架</li>
+<li>二进制变量</li>
+<li>Switch支持String类型</li>
+<li>try-with-resource</li>
+<li>简化泛型</li>
+<li>catch多个异常</li>
+<li>InvokeDynamic</li>
+<li>更多NIO的API</li>
+</ul>
+<h2 id="jdk8">jdk8</h2><ul>
+<li>lambda</li>
+<li>Nashorn JavaScript Engine</li>
+<li>JDBC 4.2</li>
+<li>Bulk Data Operations for Collections</li>
+<li>Base64</li>
+<li>新的时间函数</li>
+<li>HTTP URL Permissions</li>
+<li>Repeating Annotations</li>
+</ul>
+<p>新特性链接：<br><a href="http://openjdk.java.net/projects/jdk7/features" target="_blank" rel="external">http://openjdk.java.net/projects/jdk7/features</a><br><a href="http://openjdk.java.net/projects/jdk8/features" target="_blank" rel="external">http://openjdk.java.net/projects/jdk8/features</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://minotaursu.com/2014/10/27/jdk7jdk8新特性概述/" data-id="cjbhnzl7g002ig1s6leugl4bg" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/jdk/">jdk</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
+      <article id="post-分布式事务处理总结" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2014/10/24/分布式事务处理总结/">分布式事务处理总结</a>
     </h1>
   
 
@@ -188,32 +252,69 @@
     </footer>
   </div>
   
+</article>
+
+
+
     
-<nav id="article-nav">
-  
-    <a href="/2014/10/27/jdk7jdk8新特性概述/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
+      <article id="post-职业生涯的第一个三年" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
         
-          jdk7jdk8新特性概述
-        
-      </div>
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2014/07/07/职业生涯的第一个三年/">职业生涯的第一个三年</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2014/07/07/职业生涯的第一个三年/">
+      <time datetime="2014-07-07T07:22:22.000Z" itemprop="datePublished">2014-07-7</time>
     </a>
-  
-  
-    <a href="/2014/07/07/职业生涯的第一个三年/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">职业生涯的第一个三年</div>
-    </a>
-  
-</nav>
+  </div>
 
 
+          
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <h2 id="try">try</h2><p>回首3年前的7月，我背着一个硕大的包，拎着满满的行李箱走下飞机来到杭州，在一个阳光明媚的有些刺眼，天气闷热难耐的日子，正式告别了学校，入职阿里巴巴广告应用团队，开始了人生中的第一份正式工作。三年后的7月，我在一个天气清爽的日子写下这段文字，决定告别熟悉的广告业务，加入了一个新的业务团队。<br>在这三年的时间里经历了工作地点的变动，从滨江到华星到西溪；经历了组织架构的调整，从asc到一淘到阿里妈妈；经历了工作内容的变化，从外投到SEM到结算到bp到品牌实效。项目经历上一直是从0到1，从无到有的比较多，做的事情大部分都是新系统的开发和原有系统的大改造。幸运的是这些经历让我对经典的广告业务都有一些理解，遗憾的是缺少把一个业务从1做到100，长的枝繁叶茂的体验。  </p>
+<h2 id="外投">外投</h2><p>关键词：<strong>站外投放，二跳，A/B test，异步加载，gzip</strong><br>公司不让说。 </p>
+<h2 id="SEM">SEM</h2><p>关键词：<strong>hadoop，shell，openApi，webservice，soap</strong><br>公司不让说。  </p>
+<h2 id="结算">结算</h2><p>关键词：<strong>事务，XA协议，账户，性能，稳定性，akka</strong><br>公司不让说。  </p>
+<h2 id="搜索导购&amp;一淘直通车">搜索导购&amp;一淘直通车</h2><p>关键词：<strong>搜索，导购，直通车，p4p，bp</strong><br>公司不让说。  </p>
+<h2 id="品牌实效">品牌实效</h2><p>关键词: <strong>建站，cms，组件化</strong><br>公司不让说。 </p>
+<h2 id="finally">finally</h2><p>最后，感谢3年来团队自由宽松的工作氛围，感谢热情友善的小伙伴们，Farewell fellows!</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://minotaursu.com/2014/07/07/职业生涯的第一个三年/" data-id="cjbhnzl640007g1s65hsv0vgy" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/工作/">工作</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/开发/">开发</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/职业规划/">职业规划</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/阿里/">阿里</a></li></ul>
+
+    </footer>
+  </div>
   
 </article>
 
 
-</section>
+
+    
+      <nav id="page-nav">
+        <a class="extend prev" rel="prev" href="/page/6/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/8/">Next &raquo;</a>
+      </nav>
+    </section>
       
         <aside id="sidebar">
   

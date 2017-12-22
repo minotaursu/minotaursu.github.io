@@ -115,7 +115,7 @@
 
       
       <section id="main">
-      <article id="post-职业生涯的第一个三年" class="article article-type-post" itemscope itemprop="blogPost">
+      <article id="post-jar包冲突与inode" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
     
@@ -124,7 +124,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2014/07/07/职业生涯的第一个三年/">职业生涯的第一个三年</a>
+      <a class="article-title" href="/2014/12/24/jar包冲突与inode/">jar包冲突与inode</a>
     </h1>
   
 
@@ -132,8 +132,8 @@
           
   <div class="article-date">
     <i class="fa fa-calendar"></i>
-    <a href="/2014/07/07/职业生涯的第一个三年/">
-      <time datetime="2014-07-07T07:22:22.000Z" itemprop="datePublished">2014-07-7</time>
+    <a href="/2014/12/24/jar包冲突与inode/">
+      <time datetime="2014-12-24T06:20:40.000Z" itemprop="datePublished">2014-12-24</time>
     </a>
   </div>
 
@@ -145,21 +145,26 @@
     <div class="article-entry" itemprop="articleBody">
       
                 
-        <h2 id="try">try</h2><p>回首3年前的7月，我背着一个硕大的包，拎着满满的行李箱走下飞机来到杭州，在一个阳光明媚的有些刺眼，天气闷热难耐的日子，正式告别了学校，入职阿里巴巴广告应用团队，开始了人生中的第一份正式工作。三年后的7月，我在一个天气清爽的日子写下这段文字，决定告别熟悉的广告业务，加入了一个新的业务团队。<br>在这三年的时间里经历了工作地点的变动，从滨江到华星到西溪；经历了组织架构的调整，从asc到一淘到阿里妈妈；经历了工作内容的变化，从外投到SEM到结算到bp到品牌实效。项目经历上一直是从0到1，从无到有的比较多，做的事情大部分都是新系统的开发和原有系统的大改造。幸运的是这些经历让我对经典的广告业务都有一些理解，遗憾的是缺少把一个业务从1做到100，长的枝繁叶茂的体验。  </p>
-<h2 id="外投">外投</h2><p>关键词：<strong>站外投放，二跳，A/B test，异步加载，gzip</strong><br>公司不让说。 </p>
-<h2 id="SEM">SEM</h2><p>关键词：<strong>hadoop，shell，openApi，webservice，soap</strong><br>公司不让说。  </p>
-<h2 id="结算">结算</h2><p>关键词：<strong>事务，XA协议，账户，性能，稳定性，akka</strong><br>公司不让说。  </p>
-<h2 id="搜索导购&amp;一淘直通车">搜索导购&amp;一淘直通车</h2><p>关键词：<strong>搜索，导购，直通车，p4p，bp</strong><br>公司不让说。  </p>
-<h2 id="品牌实效">品牌实效</h2><p>关键词: <strong>建站，cms，组件化</strong><br>公司不让说。 </p>
-<h2 id="finally">finally</h2><p>最后，感谢3年来团队自由宽松的工作氛围，感谢热情友善的小伙伴们，Farewell fellows!</p>
+        <h2 id="包冲突">包冲突</h2><p>几乎上点规模的java系统就会遇到jar冲突，不负责任的讲排除依赖成了每次发布上线前必做的工作。虽然问题的本质都是jar冲突，但是表现上却有很多不同，从NoSuchMethodError,ClassNotFoundException到field找不到,作用域错误；并且触发冲突条件也不相同，最好并且最常见的是在应用启动时抛出异常，比较恶心的是运行时是某些特殊的边界条件下抛出异常特别。<br>在某些领域，某些境界提出问题，发现问题比解决问题具有更高的价值，但应用开发显然不属于这种高端领域，对于一般的jar冲突我的做法如下。</p>
+<ol>
+<li>查看log中的异常堆栈信息，在idea中CTRL+N，一般会发现多个类。</li>
+<li>如果1搞不定，可以加入jvm参数-verbose:class，log里会打印出类的加载信息。</li>
+<li>确定jar包名，执行mvn dependency:tree&gt;tree.log。</li>
+<li>如果是lib中的包冲突就排除相应的jar。</li>
+<li>如果不能exclusion，声明一个路径最短，最靠前的dependency。告诉maven，畜生！用这个版本的jar。</li>
+<li>如果是容器||中间件的包和应用lib包冲突，就升级容器||中间件。</li>
+</ol>
+<h2 id="inode">inode</h2><p>在jar冲突中有一种情况就是日常是没问题的，生产环境存在冲突，甚至是生产环境中一部分机器存在冲突，这个是因为tomcat等容器的classLoader加载顺序是不排序的，依赖于底层文件系统的顺序，具体到*nix中就是inode的顺序，每个inode中保存了文件系统的一个文件对象的元信息存储，简单的将就是文件在扇区中的索引值。</p>
+<p>可以使用 ls -li 和 stat查看inode，鉴于安全等原因以免引起不必要的麻烦，就不截图了。</p>
+<h2 id="finally">finally</h2><p>实际上大部分的jar都是向后兼容的，如果maven能够按照最高版本依赖（其实也是有问题的），而不是最短路径依赖，相信这个问题会好很多。实际开发中，可以使用maven的依赖冲突检测插件进行事先排除；也可以在部署的lib中查找下进行事后处理；有些发布系统会提前告知本次发布相比与上次新增了那些jar，删除了那些jar，这是一个比较好的策略，毕竟更简单的方法具有更好的执行性。</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2014/07/07/职业生涯的第一个三年/" data-id="cjbhnes7400076ss6zlliwyul" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2014/12/24/jar包冲突与inode/" data-id="cjbhnzl7l002qg1s6y6xelw8e" class="article-share-link">Share</a>
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/工作/">工作</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/开发/">开发</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/职业规划/">职业规划</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/阿里/">阿里</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/开发/">开发</a></li></ul>
 
     </footer>
   </div>
@@ -169,7 +174,7 @@
 
 
     
-      <article id="post-git实用攻略" class="article article-type-post" itemscope itemprop="blogPost">
+      <article id="post-CAS" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
     
@@ -178,7 +183,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2014/07/01/git实用攻略/">git实用攻略</a>
+      <a class="article-title" href="/2014/11/05/CAS/">CAS</a>
     </h1>
   
 
@@ -186,8 +191,8 @@
           
   <div class="article-date">
     <i class="fa fa-calendar"></i>
-    <a href="/2014/07/01/git实用攻略/">
-      <time datetime="2014-07-01T08:03:36.000Z" itemprop="datePublished">2014-07-1</time>
+    <a href="/2014/11/05/CAS/">
+      <time datetime="2014-11-05T07:06:24.000Z" itemprop="datePublished">2014-11-5</time>
     </a>
   </div>
 
@@ -199,41 +204,20 @@
     <div class="article-entry" itemprop="articleBody">
       
                 
-        <p>一直以来都是在mac的iterm2和windows的cygwin上通过命令行的方式使用git，今天决定整理下常用的git命令，作为简明实用的帮助手册，方便以后查找。</p>
-<h2 id="git_配置">git 配置</h2><ol>
-<li>使用git config —global user.name/user.email 进行初始化配置</li>
-<li>使用cat ~/.gitconfig 和 cat .git/config 查看存储的配置信息</li>
-<li>配置<a href="https://help.github.com/articles/generating-ssh-keys" target="_blank" rel="external">sshkey</a> ，这样以后push就不再需要密码</li>
-<li>对某个命令有疑惑，使用git help</li>
+        <h2 id="CAS_是什么">CAS 是什么</h2><p>CAS是单词compare and set的缩写，意思是指在set之前先比较该值有没有变化，只有在没变的情况下才对其赋值。在java.util.concurrent包中，CAS提供了一种不同于互斥锁，读写锁的乐观锁机制，CAS和volatile一起构成了整个concurrent包的基石。</p>
+<h2 id="CAS_原理">CAS 原理</h2><p>我们都知道，在java语言之前，并发就已经广泛存在并在服务器领域得到了大量的应用。所以硬件厂商老早就在芯片中加入了大量直至并发操作的原语，从而在硬件层面提升效率。在intel的CPU中，使用cmpxchg指令,程序会根据当前处理器的类型来决定是否为cmpxchg指令添加lock前缀。如果程序是在多处理器上运行，就为cmpxchg指令加上lock前缀（lock cmpxchg）。反之，如果程序是在单处理器上运行，就省略lock前缀（单处理器自身会维护单处理器内的顺序一致性，不需要lock前缀提供的内存屏障效果）。<br>CAS 操作包含三个操作数 —— 内存位置（V）、预期原值（A）和新值(B)。 如果内存位置的值与预期原值相匹配，那么处理器会自动将该位置值更新为新值 。否则，处理器不做任何操作。无论哪种情况，它都会在 CAS 指令之前返回该 位置的值。（在 CAS 的一些特殊情况下将仅返回 CAS 是否成功，而不提取当前 值。）CAS 有效地说明了“我认为位置 V 应该包含值 A；如果包含该值，则将 B 放到这个位置；否则，不要更改该位置，只告诉我这个位置现在的值即可。”<br>通常将 CAS 用于同步的方式是从地址 V 读取值 A，执行多步计算来获得新 值 B，然后使用 CAS 将 V 的值从 A 改为 B。如果 V 处的值尚未同时更改，则 CAS 操作成功。<br>类似于 CAS 的指令允许算法执行读-修改-写操作，而无需害怕其他线程同时 修改变量，因为如果其他线程修改变量，那么 CAS 会检测它（并失败），算法可以对该操作重新计算。</p>
+<h2 id="CAS缺点">CAS缺点</h2><ol>
+<li>ABA问题<br>因为CAS需要在操作值的时候检查下值有没有发生变化，如果没有发生变化则更新，但是如果一个值原来是A，变成了B，又变成了A，那么使用CAS进行检查时会发现它的值没有发生变化，但是实际上却变化了。ABA问题的解决思路就是使用版本号。在变量前面追加上版本号，每次变量更新的时候把版本号加一，那么A－B－A 就会变成1A-2B－3A。</li>
+<li>CPU开销大<br>自旋CAS如果长时间不成功，会给CPU带来非常大的执行开销。</li>
 </ol>
-<h2 id="git_基本命令">git 基本命令</h2><ol>
-<li><strong>git init</strong><br>本地生成git项目，会有一个.git的子目录产生</li>
-<li><strong>git clone</strong><br>签出分支</li>
-<li><strong>git add</strong><br>将本地修改/新增加入到git的index中，支持<strong>git add file1 file2</strong>，<strong>git add dir</strong>，<strong>git add .</strong>等多种形式</li>
-<li><strong>git rm</strong><br>删除本地文件&amp;index中存储的修改, <strong>git rm file1 file2</strong> 删除文件，<strong>git rm -r dir</strong> 递归删除，<strong>git rm —cached file1</strong> 只从index中删除，适用于<strong>git add</strong>了一个不想提交的文件</li>
-<li><strong>git commit -m “message”</strong><br>提交index到head</li>
-<li><strong>git status</strong><br>查看状态</li>
-<li><strong>git log</strong><br>查看log</li>
-<li><strong>git diff</strong><br>比较本地文件和index</li>
-<li><strong>git checkout</strong><br>切换分支，<strong>git checkout -b new_branch</strong> 创建并切换到新分支</li>
-<li><strong>git branch</strong><br>列出本地所有分支，<strong>git branch -r</strong> 列出所有远程分支，<strong>git branch -D new_branch</strong> 删除某个分支</li>
-<li><strong>git push origin master</strong><br>将head更新到名为origin的远程版本库的master分支</li>
-<li><strong>git fetch</strong><br>从远程获取最新版本到本地</li>
-<li><strong>git merge</strong><br>远程/本地分支合并</li>
-<li><strong>git pull</strong><br>获取并合并分支 <strong>git fetch</strong>+<strong>git merged</strong></li>
-<li><strong>git rebase</strong><br>回退变更到上次pull，更新最新pull的变更，将本地修改合并到变更上，额，解释起来比较复杂，建议看官方文档</li>
-<li><strong>git reset</strong><br>回退到上次commit时的状态</li>
-<li><strong>git revert</strong><br>撤销某次commit</li>
-</ol>
-<h2 id="finally">finally</h2><p>复杂的操作和原理结构问题@<strong><a href="https://help.github.com/" target="_blank" rel="external">git help</a></strong>。</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2014/07/01/git实用攻略/" data-id="cjbhnes8y00336ss62409kn1g" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2014/11/05/CAS/" data-id="cjbhnzl7x003bg1s6b67n63n5" class="article-share-link">Share</a>
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/git/">git</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/并发/">并发</a></li></ul>
 
     </footer>
   </div>
@@ -243,7 +227,7 @@
 
 
     
-      <article id="post-一些技术发展和职业规划的建议" class="article article-type-post" itemscope itemprop="blogPost">
+      <article id="post-java-Lock" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
     
@@ -252,7 +236,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2014/06/24/一些技术发展和职业规划的建议/">一些技术发展和职业规划的建议</a>
+      <a class="article-title" href="/2014/11/03/java-Lock/">java Lock</a>
     </h1>
   
 
@@ -260,8 +244,8 @@
           
   <div class="article-date">
     <i class="fa fa-calendar"></i>
-    <a href="/2014/06/24/一些技术发展和职业规划的建议/">
-      <time datetime="2014-06-24T05:39:53.000Z" itemprop="datePublished">2014-06-24</time>
+    <a href="/2014/11/03/java-Lock/">
+      <time datetime="2014-11-02T23:57:08.000Z" itemprop="datePublished">2014-11-3</time>
     </a>
   </div>
 
@@ -273,29 +257,30 @@
     <div class="article-entry" itemprop="articleBody">
       
                 
-        <p>一些来自<a href="http://weibo.com/aimingoo" target="_blank" rel="external">周爱民</a>老师的技术发展和职业规划的建议，共勉~ </p>
+        <p>在jdk5中，新增了Lock接口来提供一种比synchronized更灵活的锁机制。</p>
+<h2 id="ReentrantLock">ReentrantLock</h2><p>ReentrantLock是被最广泛使用来替代synchronized的Lock接口实现，ReentrantLock的代码使用非常简单，只要记得将unlock写在finally方法中就可以了。<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">Lock</span> <span class="keyword">lock</span> = new ReentrantLock();</span></span><br><span class="line"><span class="operator"><span class="keyword">lock</span>.<span class="keyword">lock</span>();</span></span><br><span class="line">try &#123;</span><br><span class="line">&#125; finally &#123;</span><br><span class="line">	<span class="operator"><span class="keyword">lock</span>.<span class="keyword">unlock</span>();</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>相比synchronied，ReentrantLock具有以下特性：</p>
 <ul>
-<li>不要急</li>
-<li>不要害怕改变</li>
-<li>不要只做不想</li>
-<li>听别人的话，即使你不想听</li>
-<li>订一个五年期的目标，写一个一年期的计划，然后回顾它</li>
-<li>学好中文，学好写文章，学会打标点符号</li>
-<li>学好英语，有时候会发挥巨大作用</li>
-<li>把工作当成事业做，天天都在做事业，才会成功</li>
-<li>理论看不懂，就去实践；实践遇到问题，就去看理论</li>
-<li>参加一个开源项目。如果没你感兴趣的，就自己发起一个</li>
-<li>保持自己对某一件事物的热心，执著，即使这件事与你是不是程序员毫无关系</li>
-<li>成功不能被复制，但失败总在不停复制。看看别人是怎么倒下的，你可以更早地成功</li>
+<li>非阻塞的tryLock，可以进行锁的轮询。</li>
+<li>能被中断的lockInterruptibly，可以进行锁中断。</li>
+<li>有超时时间的tryLock</li>
+</ul>
+<p>ReentrantLock的默认构造函数是非公平的，公平的锁机制会对锁的请求进行排队，按照FIFO的原则进行锁的获取，造成JVM对于等待中的线程调度次序和操作系统对线程的调度不匹配，所以公平锁的性能要小于非公平锁的性能；在大多数场景下我们都可以使用ReentrantLock的默认构造函数，而在某些需要避免‘饥饿’发生的场景下，我们可以使用ReentrantLock(true)。</p>
+<h2 id="ReentrantReadWriteLock">ReentrantReadWriteLock</h2><p>ReentrantReadWriteLock实现了ReadWriteLock接口，提供了一对锁：readLock与writeLock。读锁可以由多个线程同时保持，读锁则是独占的。比较适合读多写少高并发的场景，相比于ReentrantLock，ReentrantReadWriteLock的使用场景并不广泛，性能也要差一点。</p>
+<p>ReadWriteLock的互斥性：</p>
+<ul>
+<li>读读不互斥</li>
+<li>读写互斥</li>
+<li>写写互斥</li>
 </ul>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2014/06/24/一些技术发展和职业规划的建议/" data-id="cjbhnes8c00236ss6i765gpi1" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2014/11/03/java-Lock/" data-id="cjbhnzl7j002lg1s668dcdyae" class="article-share-link">Share</a>
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/tips/">tips</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/并发/">并发</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/锁/">锁</a></li></ul>
 
     </footer>
   </div>
@@ -306,7 +291,7 @@
 
     
       <nav id="page-nav">
-        <a class="extend prev" rel="prev" href="/page/5/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span>
+        <a class="extend prev" rel="prev" href="/page/5/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/7/">Next &raquo;</a>
       </nav>
     </section>
       

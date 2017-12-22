@@ -115,6 +115,72 @@
 
       
       <section id="main">
+      <article id="post-谈谈微信红包的设计实现" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/04/27/谈谈微信红包的设计实现/">微信红包的设计实现</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2017/04/27/谈谈微信红包的设计实现/">
+      <time datetime="2017-04-27T07:19:48.000Z" itemprop="datePublished">2017-04-27</time>
+    </a>
+  </div>
+
+
+          
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <p>红包功能的设计实现是一个很有趣的话题，主要的功能是P个人抢总金额M的N个红包，满足先抢的N个人能抢到红包。如果这是一个leetcode的算法题目难度应该是easy，只要保证Ni抢到的金额区间在[0.01,2倍剩余金额平均值）就能ac。<br>将算法带入到真实的工程实现，问题就要复杂得多，如果达到微信的量级，明显要考虑的有以下几点。</p>
+<ol>
+<li>拆红包</li>
+<li>高并发读</li>
+<li>并发写</li>
+<li>网络流量峰值</li>
+<li>对账</li>
+<li>降级</li>
+<li>故障恢复</li>
+</ol>
+<h1 id="拆红包">拆红包</h1><p>拆红包有预拆包和实时拆包2种策略</p>
+<h2 id="预拆包策略">预拆包策略</h2><p>预拆包的策略在发红包时将金额M的红包拆分成N份，将分配好的结果放入内存队列或者cache，通过incr操作在用户抢红包时分配预算好的红包slot，预算的策略可以避免对共享资源的操作，减少了锁竞争，服务本身是无状态的，设计和实现相对简单，伸缩性较好。劣势是需要额外的存储空间，如果存在大量活跃红包或者红包份数很多时会增加成本。</p>
+<h2 id="实时拆包">实时拆包</h2><p>实时拆包的策略在用户抢红包时实时拆包计算金额，这样只需要保存剩余红包数量和金额，不需要额外保存每个预拆包的红包金额。使用预拆包的策略会面临并发写的问题，如果多个拆红包的请求同时执行会导致数据不一致引起超发的问题，可以使用CAS操作实现乐观锁保证并发拆包不会出现问题。</p>
+<h1 id="高并发读">高并发读</h1><p>应对高并发读的通常思路是业务层拦截过滤无效请求，使用有效的缓存。可以使用Cache层decr功能记录请求红包的用户数，当decr到0后就拦截后面的请求直接返回，对DAO层也要增加相应的缓存减少数据库的压力。</p>
+<h1 id="并发写">并发写</h1><p>应对并发写的通常思路是串行化和乐观锁。在用户抢红包时实时拆包计算金额，每抢到一个红包，就cas更新剩余金额和红包个数，同时在DB中记录凭证，考虑到DB的写入压力，需要做分库分表，冷热分离。</p>
+<h1 id="网络流量峰值">网络流量峰值</h1><p>大量用户同时抢红包是否会造成网络拥塞，发红包和抢红包最好在同一个IDC。</p>
+<h1 id="对账">对账</h1><p>考虑到拆红包凭证和入账是异步的2套系统，以及出现故障的可能，需要定时对账保证数据的一致性。</p>
+<h1 id="降级">降级</h1><p>在cache故障时有限流的使用DB进行服务，在资源紧张的时候关闭掉非核心流程，在实时入账请求量过大时，延迟批量入账。</p>
+<p><img src="http://hexo-tuchuan.qiniudn.com/wechat-small.jpg" alt=""><br>Reference:<br><a href="https://www.zybuluo.com/yulin718/note/93148" target="_blank" rel="external">https://www.zybuluo.com/yulin718/note/93148</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://minotaursu.com/2017/04/27/谈谈微信红包的设计实现/" data-id="cjbhnzl5e0000g1s6lgmdmdk4" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/工作/">工作</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/开发/">开发</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/系统设计/">系统设计</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
       <article id="post-使用AOP记录应用调用链开销" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -150,7 +216,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2017/04/12/使用AOP记录应用调用链开销/" data-id="cjbhnes87001o6ss6ywsqbi2u" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2017/04/12/使用AOP记录应用调用链开销/" data-id="cjbhnzl6w001og1s6esylfc78" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/AOP/">AOP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/spring/">spring</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/性能/">性能</a></li></ul>
@@ -232,7 +298,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2016/11/06/消息队列之简要设计/" data-id="cjbhnes7i000l6ss6gjtdtuu1" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2016/11/06/消息队列之简要设计/" data-id="cjbhnzl6c000lg1s6kytutysw" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/分布式/">分布式</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/消息队列/">消息队列</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/软件开发/">软件开发</a></li></ul>
@@ -245,133 +311,8 @@
 
 
     
-      <article id="post-netty详解之reactor模型" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/09/23/netty详解之reactor模型/">netty详解之reactor模型</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2016/09/23/netty详解之reactor模型/">
-      <time datetime="2016-09-23T09:41:41.000Z" itemprop="datePublished">2016-09-23</time>
-    </a>
-  </div>
-
-
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <p>假设在办理各种证件时分为填表，审核，制作3个过程，每个过程用时10分钟，这样一个工作人员需要30分钟办理一个证件。那么有没有办法提供效率，减少等待时间呢。可以让一个专门的工作人员，每个顾客到来时就负责让顾客填表，在顾客填好表后交给其他工作人员审核。这样其他功能人员的工作效率就从30分钟提高到了20分钟。</p>
-<h2 id="Reactor模式">Reactor模式</h2><p>Reactor模式就是这样一种机制，利用事件驱动减少工作线程的等待时间。Reactor模式是处理并发I/O比较常见的一种模式，用于同步I/O，中心思想是将所有要处理的I/O事件注册到一个中心I/O多路复用器上，同时主线程阻塞在多路复用器上；一旦有I/O事件<strong>准备就绪</strong>(区别在于多路复用器是边沿触发还是水平触发)，多路复用器返回并将相应I/O事件分发到对应的处理器中。</p>
-<h2 id="单线程模型">单线程模型</h2><p>这是最简单的单Reactor单线程模型。Reactor线程是个多面手，负责多路分离套接字，Accept新连接，并分派请求到处理器链中。该模型适用于处理器链中业务处理组件能快速完成的场景。不过这种单线程模型不能充分利用多核资源，所以实际使用的不多。 </p>
-<p><img src="http://hexo-tuchuan.qiniudn.com/reactor3.png" alt=""></p>
-<h2 id="多线程模型（单Reactor）">多线程模型（单Reactor）</h2><p>相比上一种模型，该模型在事件处理器（Handler）链部分采用了多线程（线程池），也是后端程序常用的模型。 </p>
-<p><img src="http://hexo-tuchuan.qiniudn.com/reactor4.png" alt=""></p>
-<h2 id="多线程模型（多Reactor）">多线程模型（多Reactor）</h2><p>这个模型比起第二种模型，它是将Reactor分成两部分，mainReactor负责监听并accept新连接，然后将建立的socket通过多路复用器（Acceptor）分派给subReactor。subReactor负责多路分离已连接的socket，读写网络数据；业务处理功能，其交给worker线程池完成。通常，subReactor个数上可与CPU个数等同。</p>
-<p><img src="http://hexo-tuchuan.qiniudn.com/reactor5.png" alt="">  </p>
-<h2 id="服务端通信时序">服务端通信时序</h2><p><img src="http://hexo-tuchuan.qiniudn.com/reactor1.png" alt="服务端通信序列图"></p>
-<h2 id="客户端通信时序">客户端通信时序</h2><p><img src="http://hexo-tuchuan.qiniudn.com/reactor2.png" alt="客户端通信序列图"></p>
-<p>Netty的IO线程NioEventLoop由于聚合了多路复用器Selector，可以同时并发处理成百上千个客户端Channel，由于读写操作都是非阻塞的，这就可以充分提升IO线程的运行效率，避免由于频繁IO阻塞导致的线程挂起。这从根本上解决了传统同步阻塞IO一连接一线程模型，架构的性能、弹性伸缩能力和可靠性都得到了极大的提升。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2016/09/23/netty详解之reactor模型/" data-id="cjbhnes8f00266ss6rlx8qgnj" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/io/">io</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/netty/">netty</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/reactor/">reactor</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-netty详解之io模型" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/09/23/netty详解之io模型/">netty详解之io模型</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2016/09/23/netty详解之io模型/">
-      <time datetime="2016-09-23T08:12:54.000Z" itemprop="datePublished">2016-09-23</time>
-    </a>
-  </div>
-
-
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <p>提起IO模型首先想到的就是同步，异步，阻塞，非阻塞这几个概念。每个概念的含义，解释，概念间的区别这些都是好理解，这里深入*nix系统讲一下IO模型。  </p>
-<p>在*nix中将IO模型分为5类。  </p>
-<ol>
-<li>Blocking I/O   </li>
-<li>Nonblocking I/O  </li>
-<li>I/O Multiplexing (select and poll)  </li>
-<li>Signal Driven I/O (SIGIO)  </li>
-<li>Asynchronous I/O (the POSIX aio_functions)  </li>
-</ol>
-<h2 id="阻塞_I/O（blocking_IO）">阻塞 I/O（blocking IO）</h2><p><img src="http://hexo-tuchuan.qiniudn.com/bio.png" alt=""></p>
-<p>如图所示，系统调用recvfrom，内核kernel等待数据数据准备完成，在数据准备完成后将数据从内核态拷贝到用户态，recvfrom直到整个过程结束后才完成，在整个过程中经历2次阻塞。</p>
-<h2 id="非阻塞_I/O（nonblocking_IO）">非阻塞 I/O（nonblocking IO）</h2><p><img src="http://hexo-tuchuan.qiniudn.com/nio.png" alt=""></p>
-<p>如图所示，系统调用recvfrom，内核kernel在数据没有准备完成时直接返回，系统会不断轮询，在kernel准备完成数据后将数据从内核态拷贝到用户态，在等待数据完成的过程中并不阻塞。</p>
-<h2 id="I/O_多路复用（_IO_multiplexing）">I/O 多路复用（ IO multiplexing）</h2><p><img src="http://hexo-tuchuan.qiniudn.com/mio.png" alt=""></p>
-<p>如图所示，IO multiplexing 使用select，poll，epoll等实现单个kernel的进程/线程处理多个IO请求，IO复用将等待数据准备和将数据拷贝给应用这两个阶段分开处理，让一个线程（而且是内核级别的线程）来处理所有的等待，一旦有相应的IO事件发生就通知继续完成IO操作，虽然仍然有阻塞和等待，但是等待总是发生在一个线程，这时使用多线程可以保证其他线程一旦唤醒就是处理数据。</p>
-<h2 id="信号驱动_I/O_(Signal_Driven_I/O)">信号驱动 I/O (Signal Driven I/O)</h2><p><img src="http://hexo-tuchuan.qiniudn.com/sio.png" alt=""></p>
-<p>如图所示，系统调用recvfrom试图读取数据，并且直接返回，不管是否有数据可读，内核线程读完数据，给发信号通知应用线程，应用线程收到信息，等待内核线程将数据拷贝给应用线程。</p>
-<h2 id="异步_I/O（asynchronous_IO）">异步 I/O（asynchronous IO）</h2><p><img src="http://hexo-tuchuan.qiniudn.com/aio.png" alt=""></p>
-<p>如图所示，系统调用aio_read，内核kernel直接返回，系统不需要阻塞，继续做其他事情。kernel则进行等待数据准备完成，并将数据拷贝到用户态后，发送signal信号通知系统已经完成。</p>
-<h2 id="各个IO模型的对比">各个IO模型的对比</h2><p><img src="http://hexo-tuchuan.qiniudn.com/dio.png" alt=""></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2016/09/23/netty详解之io模型/" data-id="cjbhnes8h002d6ss6a2lxnxfc" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/netty/">netty</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nio/">nio</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
       <nav id="page-nav">
-        <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
+        <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
       </nav>
     </section>
       

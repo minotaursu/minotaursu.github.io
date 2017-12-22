@@ -3,55 +3,18 @@
 <head>
   <meta charset="utf-8">
   
-  <title>一些技术发展和职业规划的建议 | Minotaur story</title>
+  <title>Minotaur story</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="google-site-verification" content="bDBQbYqQqKkNOj4OxUu1rjxMw6nQqWpxzBffZ7yj2kA" />
-  <meta name="description" content="一些来自周爱民老师的技术发展和职业规划的建议，共勉~ 
-
-不要急
-不要害怕改变
-不要只做不想
-听别人的话，即使你不想听
-订一个五年期的目标，写一个一年期的计划，然后回顾它
-学好中文，学好写文章，学会打标点符号
-学好英语，有时候会发挥巨大作用
-把工作当成事业做，天天都在做事业，才会成功
-理论看不懂，就去实践；实践遇到问题，就去看理论
-参加一个开源项目。如果没你感兴趣的，就自己发起一个
-保持自己对某一">
-<meta property="og:type" content="article">
-<meta property="og:title" content="一些技术发展和职业规划的建议">
-<meta property="og:url" content="http://minotaursu.com/2014/06/24/一些技术发展和职业规划的建议/index.html">
+  <meta name="description" content="java developer life">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Minotaur story">
+<meta property="og:url" content="http://minotaursu.com/page/8/index.html">
 <meta property="og:site_name" content="Minotaur story">
-<meta property="og:description" content="一些来自周爱民老师的技术发展和职业规划的建议，共勉~ 
-
-不要急
-不要害怕改变
-不要只做不想
-听别人的话，即使你不想听
-订一个五年期的目标，写一个一年期的计划，然后回顾它
-学好中文，学好写文章，学会打标点符号
-学好英语，有时候会发挥巨大作用
-把工作当成事业做，天天都在做事业，才会成功
-理论看不懂，就去实践；实践遇到问题，就去看理论
-参加一个开源项目。如果没你感兴趣的，就自己发起一个
-保持自己对某一">
-<meta property="og:updated_time" content="2017-02-23T03:46:59.000Z">
+<meta property="og:description" content="java developer life">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="一些技术发展和职业规划的建议">
-<meta name="twitter:description" content="一些来自周爱民老师的技术发展和职业规划的建议，共勉~ 
-
-不要急
-不要害怕改变
-不要只做不想
-听别人的话，即使你不想听
-订一个五年期的目标，写一个一年期的计划，然后回顾它
-学好中文，学好写文章，学会打标点符号
-学好英语，有时候会发挥巨大作用
-把工作当成事业做，天天都在做事业，才会成功
-理论看不懂，就去实践；实践遇到问题，就去看理论
-参加一个开源项目。如果没你感兴趣的，就自己发起一个
-保持自己对某一">
+<meta name="twitter:title" content="Minotaur story">
+<meta name="twitter:description" content="java developer life">
   
   
     <link rel="icon" href="/css/images/favicon.ico">
@@ -151,7 +114,8 @@
 </aside>
 
       
-      <section id="main"><article id="post-一些技术发展和职业规划的建议" class="article article-type-post" itemscope itemprop="blogPost">
+      <section id="main">
+      <article id="post-git实用攻略" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
     
@@ -159,8 +123,82 @@
       <header class="article-header">
         
   
-    <h1 class="article-title" itemprop="name">
-      一些技术发展和职业规划的建议
+    <h1 itemprop="name">
+      <a class="article-title" href="/2014/07/01/git实用攻略/">git实用攻略</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2014/07/01/git实用攻略/">
+      <time datetime="2014-07-01T08:03:36.000Z" itemprop="datePublished">2014-07-1</time>
+    </a>
+  </div>
+
+
+          
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <p>一直以来都是在mac的iterm2和windows的cygwin上通过命令行的方式使用git，今天决定整理下常用的git命令，作为简明实用的帮助手册，方便以后查找。</p>
+<h2 id="git_配置">git 配置</h2><ol>
+<li>使用git config —global user.name/user.email 进行初始化配置</li>
+<li>使用cat ~/.gitconfig 和 cat .git/config 查看存储的配置信息</li>
+<li>配置<a href="https://help.github.com/articles/generating-ssh-keys" target="_blank" rel="external">sshkey</a> ，这样以后push就不再需要密码</li>
+<li>对某个命令有疑惑，使用git help</li>
+</ol>
+<h2 id="git_基本命令">git 基本命令</h2><ol>
+<li><strong>git init</strong><br>本地生成git项目，会有一个.git的子目录产生</li>
+<li><strong>git clone</strong><br>签出分支</li>
+<li><strong>git add</strong><br>将本地修改/新增加入到git的index中，支持<strong>git add file1 file2</strong>，<strong>git add dir</strong>，<strong>git add .</strong>等多种形式</li>
+<li><strong>git rm</strong><br>删除本地文件&amp;index中存储的修改, <strong>git rm file1 file2</strong> 删除文件，<strong>git rm -r dir</strong> 递归删除，<strong>git rm —cached file1</strong> 只从index中删除，适用于<strong>git add</strong>了一个不想提交的文件</li>
+<li><strong>git commit -m “message”</strong><br>提交index到head</li>
+<li><strong>git status</strong><br>查看状态</li>
+<li><strong>git log</strong><br>查看log</li>
+<li><strong>git diff</strong><br>比较本地文件和index</li>
+<li><strong>git checkout</strong><br>切换分支，<strong>git checkout -b new_branch</strong> 创建并切换到新分支</li>
+<li><strong>git branch</strong><br>列出本地所有分支，<strong>git branch -r</strong> 列出所有远程分支，<strong>git branch -D new_branch</strong> 删除某个分支</li>
+<li><strong>git push origin master</strong><br>将head更新到名为origin的远程版本库的master分支</li>
+<li><strong>git fetch</strong><br>从远程获取最新版本到本地</li>
+<li><strong>git merge</strong><br>远程/本地分支合并</li>
+<li><strong>git pull</strong><br>获取并合并分支 <strong>git fetch</strong>+<strong>git merged</strong></li>
+<li><strong>git rebase</strong><br>回退变更到上次pull，更新最新pull的变更，将本地修改合并到变更上，额，解释起来比较复杂，建议看官方文档</li>
+<li><strong>git reset</strong><br>回退到上次commit时的状态</li>
+<li><strong>git revert</strong><br>撤销某次commit</li>
+</ol>
+<h2 id="finally">finally</h2><p>复杂的操作和原理结构问题@<strong><a href="https://help.github.com/" target="_blank" rel="external">git help</a></strong>。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://minotaursu.com/2014/07/01/git实用攻略/" data-id="cjbhnzl7t0033g1s68m91d3ot" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/git/">git</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
+      <article id="post-一些技术发展和职业规划的建议" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2014/06/24/一些技术发展和职业规划的建议/">一些技术发展和职业规划的建议</a>
     </h1>
   
 
@@ -208,27 +246,15 @@
     </footer>
   </div>
   
-    
-<nav id="article-nav">
-  
-    <a href="/2014/07/01/git实用攻略/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          git实用攻略
-        
-      </div>
-    </a>
-  
-  
-</nav>
-
-
-  
 </article>
 
 
-</section>
+
+    
+      <nav id="page-nav">
+        <a class="extend prev" rel="prev" href="/page/7/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span>
+      </nav>
+    </section>
       
         <aside id="sidebar">
   
