@@ -205,13 +205,6 @@
     </url>
 
     <url>
-        <loc>http://minotaursu.com/tags/java/</loc>
-        <lastmod>2017-12-22T04:11:15.181Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
         <loc>http://minotaursu.com/tags/jackson/</loc>
         <lastmod>2017-12-22T04:11:15.181Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -221,6 +214,34 @@
     <url>
         <loc>http://minotaursu.com/tags/json/</loc>
         <lastmod>2017-12-22T04:11:15.181Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://minotaursu.com/tags/java/</loc>
+        <lastmod>2017-12-22T08:27:42.020Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://minotaursu.com/tags/%E8%AF%AD%E8%A8%80/</loc>
+        <lastmod>2017-12-22T08:27:42.020Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://minotaursu.com/tags/python/</loc>
+        <lastmod>2017-12-22T08:27:42.020Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://minotaursu.com/tags/go/</loc>
+        <lastmod>2017-12-22T08:27:42.020Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>

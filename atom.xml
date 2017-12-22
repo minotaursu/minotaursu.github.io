@@ -41,6 +41,52 @@
   </entry>
   
   <entry>
+    <title><![CDATA[更换一门工作语言的成本]]></title>
+    <link href="http://minotaursu.com/2017/12/18/%E6%9B%B4%E6%8D%A2%E4%B8%80%E9%97%A8%E5%B7%A5%E4%BD%9C%E8%AF%AD%E8%A8%80%E7%9A%84%E6%88%90%E6%9C%AC/"/>
+    <id>http://minotaursu.com/2017/12/18/更换一门工作语言的成本/</id>
+    <published>2017-12-18T08:21:21.000Z</published>
+    <updated>2017-12-22T08:27:42.020Z</updated>
+    <content type="html"><![CDATA[<p><img src="http://hexo-tuchuan.qiniudn.com/lang.jpeg" alt=""></p>
+<p>程序员这个职业经常需要学习新的技术，假如某一天工作上主要使用的语言没落了，或者新的项目需要使用另一门不熟悉的语言开发，那么成本到底有多少，那些是需要重新学习的，又有那些是可以被保留或者继承的。</p>
+<h3 id="需要重新学习的">需要重新学习的</h3><ol>
+<li>语法&amp;语法糖。这应该是最简单的部分，是用大括号分组还是使用缩进分组，条件语句是否需要括号，函数是否可以赋值给变量，是否支持lambda。</li>
+<li>语言中的对象&amp;集合。可以看做是更高一级的语法，用来处理数据结构。</li>
+<li>怎么处理io&amp;网络&amp;数据库连接。 上点规模的项目必然用到。</li>
+<li>经典的第三方库。需要一段时间。</li>
+<li>经典的应用框架。使用可能比较快，解决疑难bug和二次开发需要对源码有一定了解。</li>
+<li>线程协程。想要写出高效的代码必须精通。</li>
+<li>语言相关的中间件。这可能是成本最高，最痛苦的部分。</li>
+</ol>
+<h3 id="不需要重新学习的">不需要重新学习的</h3><ol>
+<li>如何学习一门语言。不开玩笑，这才是最重要的技能，熟悉一门语言后学习新的语言会快很多。</li>
+<li>数据结构和算法的知识。</li>
+<li>操作系统。</li>
+<li>io&amp;网络&amp;数据库方面的知识。</li>
+<li>数据库调优。</li>
+<li>业务系统设计。</li>
+<li>架构思想。MVC分层，微服务。</li>
+<li>中间件的原理。</li>
+<li>业务知识。</li>
+<li>思维逻辑。</li>
+</ol>
+<p>需要重新学习的主要集中在工具层面，保留的主要是思想和原理。看起来重新学习一门语言就像一个内力深厚的高手不再用剑改学刀法，问题不会很大，但也不是毫无风险，初学期遇到一个难缠的对手也容易乱拳打死老师傅。可能需要一个月到半年的熟悉期。</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p><img src="http://hexo-tuchuan.qiniudn.com/lang.jpeg" alt=""></p>
+<p>程序员这个职业经常需要学习新的技术，假如某一天工作上主要使用的语言没落了，或者新的项目需要使用另一门不熟悉的语言开发，那么成本到底有多少，]]>
+    </summary>
+    
+      <category term="go" scheme="http://minotaursu.com/tags/go/"/>
+    
+      <category term="java" scheme="http://minotaursu.com/tags/java/"/>
+    
+      <category term="python" scheme="http://minotaursu.com/tags/python/"/>
+    
+      <category term="语言" scheme="http://minotaursu.com/tags/%E8%AF%AD%E8%A8%80/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[archsummit2017见闻和思考]]></title>
     <link href="http://minotaursu.com/2017/12/13/archsummit2017%E8%A7%81%E9%97%BB%E5%92%8C%E6%80%9D%E8%80%83/"/>
     <id>http://minotaursu.com/2017/12/13/archsummit2017见闻和思考/</id>
@@ -348,41 +394,6 @@
       <category term="spring" scheme="http://minotaursu.com/tags/spring/"/>
     
       <category term="缓存" scheme="http://minotaursu.com/tags/%E7%BC%93%E5%AD%98/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[小明的魔法调度框架之旅]]></title>
-    <link href="http://minotaursu.com/2015/12/12/%E5%B0%8F%E6%98%8E%E7%9A%84%E9%AD%94%E6%B3%95%E8%B0%83%E5%BA%A6%E6%A1%86%E6%9E%B6%E4%B9%8B%E6%97%85/"/>
-    <id>http://minotaursu.com/2015/12/12/小明的魔法调度框架之旅/</id>
-    <published>2015-12-12T04:01:24.000Z</published>
-    <updated>2017-02-23T03:46:49.000Z</updated>
-    <content type="html"><![CDATA[<p><em>据说每个程序员上辈子都是法力高深的魔法师</em></p>
-<h2 id="crontab">crontab</h2><p>话说小明11年从新手村毕业，拿着一把等级为灰色的木剑就开始了打怪升级之路。小明发现怪并不好打，怪物都是在凌晨4点才出现的，好在小明在新手村的时候学会了一个叫crontab的静态魔法，该魔法虽然等级低但是不需要吟唱时间，小明将crontab附魔在自己的木剑上，木剑就可以每天凌晨4点定时去打怪了。</p>
-<h2 id="quartz">quartz</h2><p>虽然crontab这个静态魔法很NB，无奈小明的装备换的太频繁，每次更新装备都需要重新将crontab附魔到武器上才行；这个时候小明已经学会了一个叫quartz的中级魔法，相对不需要吟唱的crontab，quartz需要按照Job，JobDetail，Tigger，Scheduler的顺序进行吟唱才行，虽然过程是<br>复杂了一些，但是好处是显而易见的，魔法再也不需要和装备进行绑定，Scheduler是一个完全独立结界，Scheduler可以容纳多个JobDetail和Tigger,内部的固有魔法线程池可以并行调度多个任务。</p>
-<h2 id="quartz集群">quartz集群</h2><p>在使用了quartz这个中级魔法之后，小明轻松了很长一段时间，再也不必为换装备导致魔法失效而苦恼。在成为了一个合格的中级魔法师之后，学会了无限剑制这种BT魔法之后，小明决定向着中级副本进发，为了应付副本危险的环境，小明利用无限剑制将每个装备都附上了quartz这个魔法，现在问题来了，如果所有的quartz都发动，会产生魔法混乱现象，导致反噬；小明打开了《哈利波特》上面说需要使用魔法石进行魔法加持，例如红魔石mysql，绿魔石redis，蓝魔石zookeeper，只要魔石具有原子性锁操作机制就可以了，在红魔石mysql和quartz配合下，顺序的杀掉了怪物。</p>
-<h2 id="ttd/tbschedule">ttd/tbschedule</h2><p>在中级副本打怪升级一段时间后，小明购买了高级魔法ttd和tbschedule，相对于静态魔法crontab和中级魔法quartz，高级魔法的功能真是-碉堡了。</p>
-<ul>
-<li>支持剑系武器java，弓系武器shell等多种武器；</li>
-<li>支持对吟唱依赖，上一个魔法吟唱成功后才会出现下一个魔法；</li>
-<li>支持大规模魔法分拆，合并</li>
-<li>有着路由规则指定这种高级魔法；</li>
-<li>由蓝宝石zookeeper进行加持和魔法心跳检测，保证不会出现魔法阵的混乱；</li>
-<li>通过魔物netty进行大规模魔法阵的触发；</li>
-<li>通过魔法镜面可以看到魔法执行的效果，当遇到大boss导致魔法失效时还有魔法消息监控功能；</li>
-</ul>
-<h2 id="future">future</h2><p>在小明使用了购买的高级魔法TTD后，小明再也没有见过洛杉鸡凌晨4点的天空（其实是从来好么）。小明听说在山的那边海的那边有一群蓝精灵，他们快速又瞬移，他们筑墙又监禁，他们喽啰无敌生活在那绿色的大森林，他们亵渎溶火漩涡又结群……<br>不过小明并不惧怕，因为芝士就是力量。</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p><em>据说每个程序员上辈子都是法力高深的魔法师</em></p>
-<h2 id="crontab">crontab</h2><p>话说小明11年从新手村毕业，拿着一把等级为灰色的木剑就开始了打怪升级之路。小明发现怪并不好打，怪物都是在凌晨4点才出现的，好在小明在新手村的时]]>
-    </summary>
-    
-      <category term="java" scheme="http://minotaursu.com/tags/java/"/>
-    
-      <category term="quartz" scheme="http://minotaursu.com/tags/quartz/"/>
-    
-      <category term="调度" scheme="http://minotaursu.com/tags/%E8%B0%83%E5%BA%A6/"/>
     
   </entry>
   
