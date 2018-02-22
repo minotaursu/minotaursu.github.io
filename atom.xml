@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://minotaursu.com/"/>
-  <updated>2018-02-22T06:10:40.215Z</updated>
+  <updated>2018-02-22T06:44:52.342Z</updated>
   <id>http://minotaursu.com/</id>
   
   <author>
@@ -15,13 +15,30 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title><![CDATA[2017年终总结]]></title>
+    <link href="http://minotaursu.com/2018/02/22/2017%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/"/>
+    <id>http://minotaursu.com/2018/02/22/2017年终总结/</id>
+    <published>2018-02-22T06:17:55.000Z</published>
+    <updated>2018-02-22T06:44:52.342Z</updated>
+    <content type="html"></content>
+    <summary type="html">
+    
+    </summary>
+    
+      <category term="工作" scheme="http://minotaursu.com/tags/%E5%B7%A5%E4%BD%9C/"/>
+    
+      <category term="滴滴" scheme="http://minotaursu.com/tags/%E6%BB%B4%E6%BB%B4/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[一次GC耗时超长的问题排查]]></title>
     <link href="http://minotaursu.com/2018/02/22/%E4%B8%80%E6%AC%A1GC%E8%80%97%E6%97%B6%E8%B6%85%E9%95%BF%E7%9A%84%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/"/>
     <id>http://minotaursu.com/2018/02/22/一次GC耗时超长的问题排查/</id>
     <published>2018-02-22T03:57:06.000Z</published>
-    <updated>2018-02-22T06:10:40.215Z</updated>
+    <updated>2018-02-22T07:07:08.023Z</updated>
     <content type="html"><![CDATA[<p><img src="http://hexo-tuchuan.qiniudn.com/gc.png" alt=""></p>
-<p>2017年10月某日突然收到FullGC耗时超长的报警，排查发现应用存在周期性FULLGC耗时超长的的情况，每次FULLGC时间长达5s以上，甚至出现过10s以上的FULLGC，导致FULLGC时应用的响应全部超时。 最初是怀疑系统有大量的对象没有释放导致FULLGC时间过长，第一时间dump了应用的内存，并没有发现内存泄露的情况。后面查看GC日志发现Rescan阶段weak refs processing的超时都超长，GC日志里大量可见[weak refs processing, 9.7398650 secs]，排查的方向就逐渐转向了weak refs processing 为什么会花费如此长的时间，按照这个思路排查了一晚上也没有结果。<br>第二天使用<a href="http://gceasy.io/" target="_blank" rel="external">http://gceasy.io/</a> 进行了GC的可视化分析，发现了一个之前一直忽略的现象，GC真实的耗时是远大于用户耗时和系统耗时的，[Times: user=2.56 sys=0.07, real=9.82 secs]。我们知道JVM本身作为一个进程也是由linux系统进行内存分配，而linux的内存空间由两部分构成，物理内存和swap空间，假如GC时有一部分内容被交换到swap，遍历到这部分的时候就需要将其交换回内存，极端情况下甚至会把整个堆分区轮流往SWAP写一遍，而磁盘交换的速度是远慢于物理内存的，如果GC和swap同时发生会导致超长时间的卡顿，通过sar -W -f 命令分析发现swap时间完全吻合发生耗时超长的GC时间，基本可以断定是系统的物理内存不够用导致系统发生swap，最终导致耗时超长的GC发生，关闭linux的swap后引用的GC时间恢复到500ms以下。<br>虽然gc耗时超长的问题得到了解决，但是仔细思考一下就会发现问题的解决完全依赖程序员的推理过程和知识储备，那么是不是可以有更简单更快速的问题排查定位手段，我认为答案是可以的，那就是更加智能化的监控，将业务指标，应用指标，系统指标打通关联，在FULLGC超时报警的时候通知告知业务开发系统发生了swap，并且能展示对订单量和GMV等指标的影响。好的基础设施就像强大的武器，虽然依赖好的枪法用手枪也能杀死敌人，但是手里有把AKM或M16还是更容易吃鸡。</p>
+<p>2017年10月某日突然收到FullGC耗时超长的报警，排查发现应用存在周期性FULLGC耗时超长的的情况，每次FULLGC时间长达5s以上，甚至出现过10s以上的FULLGC，导致FULLGC时应用的响应全部超时。最初是怀疑系统有大量的对象没有释放导致FULLGC时间过长，第一时间dump了应用的内存，并没有发现内存泄露的情况。后面查看GC日志发现Rescan阶段weak refs processing的超时都超长，GC日志里大量可见[weak refs processing, 9.7398650 secs]，排查的方向就逐渐转向了weak refs processing 为什么会花费如此长的时间，大家在一起针对代码分析了很久，从jackson的使用，到本地缓存的使用，到NIO的影响，每个人都提出了自己的见解，但是又没有强有力的证据验证自己的结果，按照这个思路排查了一晚上也没有结果。<br>后面分析发现耗时超长的FULLGC只出现在特定的某一台服务器上，该应用的FULLGC耗时在其他服务器上都表现正常，排查发现出现GC耗时过长的服务器还部署着大数据的某个高IO类型的应用，排查的思路又转向了服务器的IO和cpu，但是并没有发现io和cpu的异常情况，排查似乎陷入了困境。<br>过了几天之后找到了一个可视化的GC分析工具<a href="http://gceasy.io/" target="_blank" rel="external">gceasy.io</a> ，分析后发现一个之前一直忽略的现象，GC真实的耗时是远大于用户耗时和系统耗时的，[Times: user=2.56 sys=0.07, real=9.82 secs]。我们知道JVM本身作为一个进程也是由linux系统进行内存分配，而linux的内存空间由两部分构成，物理内存和swap空间，假如GC时有一部分内容被交换到swap，遍历到这部分的时候就需要将其交换回内存，极端情况下甚至会把整个堆分区轮流往SWAP写一遍，而磁盘交换的速度是远慢于物理内存的，如果GC和swap同时发生会导致超长时间的卡顿，通过sar -W -f 命令分析发现swap时间完全吻合发生耗时超长的GC时间，基本可以断定是系统的物理内存不够用导致系统发生swap，最终导致耗时超长的GC发生，关闭linux的swap后引用的GC时间恢复到500ms以下。<br>虽然gc耗时超长的问题得到了解决，但是仔细思考一下就会发现问题的解决完全依赖程序员的推理过程和知识储备，那么是不是可以有更简单更快速的问题排查定位手段，我认为答案是可以的，那就是更加智能化的监控，将业务指标，应用指标，系统指标打通关联，在FULLGC超时报警的时候通知告知业务开发系统发生了swap，并且能展示对订单量和GMV等指标的影响。好的基础设施就像强大的武器，虽然依赖好的枪法用手枪也能杀死敌人，但是手里有把AKM或M16还是更容易吃鸡。</p>
 ]]></content>
     <summary type="html">
     <![CDATA[<p><img src="http://hexo-tuchuan.qiniudn.com/gc.png" alt=""></p>
@@ -313,49 +330,6 @@
       <category term="netty" scheme="http://minotaursu.com/tags/netty/"/>
     
       <category term="reactor" scheme="http://minotaursu.com/tags/reactor/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[netty详解之io模型]]></title>
-    <link href="http://minotaursu.com/2016/09/23/netty%E8%AF%A6%E8%A7%A3%E4%B9%8Bio%E6%A8%A1%E5%9E%8B/"/>
-    <id>http://minotaursu.com/2016/09/23/netty详解之io模型/</id>
-    <published>2016-09-23T08:12:54.000Z</published>
-    <updated>2017-02-23T03:38:43.000Z</updated>
-    <content type="html"><![CDATA[<p>提起IO模型首先想到的就是同步，异步，阻塞，非阻塞这几个概念。每个概念的含义，解释，概念间的区别这些都是好理解，这里深入*nix系统讲一下IO模型。  </p>
-<p>在*nix中将IO模型分为5类。  </p>
-<ol>
-<li>Blocking I/O   </li>
-<li>Nonblocking I/O  </li>
-<li>I/O Multiplexing (select and poll)  </li>
-<li>Signal Driven I/O (SIGIO)  </li>
-<li>Asynchronous I/O (the POSIX aio_functions)  </li>
-</ol>
-<h2 id="阻塞_I/O（blocking_IO）">阻塞 I/O（blocking IO）</h2><p><img src="http://hexo-tuchuan.qiniudn.com/bio.png" alt=""></p>
-<p>如图所示，系统调用recvfrom，内核kernel等待数据数据准备完成，在数据准备完成后将数据从内核态拷贝到用户态，recvfrom直到整个过程结束后才完成，在整个过程中经历2次阻塞。</p>
-<h2 id="非阻塞_I/O（nonblocking_IO）">非阻塞 I/O（nonblocking IO）</h2><p><img src="http://hexo-tuchuan.qiniudn.com/nio.png" alt=""></p>
-<p>如图所示，系统调用recvfrom，内核kernel在数据没有准备完成时直接返回，系统会不断轮询，在kernel准备完成数据后将数据从内核态拷贝到用户态，在等待数据完成的过程中并不阻塞。</p>
-<h2 id="I/O_多路复用（_IO_multiplexing）">I/O 多路复用（ IO multiplexing）</h2><p><img src="http://hexo-tuchuan.qiniudn.com/mio.png" alt=""></p>
-<p>如图所示，IO multiplexing 使用select，poll，epoll等实现单个kernel的进程/线程处理多个IO请求，IO复用将等待数据准备和将数据拷贝给应用这两个阶段分开处理，让一个线程（而且是内核级别的线程）来处理所有的等待，一旦有相应的IO事件发生就通知继续完成IO操作，虽然仍然有阻塞和等待，但是等待总是发生在一个线程，这时使用多线程可以保证其他线程一旦唤醒就是处理数据。</p>
-<h2 id="信号驱动_I/O_(Signal_Driven_I/O)">信号驱动 I/O (Signal Driven I/O)</h2><p><img src="http://hexo-tuchuan.qiniudn.com/sio.png" alt=""></p>
-<p>如图所示，系统调用recvfrom试图读取数据，并且直接返回，不管是否有数据可读，内核线程读完数据，给发信号通知应用线程，应用线程收到信息，等待内核线程将数据拷贝给应用线程。</p>
-<h2 id="异步_I/O（asynchronous_IO）">异步 I/O（asynchronous IO）</h2><p><img src="http://hexo-tuchuan.qiniudn.com/aio.png" alt=""></p>
-<p>如图所示，系统调用aio_read，内核kernel直接返回，系统不需要阻塞，继续做其他事情。kernel则进行等待数据准备完成，并将数据拷贝到用户态后，发送signal信号通知系统已经完成。</p>
-<h2 id="各个IO模型的对比">各个IO模型的对比</h2><p><img src="http://hexo-tuchuan.qiniudn.com/dio.png" alt=""></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>提起IO模型首先想到的就是同步，异步，阻塞，非阻塞这几个概念。每个概念的含义，解释，概念间的区别这些都是好理解，这里深入*nix系统讲一下IO模型。  </p>
-<p>在*nix中将IO模型分为5类。  </p>
-<ol>
-<li>Blocking I/O   </li>
-]]>
-    </summary>
-    
-      <category term="java" scheme="http://minotaursu.com/tags/java/"/>
-    
-      <category term="netty" scheme="http://minotaursu.com/tags/netty/"/>
-    
-      <category term="nio" scheme="http://minotaursu.com/tags/nio/"/>
     
   </entry>
   
