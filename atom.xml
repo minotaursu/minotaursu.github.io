@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://minotaursu.com/"/>
-  <updated>2017-12-22T04:11:15.181Z</updated>
+  <updated>2018-02-22T06:10:40.215Z</updated>
   <id>http://minotaursu.com/</id>
   
   <author>
@@ -13,6 +13,28 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[一次GC耗时超长的问题排查]]></title>
+    <link href="http://minotaursu.com/2018/02/22/%E4%B8%80%E6%AC%A1GC%E8%80%97%E6%97%B6%E8%B6%85%E9%95%BF%E7%9A%84%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/"/>
+    <id>http://minotaursu.com/2018/02/22/一次GC耗时超长的问题排查/</id>
+    <published>2018-02-22T03:57:06.000Z</published>
+    <updated>2018-02-22T06:10:40.215Z</updated>
+    <content type="html"><![CDATA[<p><img src="http://hexo-tuchuan.qiniudn.com/gc.png" alt=""></p>
+<p>2017年10月某日突然收到FullGC耗时超长的报警，排查发现应用存在周期性FULLGC耗时超长的的情况，每次FULLGC时间长达5s以上，甚至出现过10s以上的FULLGC，导致FULLGC时应用的响应全部超时。 最初是怀疑系统有大量的对象没有释放导致FULLGC时间过长，第一时间dump了应用的内存，并没有发现内存泄露的情况。后面查看GC日志发现Rescan阶段weak refs processing的超时都超长，GC日志里大量可见[weak refs processing, 9.7398650 secs]，排查的方向就逐渐转向了weak refs processing 为什么会花费如此长的时间，按照这个思路排查了一晚上也没有结果。<br>第二天使用<a href="http://gceasy.io/" target="_blank" rel="external">http://gceasy.io/</a> 进行了GC的可视化分析，发现了一个之前一直忽略的现象，GC真实的耗时是远大于用户耗时和系统耗时的，[Times: user=2.56 sys=0.07, real=9.82 secs]。我们知道JVM本身作为一个进程也是由linux系统进行内存分配，而linux的内存空间由两部分构成，物理内存和swap空间，假如GC时有一部分内容被交换到swap，遍历到这部分的时候就需要将其交换回内存，极端情况下甚至会把整个堆分区轮流往SWAP写一遍，而磁盘交换的速度是远慢于物理内存的，如果GC和swap同时发生会导致超长时间的卡顿，通过sar -W -f 命令分析发现swap时间完全吻合发生耗时超长的GC时间，基本可以断定是系统的物理内存不够用导致系统发生swap，最终导致耗时超长的GC发生，关闭linux的swap后引用的GC时间恢复到500ms以下。<br>虽然gc耗时超长的问题得到了解决，但是仔细思考一下就会发现问题的解决完全依赖程序员的推理过程和知识储备，那么是不是可以有更简单更快速的问题排查定位手段，我认为答案是可以的，那就是更加智能化的监控，将业务指标，应用指标，系统指标打通关联，在FULLGC超时报警的时候通知告知业务开发系统发生了swap，并且能展示对订单量和GMV等指标的影响。好的基础设施就像强大的武器，虽然依赖好的枪法用手枪也能杀死敌人，但是手里有把AKM或M16还是更容易吃鸡。</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p><img src="http://hexo-tuchuan.qiniudn.com/gc.png" alt=""></p>
+<p>2017年10月某日突然收到FullGC耗时超长的报警，排查发现应用存在周期性FULLGC耗时超长的的情况，每次FULLGC时间长达5s以上，甚]]>
+    </summary>
+    
+      <category term="gc" scheme="http://minotaursu.com/tags/gc/"/>
+    
+      <category term="java" scheme="http://minotaursu.com/tags/java/"/>
+    
+      <category term="性能" scheme="http://minotaursu.com/tags/%E6%80%A7%E8%83%BD/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[jackson使用setDateFormat后反序列化错误]]></title>
@@ -181,6 +203,36 @@
   </entry>
   
   <entry>
+    <title><![CDATA[2016年终总结]]></title>
+    <link href="http://minotaursu.com/2017/04/06/2016%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/"/>
+    <id>http://minotaursu.com/2017/04/06/2016年终总结/</id>
+    <published>2017-04-06T11:38:08.000Z</published>
+    <updated>2018-02-22T02:22:49.450Z</updated>
+    <content type="html"><![CDATA[<p>在2017年过去小半年之后，还是决定回顾一下过去的2016，写了这个年终总结。2016年初拿到了驾照，装修好了房子，看着勇士在总决赛被逆转痛失冠军，在G20期间出去玩了一趟，算是2016年比较重要的几件事情。 工作上运维了一整年的elasticsearch，支持了后台和BI的部分业务，贡献了大量的代码，也重构了很多的代码。在工作2年之后对系统大部分功能都比较熟悉，心理感觉有些疲倦，代驾也是一个拼内功，拼服务的行业，少会有爆发式的增长，市场的空间清晰可见。年后去前东家的云计算部门面试了一趟，希望能争取一个满意的offer，前东家给了一个base提升了一些，但算上滴滴的未固化的期权是降薪的offer。对于这种变化不大的offer最是难以选择，考虑了很久纠结了很久，最后还咨询了很多前同事的意见，大部分人是不建议我去。 工作上，行业，部门，老板，薪水都满意的情况实在难以出现。总体来说，2016年是变好的一年，并没有多少糟心的事情，日子很平静。2017年对自己的期待就是空杯心态，精益求精吧。</p>
+<p>2017·wishlist</p>
+<ol>
+<li>日本/九寨沟行一次，目的地视财力而定</li>
+<li>为知名开源项目贡献一次代码，例如elasticsearch，netty等</li>
+<li>完成 <a href="http://book.douban.com/people/49806902/wish" target="_blank" rel="external">豆瓣阅读列表</a></li>
+<li>blog的最高uv到达100</li>
+<li>改进计费系统的持续集成方案</li>
+<li>2017年总结时，列出一件自己觉得NB的事情</li>
+</ol>
+<p><img src="http://hexo-tuchuan.qiniudn.com/cup.jpeg" alt="空杯心态,精益求精"></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>在2017年过去小半年之后，还是决定回顾一下过去的2016，写了这个年终总结。2016年初拿到了驾照，装修好了房子，看着勇士在总决赛被逆转痛失冠军，在G20期间出去玩了一趟，算是2016年比较重要的几件事情。 工作上运维了一整年的elasticsearch，支持了后台和BI]]>
+    </summary>
+    
+      <category term="工作" scheme="http://minotaursu.com/tags/%E5%B7%A5%E4%BD%9C/"/>
+    
+      <category term="滴滴" scheme="http://minotaursu.com/tags/%E6%BB%B4%E6%BB%B4/"/>
+    
+      <category term="阿里" scheme="http://minotaursu.com/tags/%E9%98%BF%E9%87%8C/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[消息队列之简要设计]]></title>
     <link href="http://minotaursu.com/2016/11/06/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E4%B9%8B%E7%AE%80%E8%A6%81%E8%AE%BE%E8%AE%A1/"/>
     <id>http://minotaursu.com/2016/11/06/消息队列之简要设计/</id>
@@ -304,96 +356,6 @@
       <category term="netty" scheme="http://minotaursu.com/tags/netty/"/>
     
       <category term="nio" scheme="http://minotaursu.com/tags/nio/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[构建可靠的系统]]></title>
-    <link href="http://minotaursu.com/2016/05/25/%E6%9E%84%E5%BB%BA%E5%8F%AF%E9%9D%A0%E7%9A%84%E7%B3%BB%E7%BB%9F/"/>
-    <id>http://minotaursu.com/2016/05/25/构建可靠的系统/</id>
-    <published>2016-05-25T03:38:00.000Z</published>
-    <updated>2017-04-27T07:15:43.000Z</updated>
-    <content type="html"><![CDATA[<p>编写的代码能否在线上持续的提供稳定可靠的服务是区分普通程序员，文艺程序员，2B程序员的重要标准之一。持续的提供稳定可靠的服务说起来简单，实际影响的因素有很多，数据的量级，请求的峰值，并发的影响，架构的设计，系统的复杂度，外部依赖，线上的运维，单测和CR的执行，这些都一定程度影响着系统能否持续的提供稳定可靠的服务。和所有的工程类似，软件工程的质量也不是由单一因素就能决定的，这里我们不谈这些因素的影响，只站在开发者的角度说一下如何构造可靠的系统，在可控的范围内实现一个能够提供稳定可靠服务的系统。软件有风险，开发需谨慎，一家之言仅供参考。</p>
-<h2 id="区分可靠和不可靠的操作">区分可靠和不可靠的操作</h2><p>区分可靠和不可靠的操作，是编写可靠代码的基本要求。只有理解了什么是可靠与不可靠才能做出正确的应对，使可靠的代码简洁，不可靠的代码健壮，例如从缓存中获取数据，更新数据库，这些就是不可靠的操作，可能因为网络，软件，硬件等各种原因失败，代码需要根据不同的情况记录异常或者进行重试等操作，因为更新数据库可能失败，需要在有一致性要求的情况加上事务。除了第三方不可靠之外，代码在不同的环境也可能是不可靠的，例如单线程安全的代码在多线程可能就是不可靠的，串行访问可靠的代码在并发时可能就是不可靠的，单机可靠的代码在分布式环境可能就是不可靠的，小数据量时可靠的代码在数据量变大时可能就是不可靠的。知道了遇到的是老虎还是Hello Kitty，才知道是要逃还是微笑。</p>
-<h2 id="快速失败，抛出异常">快速失败，抛出异常</h2><p>fail fast做为一个设计开发原则往往和我们的直觉背道而驰，为了系统的健壮性我们往往将错误自动处理掉，希望系统进行运行下去，减少错误的产生。其实这种做法往往会滋生出隐藏很深的bug，编写很多magic code，导致维护代码和查找错误都很困难。快速失败的原则让错误尽早被发现，避免导致更大的错误，有人觉得程序有很多assert语句和抛出异常很不安全，事实上fail fast不会导致系统的crash，反而因为出现什么bug和bug在哪里都一目了然增加了系统的健壮性，fail fast就像创业一样快速的试错，如果发现方向不可行就赶紧打住避免更大的损失。比较典型的fail fast使用就是接口入参时的各种assert和调用第三方时的超时设置，这样即使第三方出现故障也不会导致线程打满拖垮我们的系统。</p>
-<h2 id="兜底与降级">兜底与降级</h2><p>提到了快速失败就不能不说兜底，快速失败是为了尽快的发现错误，避免错误的隐藏和扩大。兜底是为了错误容忍，避免因为非核心流程的失败导致整体功能的不可用。例如我们在获取商品详情时，不能因为获取商品评价信息失败就导致整个商品详情失败；获取某些配置信息时本地也要有一份兜底配置，避免因为配置信息获取不到导致核心业务的失败。如果说兜底是在错误发生时的被动防御，那么降级就是对错误的主动预防了，同样以商品详情为例，在某次活动期间流量暴增，那么可以主动放弃获取商品评价信息，展示商品是否有库存代替具体的库存数量，减小服务器的鸭梨，加快响应速度。</p>
-<h2 id="良好的api设计">良好的api设计</h2><p>设计一个良好的api从来都不是件容易的事情，设计一个良好的RPC调用的api就更加困难。假设有一个通过商品id获取商品详情的需求。<br>最开始我们的api可能是这样的</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Item <span class="function"><span class="title">getItemById</span><span class="params">(Long id)</span></span></span><br></pre></td></tr></table></figure>
-<p>因为是RPC调用，当返回是null的时候调用方懵逼了，这啥情况，是出错了？是超时？是没有商品？，于是对返回的对象进行一次封装，api变成介样</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RpcResult&lt;Item&gt; <span class="function"><span class="title">getItemById</span><span class="params">(Long id)</span></span></span><br></pre></td></tr></table></figure>
-<p>后面产品狗说需要批量获取商品，于是变成批量查询，api变成介样</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RpcResult&lt;Item&gt; <span class="function"><span class="title">getItemsByIds</span><span class="params">(List&lt;Long&gt; ids)</span></span></span><br></pre></td></tr></table></figure>
-<p>后面有个2B调用方一次性传了10W个id过来，几十秒也没能查出来，于是限制最多一次传100个避免长时间执行，api变成介样。</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RpcResult&lt;Item&gt; <span class="function"><span class="title">getItemsByIdsWithLimit</span><span class="params">(Long id)</span></span></span><br></pre></td></tr></table></figure>
-<p>可见良好的RPC的api设计需要考虑   </p>
-<ol>
-<li>返回值需要包含错误码，是业务异常还是网络异常，是否可以重试。   </li>
-<li>减少业务方的调用，将业务方多次调用才能完成的事情封装成一个接口。  </li>
-<li>api的命名和注释要规范，毕竟调用方不清楚实现细节，能够直观看到就是api和注释。</li>
-</ol>
-<p>同时作为调用方也要对接口进行wrapper，解决接口不规范的问题，隔离提供方api升级变更的影响。</p>
-<h2 id="避免单点">避免单点</h2><p>系统不是只运行一次，人生也不是赌博，不要总想着All in。一般对于无状态的就采用多活方案，对于任务调度这种只有一个能运行的可以考虑redis，zookeeper做锁控制，某些系统也会采用一台服务器运行，一台standby的方案，通过心跳检查的方式发现运行的主机挂掉后拉起备机的方案。</p>
-<h2 id="做好提前量">做好提前量</h2><p>考虑到业务的发展，流量爆发的突然性，业界有着系统架构支持10倍增长，系统设计支持5倍增长，系统实现支持2倍增长的说法。数据存储，服务规划这些改动比较麻烦的事情最好在设计之初的考虑清楚，随着业务的发展也要<br>做好提前量，不要等到服务不可用了才想到堆机器。</p>
-<h2 id="预热与发布过程">预热与发布过程</h2><p>除了设计和实现时遵循良好的原则规范，平滑发布也是需要考虑的一点，发布过程的兼容，稳定，可回滚都是在开发之时就要考虑清楚的。除了发布过程之外，还需要考虑发布后活动前的预热，需要通过预热请求提高缓存的命中率，保证热点数据都在缓存中，系统没有经过预热，大促活动来临之时请求瞬间就击穿了空空如也的缓存直接击垮了数据库。</p>
-<p><img src="http://hexo-tuchuan.qiniudn.com/towers.jpg?imageView/1/w/670/h/400" alt=""></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>编写的代码能否在线上持续的提供稳定可靠的服务是区分普通程序员，文艺程序员，2B程序员的重要标准之一。持续的提供稳定可靠的服务说起来简单，实际影响的因素有很多，数据的量级，请求的峰值，并发的影响，架构的设计，系统的复杂度，外部依赖，线上的运维，单测和CR的执行，这些都一定程度]]>
-    </summary>
-    
-      <category term="java" scheme="http://minotaursu.com/tags/java/"/>
-    
-      <category term="工作" scheme="http://minotaursu.com/tags/%E5%B7%A5%E4%BD%9C/"/>
-    
-      <category term="开发" scheme="http://minotaursu.com/tags/%E5%BC%80%E5%8F%91/"/>
-    
-      <category term="系统设计" scheme="http://minotaursu.com/tags/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[使用AOP实现缓存注解]]></title>
-    <link href="http://minotaursu.com/2016/01/27/%E4%BD%BF%E7%94%A8AOP%E5%AE%9E%E7%8E%B0%E7%BC%93%E5%AD%98%E6%B3%A8%E8%A7%A3/"/>
-    <id>http://minotaursu.com/2016/01/27/使用AOP实现缓存注解/</id>
-    <published>2016-01-27T03:47:04.000Z</published>
-    <updated>2017-04-12T03:46:09.000Z</updated>
-    <content type="html"><![CDATA[<h2 id="为何重造轮子">为何重造轮子</h2><p>半年前写了一个注解驱动的缓存，最近提交到了<a href="https://github.com/minotaursu/cacheAnnotation" target="_blank" rel="external">github</a>。缓存大量的被使用在应用中的多个地方，简单的使用方式就是代码先查询缓存中是否存在数据，如果不存在或者缓存过期再查询数据库，并将查询的结果缓存一段时间，缓存key通常是入参的对象或者入参对象的某些属性，有些时候还需要按照某种条件判断是否缓存。可以看到这种功能性代码和具体的业务代码混合在一起的实现方式有很大的代码冗余，即不便于维护也不灵活。使用切面的方式可以很好的抽取功能相似代码冗余的缓存代码，将缓存代码和业务代码隔离开，这样既做到了对业务的无侵入又可以灵活更换具体缓存组件。<br>其实从spring3之后spring就提供了@Cacheable注解，但是用起来不爽的地方还是太多，例如缓存时间是由cache本身设置的而非在每个@Cacheable注解中指定，这个粒度有点太大了；没有缓存key的前缀设置，不同方法很容易出现key冲突。</p>
-<h2 id="怎样重造轮子">怎样重造轮子</h2><p>鉴于spring3提供的cache注解不太能满足需求，最后决定自己写一个。目标是构造一个简单好用而不是大而全的缓存注解，整个过程陆陆续续花了3天时间，第一天确定技术方案，构建对象和对象间的关系; 第二天写具体的实现和debug; 第三天写demo和test。<br>确定技术方案的时候看了spring3的cache注解实现和在阿里时使用过的2个cache注解实现。最大是不同点是创建代理类的方式和动态生成cacheKey的实现。<br>不同的创建代理类的方式：  </p>
-<ul>
-<li>使用MethodInterceptor+xml配置，最经典的使用方式。缺点是同一个类的方法相互调用时不会被aop拦截，需要使用AopContext.currentProxy()获取代理类。  </li>
-<li>使用@AspectJ注解，可以有效的减少xml配置，缺点和MethodInterceptor相同。  </li>
-<li>基于SmartInstantiationAwareBeanPostProcessor+cglib创建代理类。 </li>
-</ul>
-<p>不同的生成cacheKey的方式：  </p>
-<ul>
-<li>使用SPEL  </li>
-<li>使用OGNL  </li>
-<li>使用正则表达式  </li>
-</ul>
-<p>最后选择了@AspectJ+SPEL的实现方式。<br>虽然具体的实现方式各自不同，类的调用结构和内部功能都是基本相同的。  </p>
-<ul>
-<li>cacheManager负责cache的管理，包含cache实现的list。  </li>
-<li>cache是具体的缓存实现，可以是redis，ehcache，memcache。  </li>
-<li>keyParser负责动态生成cacheKey。  </li>
-<li>interceptor负责注解的拦截。  </li>
-<li>@Cacheable，@CacheEvict等是具体的缓存注解。  </li>
-</ul>
-<p>按照上述的功能划分实现相关类后，花了一天的时间来写demo和test，全部的test跑通后就可以使用了。后面增加了一个CacheOperation转换具体的注解，统一对CacheOperation进行处理，代码简化了不少。</p>
-<h2 id="实际遇到的问题">实际遇到的问题</h2><p>实际使用中主要遇到了2个问题，一个是interceptor中catch了所有的Exception并打印错误日志，实际上我们会在应用中定义BizException，当发生预期内的错误时会抛出BizException，而BizException是不需要被拦截打印错误日志的。另一个是问题是并发读写问题，在cache中没有缓存的时候，ThreadA从DB获取数据，ThreadB修改了数据库的数据，ThreadB删除缓存，ThreadA然后put修改之前的数据。原本以为按照业务特点发生并发读写的概率不高，结果发现接口轮询+事务导致频繁发生不一致的情况。缓存失效策略一直是缓存使用中的难题，甚至是计算机科学中两大难题之一。处理数据库并发最常见的2个解决思路是乐观锁和串行化，但是并不适用于解决缓存和数据库的不一致，google了一下也没有找到特别好的解决方案。考虑到应用并没有超高的QPS，短时间的缓存穿透不会造成系统的崩溃，最后通过增加一个redis的缓存删除标识进行解决，这个删除标识会存活5s，在这5s中不会执行put缓存操作从而避免了缓存和数据库的不一致。</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<h2 id="为何重造轮子">为何重造轮子</h2><p>半年前写了一个注解驱动的缓存，最近提交到了<a href="https://github.com/minotaursu/cacheAnnotation" target="_blank" rel="external">gi]]>
-    </summary>
-    
-      <category term="AOP" scheme="http://minotaursu.com/tags/AOP/"/>
-    
-      <category term="annotation" scheme="http://minotaursu.com/tags/annotation/"/>
-    
-      <category term="java" scheme="http://minotaursu.com/tags/java/"/>
-    
-      <category term="spring" scheme="http://minotaursu.com/tags/spring/"/>
-    
-      <category term="缓存" scheme="http://minotaursu.com/tags/%E7%BC%93%E5%AD%98/"/>
     
   </entry>
   

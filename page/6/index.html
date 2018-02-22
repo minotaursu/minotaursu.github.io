@@ -82,11 +82,11 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        23
+        25
         <span>posts</span>
       </div>
       <div class="article-info-block">
-        36
+        37
         <span>tags</span>
       </div>
     </div>
@@ -115,6 +115,128 @@
 
       
       <section id="main">
+      <article id="post-缓存的使用" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/01/09/缓存的使用/">缓存的使用</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2015/01/09/缓存的使用/">
+      <time datetime="2015-01-09T10:07:37.000Z" itemprop="datePublished">2015-01-9</time>
+    </a>
+  </div>
+
+
+          
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <p><img src="http://hexo-tuchuan.qiniudn.com/speed.jpg?imageView/1/w/670/h/450" alt=""><br>缓存一直是web2.0应用的性能核心，缓存大幅提高了应用QPS，减少了数据库的压力，降低了RT，让应用能够飞起来。缓存具有易于上手，难于精通的特点，缓存失效的设计是整个缓存应用的难点，在某些复杂情况，不适合的缓存设计增加了系统出错的可能。下面对缓存使用的几种典型情况做下分析。</p>
+<h2 id="本地缓存">本地缓存</h2><ol>
+<li>用于缓存复杂算法的不可变计算结果。</li>
+<li>在单机或者数据变化率极低的情况下，本地缓存是一个良好的策略，因为本地缓存的效率最高，相比于分布式缓存，具有更少的网络开销，响应时间也更短，使用更加的灵活。例如邮政编码，报表数据，或者离线处理后的中奖用户名单等场景非常适合使用本地缓存。</li>
+<li>在某些场景，本地缓存作为分布式缓存的前置缓存使用，可以设置一个过期时间较长的分布式缓存，同时设置一个过期时间较短的本地缓存。</li>
+<li>数据变化率极低的情况下（例如按天更新）；往往也使用定时任务或者对象内置一个定时器从数据库获取最新的数据更新过期数据，相比按时间过期这种失效策略，这种定时更新的策略具有更好的性能。</li>
+</ol>
+<h2 id="分布式缓存">分布式缓存</h2><ol>
+<li>分布式缓存是应用开发中最常见的技术，分布式缓存解决了本地缓存的不一致问题，也避免了本地缓存可能带来的内存泄露问题。通常使用annotation的方式指定CRUD操作如何进行缓存，在annotation中指定key，过期时间，缓存策略（ehcache，memcache，分级缓存），在缓存具有高命中率的情况下可以极大的减少数据库压力，大大提高了系统的吞吐量。</li>
+<li>当缓存失效，请求不能从缓存中取出数据时，一般查询数据库获取，当并发量很高的时候，会给数据库带来极高的压力甚至雪崩，导致服务不可用。一般有几种做法，1）增加一个锁，缓存失效时获取锁，只有获取锁的请求才去查询数据库。2）增加一个存活缓存，当存活缓存为空时，重置存活缓存，然后获取数据，这样只有第一个检查到存活缓存为空的请求会访问数据库。<br>3） 优雅降级，对于某些不重要的数据（例如文章浏览量），当缓存失效时，可以直接返回空，前端不做展示。</li>
+</ol>
+<h2 id="缓存分页数据">缓存分页数据</h2><p>在某些条件下，获取到的数据是list，并且需要（必然）进行分页展示。缓存在几种情况下不适合使用，其中一种就是缓存大对象，大对象会导致缓存的性能降低，网络开销和计算开销也比较大。按照每页的Key缓存数据也是不合适的，当有写操作时需要失效所有的key。对于需要缓存分页数据的需求，视情况可以 1）只缓存前2页数据，绝大部分的流量都集中在前2页。2）只缓存id的list，获取到id的list后进行分页，然后通过service获取每个id的缓存数据。</p>
+<h2 id="缓存写操作">缓存写操作</h2><p>在某些场景，具有高频的写操作（例如记录浏览数，游戏领域）如果对数据的准确性要求不高，可以通过缓存写操作，定时存盘的方式大幅提高性能。例如所有的浏览数都记录在缓存中，每分钟更新一次数据库，在某些关键操作后（例如击杀BOSS），可以强制更新数据库一次，保证数据不因为宕机而丢失。</p>
+<h2 id="分布式缓存计数器">分布式缓存计数器</h2><p>分布式缓存提供了统一的存储和原子操作，便于集群环境下的使用。库存计算是分布式缓存的一个典型应用场景，在用户购买商品前会进行减库存，虽然在高并发时会将库存减为负数，但只要保证缓存中的数值大于等于0时才能购买就能防止超卖。<br>在秒杀的场景中可以本地缓存配合分布式缓存使用，因为秒杀的时间太短，用户并不关心秒杀过程中的库存数，例如秒杀商品只有5件，可以在每台服务器做一个库存数等于5的原子计数器，这样将极大减少分布式缓存的请求数。甚至在秒杀的场景中，可以完全使用内存缓存，通过zookeeper提前指定一台机器的内存库存数等于5，其他机器都设置为0。</p>
+<p>参考：<br><a href="http://book.douban.com/subject/10756899/" target="_blank" rel="external">高扩展性网站的50条原则</a><br><a href="http://book.douban.com/subject/3924175/" target="_blank" rel="external">构建高性能web站点</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://minotaursu.com/2015/01/09/缓存的使用/" data-id="cjdy3d3ws000egzs6l8klwui2" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/并发/">并发</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/缓存/">缓存</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
+      <article id="post-2014年终总结" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2014/12/30/2014年终总结/">2014年终总结</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2014/12/30/2014年终总结/">
+      <time datetime="2014-12-30T06:59:27.000Z" itemprop="datePublished">2014-12-30</time>
+    </a>
+  </div>
+
+
+          
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <p>这算是工作以后第一次做年终总结。距离2011年末已经整整3年，距离毕业已经3.5年。毕业（前）后，一直过着随遇而安的生活，白天码代码，下班看书，动漫，电影，游戏。今年多了一个陪妹子的活动，实事求是的说陪妹子这个优先级太高抢占了不少资源。<br>过去的2011,2012,2013年就不说了，往事已矣。今年是变化很大的一年，4月初在厦门拍了婚纱照，月末和妹子领了证；十一回家办了婚礼；12月去巴厘岛度了蜜月。今年和妹子一起去了些周边的城市，期待明年去更远的地方。有妹纸照顾还是很幸福的，至少和妹子在一起之后就没有碰过洗衣机。。。<br>工作上今年申请了转岗，从阿里妈妈去了天猫，最开始是在天猫无线，师兄是一个有10年经验的架构师，做过多种不同的业务，由于在天猫无线的时间很短，基本没写什么代码，倒是参加了几次需求讨论，师兄也请了好几杯星巴克；后来开始做话费充值业务，架构和数据量上还是很NB的，打酱油的做了几个日常。比较下来，天猫是业务和市场驱动的部门，在天猫半年接触的运营比在阿里妈妈3年接触的还多（天猫的运营也更强势）；天猫一些系统的架构，稳定性，性能做的很不错，工作上是有收获和成长的；阿里妈妈则是产品驱动的部门，就我接触到的情况，代码细节和code review方面做的相对好一些。<br>今年也面了几家公司，拿到了几个offer，有的每月base要比现在高不少。这些都得益于TMT行业的高速发展，一个新兴，成长期的行业要比成熟，稳定的行业具有更多的机会。后面也没有离职，倒是选择了一次转岗。对于转岗这件事，我的想法是如果不喜欢现在的工作（例如工作没前途，内容没意思，同事合不来，不能实现自我价值，得不到尊重），转岗离职都没问题，同时对于未来也不要抱有太多的期待，毕竟问题在那里都会遇到，都需要解决，但解决问题的方式，时间，地点都可以由自己决定。<br>年中的时候预测了股市会上涨，可惜并没有行动。今后在业余时间更有行动力，做更多更有意义的事情。不能总是玩啊玩的了。  </p>
+<p>2015·wishlist</p>
+<ol>
+<li>欧洲/日本行一次，目的地视财力而定</li>
+<li>驾照</li>
+<li>车</li>
+<li>完成 <a href="http://book.douban.com/people/49806902/wish" target="_blank" rel="external">豆瓣阅读列表</a></li>
+<li>参加3次同城活动(segmentfault/豆瓣)</li>
+<li>为开源项目贡献一次代码</li>
+<li>2015年总结时，列出一件自己觉得NB的事情</li>
+<li>不使用工资收入，更换用了3年的mac pro</li>
+</ol>
+<p><img src="http://hexo-tuchuan.qiniudn.com/saber.jpg?imageView/1/w/670/h/900" alt="不因别人的好恶而改变自己的内心，这种性格其实也蛮好的。"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://minotaursu.com/2014/12/30/2014年终总结/" data-id="cjdy3d3z1003ogzs6rszaa5lf" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/工作/">工作</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/阿里/">阿里</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
       <article id="post-jar包冲突与inode" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -161,7 +283,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2014/12/24/jar包冲突与inode/" data-id="cjbhnzl7l002qg1s6y6xelw8e" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2014/12/24/jar包冲突与inode/" data-id="cjdy3d3yg002vgzs64p4llmsm" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/开发/">开发</a></li></ul>
@@ -174,124 +296,8 @@
 
 
     
-      <article id="post-CAS" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2014/11/05/CAS/">CAS</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2014/11/05/CAS/">
-      <time datetime="2014-11-05T07:06:24.000Z" itemprop="datePublished">2014-11-5</time>
-    </a>
-  </div>
-
-
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <h2 id="CAS_是什么">CAS 是什么</h2><p>CAS是单词compare and set的缩写，意思是指在set之前先比较该值有没有变化，只有在没变的情况下才对其赋值。在java.util.concurrent包中，CAS提供了一种不同于互斥锁，读写锁的乐观锁机制，CAS和volatile一起构成了整个concurrent包的基石。</p>
-<h2 id="CAS_原理">CAS 原理</h2><p>我们都知道，在java语言之前，并发就已经广泛存在并在服务器领域得到了大量的应用。所以硬件厂商老早就在芯片中加入了大量直至并发操作的原语，从而在硬件层面提升效率。在intel的CPU中，使用cmpxchg指令,程序会根据当前处理器的类型来决定是否为cmpxchg指令添加lock前缀。如果程序是在多处理器上运行，就为cmpxchg指令加上lock前缀（lock cmpxchg）。反之，如果程序是在单处理器上运行，就省略lock前缀（单处理器自身会维护单处理器内的顺序一致性，不需要lock前缀提供的内存屏障效果）。<br>CAS 操作包含三个操作数 —— 内存位置（V）、预期原值（A）和新值(B)。 如果内存位置的值与预期原值相匹配，那么处理器会自动将该位置值更新为新值 。否则，处理器不做任何操作。无论哪种情况，它都会在 CAS 指令之前返回该 位置的值。（在 CAS 的一些特殊情况下将仅返回 CAS 是否成功，而不提取当前 值。）CAS 有效地说明了“我认为位置 V 应该包含值 A；如果包含该值，则将 B 放到这个位置；否则，不要更改该位置，只告诉我这个位置现在的值即可。”<br>通常将 CAS 用于同步的方式是从地址 V 读取值 A，执行多步计算来获得新 值 B，然后使用 CAS 将 V 的值从 A 改为 B。如果 V 处的值尚未同时更改，则 CAS 操作成功。<br>类似于 CAS 的指令允许算法执行读-修改-写操作，而无需害怕其他线程同时 修改变量，因为如果其他线程修改变量，那么 CAS 会检测它（并失败），算法可以对该操作重新计算。</p>
-<h2 id="CAS缺点">CAS缺点</h2><ol>
-<li>ABA问题<br>因为CAS需要在操作值的时候检查下值有没有发生变化，如果没有发生变化则更新，但是如果一个值原来是A，变成了B，又变成了A，那么使用CAS进行检查时会发现它的值没有发生变化，但是实际上却变化了。ABA问题的解决思路就是使用版本号。在变量前面追加上版本号，每次变量更新的时候把版本号加一，那么A－B－A 就会变成1A-2B－3A。</li>
-<li>CPU开销大<br>自旋CAS如果长时间不成功，会给CPU带来非常大的执行开销。</li>
-</ol>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2014/11/05/CAS/" data-id="cjbhnzl7x003bg1s6b67n63n5" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/并发/">并发</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-java-Lock" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2014/11/03/java-Lock/">java Lock</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2014/11/03/java-Lock/">
-      <time datetime="2014-11-02T23:57:08.000Z" itemprop="datePublished">2014-11-3</time>
-    </a>
-  </div>
-
-
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <p>在jdk5中，新增了Lock接口来提供一种比synchronized更灵活的锁机制。</p>
-<h2 id="ReentrantLock">ReentrantLock</h2><p>ReentrantLock是被最广泛使用来替代synchronized的Lock接口实现，ReentrantLock的代码使用非常简单，只要记得将unlock写在finally方法中就可以了。<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">Lock</span> <span class="keyword">lock</span> = new ReentrantLock();</span></span><br><span class="line"><span class="operator"><span class="keyword">lock</span>.<span class="keyword">lock</span>();</span></span><br><span class="line">try &#123;</span><br><span class="line">&#125; finally &#123;</span><br><span class="line">	<span class="operator"><span class="keyword">lock</span>.<span class="keyword">unlock</span>();</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>相比synchronied，ReentrantLock具有以下特性：</p>
-<ul>
-<li>非阻塞的tryLock，可以进行锁的轮询。</li>
-<li>能被中断的lockInterruptibly，可以进行锁中断。</li>
-<li>有超时时间的tryLock</li>
-</ul>
-<p>ReentrantLock的默认构造函数是非公平的，公平的锁机制会对锁的请求进行排队，按照FIFO的原则进行锁的获取，造成JVM对于等待中的线程调度次序和操作系统对线程的调度不匹配，所以公平锁的性能要小于非公平锁的性能；在大多数场景下我们都可以使用ReentrantLock的默认构造函数，而在某些需要避免‘饥饿’发生的场景下，我们可以使用ReentrantLock(true)。</p>
-<h2 id="ReentrantReadWriteLock">ReentrantReadWriteLock</h2><p>ReentrantReadWriteLock实现了ReadWriteLock接口，提供了一对锁：readLock与writeLock。读锁可以由多个线程同时保持，读锁则是独占的。比较适合读多写少高并发的场景，相比于ReentrantLock，ReentrantReadWriteLock的使用场景并不广泛，性能也要差一点。</p>
-<p>ReadWriteLock的互斥性：</p>
-<ul>
-<li>读读不互斥</li>
-<li>读写互斥</li>
-<li>写写互斥</li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2014/11/03/java-Lock/" data-id="cjbhnzl7j002lg1s668dcdyae" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/并发/">并发</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/锁/">锁</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
       <nav id="page-nav">
-        <a class="extend prev" rel="prev" href="/page/5/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/7/">Next &raquo;</a>
+        <a class="extend prev" rel="prev" href="/page/5/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><a class="page-number" href="/page/9/">9</a><a class="extend next" rel="next" href="/page/7/">Next &raquo;</a>
       </nav>
     </section>
       
@@ -302,6 +308,24 @@
     <h3 class="widget-title">recents</h3>
     <div class="widget">
       <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2018/02/22/一次GC耗时超长的问题排查/" class="thumbnail">
+  
+    <span style="background-image:url(http://hexo-tuchuan.qiniudn.com/gc.png
+)" alt="一次GC耗时超长的问题排查" class="thumbnail-image"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"></p>
+              <p class="item-title"><a href="/2018/02/22/一次GC耗时超长的问题排查/" class="title">一次GC耗时超长的问题排查</a></p>
+              <p class="item-date"><time datetime="2018-02-22T03:57:06.000Z" itemprop="datePublished">2018-02-22</time></p>
+            </div>
+          </li>
         
           <li>
             
@@ -375,24 +399,6 @@
             </div>
           </li>
         
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2017/04/12/使用AOP记录应用调用链开销/" class="thumbnail">
-  
-    <span style="background-image:url(http://hexo-tuchuan.qiniudn.com/profiler.png
-)" alt="使用AOP记录应用调用链开销" class="thumbnail-image"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"></p>
-              <p class="item-title"><a href="/2017/04/12/使用AOP记录应用调用链开销/" class="title">使用AOP记录应用调用链开销</a></p>
-              <p class="item-date"><time datetime="2017-04-12T04:47:04.000Z" itemprop="datePublished">2017-04-12</time></p>
-            </div>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -402,7 +408,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">tag cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/ACID/" style="font-size: 10px;">ACID</a> <a href="/tags/AOP/" style="font-size: 11.67px;">AOP</a> <a href="/tags/CAP/" style="font-size: 10px;">CAP</a> <a href="/tags/Cloud-native/" style="font-size: 10px;">Cloud native</a> <a href="/tags/annotation/" style="font-size: 10px;">annotation</a> <a href="/tags/archsummit/" style="font-size: 10px;">archsummit</a> <a href="/tags/git/" style="font-size: 11.67px;">git</a> <a href="/tags/go/" style="font-size: 10px;">go</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/jackson/" style="font-size: 10px;">jackson</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/json/" style="font-size: 10px;">json</a> <a href="/tags/netty/" style="font-size: 11.67px;">netty</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/quartz/" style="font-size: 10px;">quartz</a> <a href="/tags/reactor/" style="font-size: 10px;">reactor</a> <a href="/tags/spring/" style="font-size: 11.67px;">spring</a> <a href="/tags/tips/" style="font-size: 10px;">tips</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/分布式/" style="font-size: 13.33px;">分布式</a> <a href="/tags/工作/" style="font-size: 18.33px;">工作</a> <a href="/tags/并发/" style="font-size: 13.33px;">并发</a> <a href="/tags/开发/" style="font-size: 16.67px;">开发</a> <a href="/tags/性能/" style="font-size: 10px;">性能</a> <a href="/tags/消息队列/" style="font-size: 10px;">消息队列</a> <a href="/tags/系统设计/" style="font-size: 15px;">系统设计</a> <a href="/tags/缓存/" style="font-size: 11.67px;">缓存</a> <a href="/tags/职业规划/" style="font-size: 10px;">职业规划</a> <a href="/tags/语言/" style="font-size: 10px;">语言</a> <a href="/tags/调度/" style="font-size: 10px;">调度</a> <a href="/tags/软件开发/" style="font-size: 10px;">软件开发</a> <a href="/tags/锁/" style="font-size: 10px;">锁</a> <a href="/tags/阿里/" style="font-size: 11.67px;">阿里</a>
+      <a href="/tags/ACID/" style="font-size: 10px;">ACID</a> <a href="/tags/AOP/" style="font-size: 11.67px;">AOP</a> <a href="/tags/CAP/" style="font-size: 10px;">CAP</a> <a href="/tags/Cloud-native/" style="font-size: 10px;">Cloud native</a> <a href="/tags/annotation/" style="font-size: 10px;">annotation</a> <a href="/tags/archsummit/" style="font-size: 10px;">archsummit</a> <a href="/tags/gc/" style="font-size: 10px;">gc</a> <a href="/tags/git/" style="font-size: 11.67px;">git</a> <a href="/tags/go/" style="font-size: 10px;">go</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/jackson/" style="font-size: 10px;">jackson</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/json/" style="font-size: 10px;">json</a> <a href="/tags/netty/" style="font-size: 11.67px;">netty</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/quartz/" style="font-size: 10px;">quartz</a> <a href="/tags/reactor/" style="font-size: 10px;">reactor</a> <a href="/tags/spring/" style="font-size: 11.67px;">spring</a> <a href="/tags/tips/" style="font-size: 10px;">tips</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/分布式/" style="font-size: 13.33px;">分布式</a> <a href="/tags/工作/" style="font-size: 18.33px;">工作</a> <a href="/tags/并发/" style="font-size: 13.33px;">并发</a> <a href="/tags/开发/" style="font-size: 16.67px;">开发</a> <a href="/tags/性能/" style="font-size: 11.67px;">性能</a> <a href="/tags/消息队列/" style="font-size: 10px;">消息队列</a> <a href="/tags/滴滴/" style="font-size: 10px;">滴滴</a> <a href="/tags/系统设计/" style="font-size: 15px;">系统设计</a> <a href="/tags/缓存/" style="font-size: 11.67px;">缓存</a> <a href="/tags/职业规划/" style="font-size: 10px;">职业规划</a> <a href="/tags/语言/" style="font-size: 10px;">语言</a> <a href="/tags/调度/" style="font-size: 10px;">调度</a> <a href="/tags/软件开发/" style="font-size: 10px;">软件开发</a> <a href="/tags/锁/" style="font-size: 10px;">锁</a> <a href="/tags/阿里/" style="font-size: 13.33px;">阿里</a>
     </div>
   </div>
 
@@ -415,7 +421,7 @@
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2017 minotaur<br>
+      &copy; 2018 minotaur<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="https://github.com/minotaursu/hexo-theme-icarus">icarus</a>.
       
 <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1256401841'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s11.cnzz.com/z_stat.php%3Fid%3D1256401841%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
