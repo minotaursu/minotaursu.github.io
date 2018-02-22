@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://minotaursu.com/"/>
-  <updated>2018-02-22T06:44:52.342Z</updated>
+  <updated>2018-02-22T08:34:05.180Z</updated>
   <id>http://minotaursu.com/</id>
   
   <author>
@@ -19,15 +19,44 @@
     <link href="http://minotaursu.com/2018/02/22/2017%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/"/>
     <id>http://minotaursu.com/2018/02/22/2017年终总结/</id>
     <published>2018-02-22T06:17:55.000Z</published>
-    <updated>2018-02-22T06:44:52.342Z</updated>
-    <content type="html"></content>
+    <updated>2018-02-22T08:34:05.180Z</updated>
+    <content type="html"><![CDATA[<p>作为工作第N年的第M份总结还是要感叹一下时间的飞快, 首先总结一下认为比较重要的几件事情。</p>
+<ol>
+<li>去日本关西玩了一趟，也算是第一次去发达国家了，住的民宿，性价比特别高，日本的交通不是一般的贵。作为消费者喜欢日本的精致服务，但并不想在日本生活。。</li>
+<li>去了南京看中山陵，沧桑国府，金陵一梦。</li>
+<li>老婆去了阿里，工资涨了不少，工作也忙了很多，如果自己还在阿里不离职不晋升可能还没老婆工资高。。</li>
+<li>在滴滴经历了一次晋升，全票通过，精神上得到了认同。</li>
+<li>买了车，还清了除房贷车贷之外的一切贷款，财富从消费阶段转向积累阶段。</li>
+<li>工作上做了很多业务开发之外的工作，学到了不少东西。</li>
+<li>王者农药单排段位达到王者，坚持你所坚持，很多事情比想象的简单。</li>
+<li>2017年的wishlist完成了60%,希望2018年的wishlist能完成80%以上。</li>
+<li>星际二战役全通。</li>
+</ol>
+<p>2017年是工作和生活平衡的一年，前半年更加生活，和老婆一起吃了很多晚饭，周边游国外游都有，也和小伙伴们一起5排过。下半年系统的压力很大，项目也多，工作上尝试了很多方法，做了不少事情，加了不少班，也得到了认可。整体而言工作中生活中都在忙，缺少了悟，2018年还是希望多读一些书(30本以上)，多一些感悟和参悟，对未来有一定的预见。</p>
+<p>2018·wishlist</p>
+<ol>
+<li>云南/亚洲某国行一次，目的地视财力而定</li>
+<li>为知名开源项目贡献一次代码，例如elasticsearch，netty等</li>
+<li>完成 <a href="http://book.douban.com/people/49806902/wish" target="_blank" rel="external">豆瓣阅读列表</a></li>
+<li>做事更有条理，寻找更多的可能性</li>
+<li>学会吉他</li>
+<li>2018年总结时，列出一件自己觉得NB的事情</li>
+</ol>
+<p><img src="http://hexo-tuchuan.qiniudn.com/hzdream.png" alt="人的梦想，是不会终结的"></p>
+]]></content>
     <summary type="html">
-    
+    <![CDATA[<p>作为工作第N年的第M份总结还是要感叹一下时间的飞快, 首先总结一下认为比较重要的几件事情。</p>
+<ol>
+<li>去日本关西玩了一趟，也算是第一次去发达国家了，住的民宿，性价比特别高，日本的交通不是一般的贵。作为消费者喜欢日本的精致服务，但并不想在日本生活。。</li>]]>
     </summary>
     
       <category term="工作" scheme="http://minotaursu.com/tags/%E5%B7%A5%E4%BD%9C/"/>
     
+      <category term="总结" scheme="http://minotaursu.com/tags/%E6%80%BB%E7%BB%93/"/>
+    
       <category term="滴滴" scheme="http://minotaursu.com/tags/%E6%BB%B4%E6%BB%B4/"/>
+    
+      <category term="阿里" scheme="http://minotaursu.com/tags/%E9%98%BF%E9%87%8C/"/>
     
   </entry>
   
@@ -36,9 +65,9 @@
     <link href="http://minotaursu.com/2018/02/22/%E4%B8%80%E6%AC%A1GC%E8%80%97%E6%97%B6%E8%B6%85%E9%95%BF%E7%9A%84%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/"/>
     <id>http://minotaursu.com/2018/02/22/一次GC耗时超长的问题排查/</id>
     <published>2018-02-22T03:57:06.000Z</published>
-    <updated>2018-02-22T07:07:08.023Z</updated>
+    <updated>2018-02-22T07:14:24.036Z</updated>
     <content type="html"><![CDATA[<p><img src="http://hexo-tuchuan.qiniudn.com/gc.png" alt=""></p>
-<p>2017年10月某日突然收到FullGC耗时超长的报警，排查发现应用存在周期性FULLGC耗时超长的的情况，每次FULLGC时间长达5s以上，甚至出现过10s以上的FULLGC，导致FULLGC时应用的响应全部超时。最初是怀疑系统有大量的对象没有释放导致FULLGC时间过长，第一时间dump了应用的内存，并没有发现内存泄露的情况。后面查看GC日志发现Rescan阶段weak refs processing的超时都超长，GC日志里大量可见[weak refs processing, 9.7398650 secs]，排查的方向就逐渐转向了weak refs processing 为什么会花费如此长的时间，大家在一起针对代码分析了很久，从jackson的使用，到本地缓存的使用，到NIO的影响，每个人都提出了自己的见解，但是又没有强有力的证据验证自己的结果，按照这个思路排查了一晚上也没有结果。<br>后面分析发现耗时超长的FULLGC只出现在特定的某一台服务器上，该应用的FULLGC耗时在其他服务器上都表现正常，排查发现出现GC耗时过长的服务器还部署着大数据的某个高IO类型的应用，排查的思路又转向了服务器的IO和cpu，但是并没有发现io和cpu的异常情况，排查似乎陷入了困境。<br>过了几天之后找到了一个可视化的GC分析工具<a href="http://gceasy.io/" target="_blank" rel="external">gceasy.io</a> ，分析后发现一个之前一直忽略的现象，GC真实的耗时是远大于用户耗时和系统耗时的，[Times: user=2.56 sys=0.07, real=9.82 secs]。我们知道JVM本身作为一个进程也是由linux系统进行内存分配，而linux的内存空间由两部分构成，物理内存和swap空间，假如GC时有一部分内容被交换到swap，遍历到这部分的时候就需要将其交换回内存，极端情况下甚至会把整个堆分区轮流往SWAP写一遍，而磁盘交换的速度是远慢于物理内存的，如果GC和swap同时发生会导致超长时间的卡顿，通过sar -W -f 命令分析发现swap时间完全吻合发生耗时超长的GC时间，基本可以断定是系统的物理内存不够用导致系统发生swap，最终导致耗时超长的GC发生，关闭linux的swap后引用的GC时间恢复到500ms以下。<br>虽然gc耗时超长的问题得到了解决，但是仔细思考一下就会发现问题的解决完全依赖程序员的推理过程和知识储备，那么是不是可以有更简单更快速的问题排查定位手段，我认为答案是可以的，那就是更加智能化的监控，将业务指标，应用指标，系统指标打通关联，在FULLGC超时报警的时候通知告知业务开发系统发生了swap，并且能展示对订单量和GMV等指标的影响。好的基础设施就像强大的武器，虽然依赖好的枪法用手枪也能杀死敌人，但是手里有把AKM或M16还是更容易吃鸡。</p>
+<p>2017年10月某日突然收到FullGC耗时超长的报警，排查发现应用存在周期性FULLGC耗时超长的的情况，每次FULLGC时间长达5s以上，甚至出现过10s以上的FULLGC，导致FULLGC时应用的响应全部超时。最初是怀疑系统有大量的对象没有释放导致FULLGC时间过长，第一时间dump了应用的内存，并没有发现内存泄露的情况。后面查看GC日志发现Rescan阶段weak refs processing的超时都超长，GC日志里大量可见[weak refs processing, 9.7398650 secs]，排查的方向就逐渐转向了weak refs processing 为什么会花费如此长的时间，大家在一起针对代码分析了很久，从jackson的使用，到本地缓存的使用，到NIO的影响，每个人都提出了自己的见解，但是又没有强有力的证据验证自己的结果，按照这个思路排查了一晚上也没有结果。<br>后面分析发现耗时超长的FULLGC只出现在特定的某一台服务器上，该应用的FULLGC耗时在其他服务器上都表现正常，排查发现出现GC耗时过长的服务器还部署着大数据的某个高IO类型的应用，排查的思路又转向了服务器的IO和cpu，但是并没有发现io和cpu的异常情况，排查似乎陷入了困境。<br><img src="http://hexo-tuchuan.qiniudn.com/easygc.png" alt=""><br>过了几天之后找到了一个可视化的GC分析工具<a href="http://gceasy.io/" target="_blank" rel="external">gceasy.io</a> ，分析后发现一个之前一直忽略的现象，GC真实的耗时是远大于用户耗时和系统耗时的，[Times: user=2.56 sys=0.07, real=9.82 secs]。我们知道JVM本身作为一个进程也是由linux系统进行内存分配，而linux的内存空间由两部分构成，物理内存和swap空间，假如GC时有一部分内容被交换到swap，遍历到这部分的时候就需要将其交换回内存，极端情况下甚至会把整个堆分区轮流往SWAP写一遍，而磁盘交换的速度是远慢于物理内存的，如果GC和swap同时发生会导致超长时间的卡顿，通过sar -W -f 命令分析发现swap时间完全吻合发生耗时超长的GC时间，基本可以断定是系统的物理内存不够用导致系统发生swap，最终导致耗时超长的GC发生，关闭linux的swap后引用的GC时间恢复到500ms以下。<br>虽然gc耗时超长的问题得到了解决，但是仔细思考一下就会发现问题的解决完全依赖程序员的推理过程和知识储备，那么是不是可以有更简单更快速的问题排查定位手段，我认为答案是可以的，那就是更加智能化的监控，将业务指标，应用指标，系统指标打通关联，在FULLGC超时报警的时候通知告知业务开发系统发生了swap，并且能展示对订单量和GMV等指标的影响。好的基础设施就像强大的武器，虽然依赖好的枪法用手枪也能杀死敌人，但是手里有把AKM或M16还是更容易吃鸡。</p>
 ]]></content>
     <summary type="html">
     <![CDATA[<p><img src="http://hexo-tuchuan.qiniudn.com/gc.png" alt=""></p>
@@ -224,7 +253,7 @@
     <link href="http://minotaursu.com/2017/04/06/2016%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/"/>
     <id>http://minotaursu.com/2017/04/06/2016年终总结/</id>
     <published>2017-04-06T11:38:08.000Z</published>
-    <updated>2018-02-22T02:22:49.450Z</updated>
+    <updated>2018-02-22T08:30:37.344Z</updated>
     <content type="html"><![CDATA[<p>在2017年过去小半年之后，还是决定回顾一下过去的2016，写了这个年终总结。2016年初拿到了驾照，装修好了房子，看着勇士在总决赛被逆转痛失冠军，在G20期间出去玩了一趟，算是2016年比较重要的几件事情。 工作上运维了一整年的elasticsearch，支持了后台和BI的部分业务，贡献了大量的代码，也重构了很多的代码。在工作2年之后对系统大部分功能都比较熟悉，心理感觉有些疲倦，代驾也是一个拼内功，拼服务的行业，少会有爆发式的增长，市场的空间清晰可见。年后去前东家的云计算部门面试了一趟，希望能争取一个满意的offer，前东家给了一个base提升了一些，但算上滴滴的未固化的期权是降薪的offer。对于这种变化不大的offer最是难以选择，考虑了很久纠结了很久，最后还咨询了很多前同事的意见，大部分人是不建议我去。 工作上，行业，部门，老板，薪水都满意的情况实在难以出现。总体来说，2016年是变好的一年，并没有多少糟心的事情，日子很平静。2017年对自己的期待就是空杯心态，精益求精吧。</p>
 <p>2017·wishlist</p>
 <ol>
@@ -242,6 +271,8 @@
     </summary>
     
       <category term="工作" scheme="http://minotaursu.com/tags/%E5%B7%A5%E4%BD%9C/"/>
+    
+      <category term="总结" scheme="http://minotaursu.com/tags/%E6%80%BB%E7%BB%93/"/>
     
       <category term="滴滴" scheme="http://minotaursu.com/tags/%E6%BB%B4%E6%BB%B4/"/>
     
