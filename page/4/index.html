@@ -82,7 +82,7 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        26
+        27
         <span>posts</span>
       </div>
       <div class="article-info-block">
@@ -115,6 +115,88 @@
 
       
       <section id="main">
+      <article id="post-消息队列之简要设计" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/11/06/消息队列之简要设计/">消息队列之简要设计</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2016/11/06/消息队列之简要设计/">
+      <time datetime="2016-11-06T02:03:36.000Z" itemprop="datePublished">2016-11-6</time>
+    </a>
+  </div>
+
+
+          
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <h2 id="消息队列的基本功能">消息队列的基本功能</h2><p>消息队列作为系统解耦，流量控制的利器，成为分布式系统核心组件之一。在日常的开发我们享受了使用消息队列带来的便利，那么如果要自己实现一个消息队列应该入手。本文不深入讨论具体，成熟的消息队列如kafka，rocketmq等，主要介绍一下基本功能，思想和设计。<br>首先转换一下角色，作为产品经理给自己提出一个实现消息队列的需求，那么首先列一下消息队列必备的功能有哪些。</p>
+<ul>
+<li>消息堆积</li>
+<li>消息持久化</li>
+<li>消息顺序</li>
+<li>消息最少投递一次</li>
+<li>支持多topic</li>
+<li>相同topic支持多consumer</li>
+<li>消息回溯</li>
+<li>集群功能</li>
+<li>负载均衡</li>
+</ul>
+<p>一个简单的消息队列基本功能如上，在某些特殊的场景还需要支持事务，消息重试等功能。此外除了功能部分，还需要尽可能优化性能，提供监控功能帮助报警和排查问题。</p>
+<h2 id="消息队列的设计实现">消息队列的设计实现</h2><p>明确了功能需求，接下来就要考虑如何实现一个消息列队。<br>消息队列主要涉及到三个部分，通信协议+存储+消费关系维护。</p>
+<h4 id="通信协议">通信协议</h4><p>极简版的消息队列甚至只需要一个redis就可以，按照topic将序列化的数据存储到redis，消费端使用redis的incr功能获取锁，获取到锁的consumer不断的轮询获取消息。当然这种极简版的消息队列是不能通过复杂的生产环境检验的，系统的可靠性也不能保证。这里将极简版的消息队列升级一下，使用成熟的RPC框架实现通信协议，将一次同步RPC调用变成2次PRC+存储，PRC框架帮我们解决了负载均衡，服务发现，通信协议，序列化/反序列化等问题。同时RPC框架也保证了通信层面的高可用。</p>
+<h4 id="存储选择">存储选择</h4><p>对于分布式系统，存储的选择有以下几种</p>
+<ul>
+<li>内存</li>
+<li>本地文件系统</li>
+<li>分布式文件系统</li>
+<li>nosql</li>
+<li>rdbms<br>从速度上内存显然是最快的，对于允许消息丢失，消息堆积能力要求不高的场景(例如日志)，内存会是比较好的选择。rdbms则是最简单的实现可靠存储的方案，很适合用在可靠性要求很高，最终一致性的场景(例如交易消息)，对于不需要100%保证数据完整性的场景，要求性能和消息堆积的场景，hbase也是一个很好的选择。</li>
+</ul>
+<h4 id="消费关系">消费关系</h4><p>在消息存储在broker上后，需要的就是将消息正确的投递到消费者，消息的投递分为广播和单播, 最常见的使用场景是组内单播，组间广播，同一个集群使用相同的group注册订阅，通常消息队列本身不维护消费订阅关系，使用例如zookeeper等成熟的系统维护消费关系，在消费关系发生变化时下发通知。</p>
+<h2 id="队列特性">队列特性</h2><p>确定了消息队列的模块功能需求后，还需要考虑队列的特性需求，这里重点考虑消息丢失，消息确认，消息重复，消息顺序性，投递方式</p>
+<h4 id="消息丢失">消息丢失</h4><p>消息丢失可能发生在3种情况</p>
+<ul>
+<li>生产者-&gt; 队列</li>
+<li>队列-&gt; 消费者</li>
+<li>队列持久化本身<br>在生产者产生消息到队列的过程可能由于网络问题，宕机等原因没有达到消息队列，或者到达队列后并没有返回消息，这时可以通过重试等方式解决。队列到消费者时也会存在同样的问题，可以通过增加一个标识，投递消息前先标记成待完成状态，在收到消费者确认成功的回复后标记成完成。可以看到消息丢失和消息重复是一个硬币的2面, 保证消息不丢失也会带来消息重复的问题。</li>
+</ul>
+<h4 id="消息确认">消息确认</h4><p>消息确认就是将2次RPC变成3次RPC。在某些场景默认auto ack是可以的，但也需要支持消息者主动ack，在之后的某个时间重新投递</p>
+<h4 id="消息重复">消息重复</h4><p>上面提到，在需要保证消息不丢失的场景，因为对投递失败的情况不可确定是失败，还是超时，需要进行重发，一定会带来消息的重复，这里要考虑的是如何减少重复，可以根据一定的规则(业务id+业务名)，数据库唯一主键，分布式主键等产生messageId（为了方便排查问题，一定要有messageId）, 对比清除周期内记录的messageId，如果messageId相同就认为是重复的消息。</p>
+<h4 id="消息顺序性">消息顺序性</h4><p>比较简单有效的实现消息顺序性的方式就是单线程生产者+单线程消费者+每个消费线程对应一个单独队列, 排除消息丢失的情况，可以做到严格有序。</p>
+<h4 id="投递方式">投递方式</h4><p>消息队列的投递方式可以分为push和pull2种，一种模型的某些场景下的优点，在另一些场景就可能是缺点。无论是push还是pull，都存在各种的利弊。<br>push的优点就是及时性，缺点就是受限于消费者的消费能力，可能造成消息的堆积，broker会不断给消费者发送不能处理的消息。<br>pull的优点的就是主动权掌握在消费方，可以根据自己的消息速度进行消息拉取，缺点就是消费方不知道什么时候可以获取的最新的消息，会有消息延迟和忙等。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://minotaursu.com/2016/11/06/消息队列之简要设计/" data-id="cjednslt9000lols6v3gv5zaw" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/分布式/">分布式</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/消息队列/">消息队列</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/软件开发/">软件开发</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
       <article id="post-netty详解之reactor模型" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -160,7 +242,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2016/09/23/netty详解之reactor模型/" data-id="cjdy9ev88002brjs6wslvut5o" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2016/09/23/netty详解之reactor模型/" data-id="cjednsluj002fols6b63pijx7" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/io/">io</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/netty/">netty</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/reactor/">reactor</a></li></ul>
@@ -227,80 +309,10 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2016/09/23/netty详解之io模型/" data-id="cjdy9ev8d002irjs6zsf03dle" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2016/09/23/netty详解之io模型/" data-id="cjednslul002mols6wcc1ckq2" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/netty/">netty</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nio/">nio</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-构建可靠的系统" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/05/25/构建可靠的系统/">构建可靠的系统</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2016/05/25/构建可靠的系统/">
-      <time datetime="2016-05-25T03:38:00.000Z" itemprop="datePublished">2016-05-25</time>
-    </a>
-  </div>
-
-
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <p>编写的代码能否在线上持续的提供稳定可靠的服务是区分普通程序员，文艺程序员，2B程序员的重要标准之一。持续的提供稳定可靠的服务说起来简单，实际影响的因素有很多，数据的量级，请求的峰值，并发的影响，架构的设计，系统的复杂度，外部依赖，线上的运维，单测和CR的执行，这些都一定程度影响着系统能否持续的提供稳定可靠的服务。和所有的工程类似，软件工程的质量也不是由单一因素就能决定的，这里我们不谈这些因素的影响，只站在开发者的角度说一下如何构造可靠的系统，在可控的范围内实现一个能够提供稳定可靠服务的系统。软件有风险，开发需谨慎，一家之言仅供参考。</p>
-<h2 id="区分可靠和不可靠的操作">区分可靠和不可靠的操作</h2><p>区分可靠和不可靠的操作，是编写可靠代码的基本要求。只有理解了什么是可靠与不可靠才能做出正确的应对，使可靠的代码简洁，不可靠的代码健壮，例如从缓存中获取数据，更新数据库，这些就是不可靠的操作，可能因为网络，软件，硬件等各种原因失败，代码需要根据不同的情况记录异常或者进行重试等操作，因为更新数据库可能失败，需要在有一致性要求的情况加上事务。除了第三方不可靠之外，代码在不同的环境也可能是不可靠的，例如单线程安全的代码在多线程可能就是不可靠的，串行访问可靠的代码在并发时可能就是不可靠的，单机可靠的代码在分布式环境可能就是不可靠的，小数据量时可靠的代码在数据量变大时可能就是不可靠的。知道了遇到的是老虎还是Hello Kitty，才知道是要逃还是微笑。</p>
-<h2 id="快速失败，抛出异常">快速失败，抛出异常</h2><p>fail fast做为一个设计开发原则往往和我们的直觉背道而驰，为了系统的健壮性我们往往将错误自动处理掉，希望系统进行运行下去，减少错误的产生。其实这种做法往往会滋生出隐藏很深的bug，编写很多magic code，导致维护代码和查找错误都很困难。快速失败的原则让错误尽早被发现，避免导致更大的错误，有人觉得程序有很多assert语句和抛出异常很不安全，事实上fail fast不会导致系统的crash，反而因为出现什么bug和bug在哪里都一目了然增加了系统的健壮性，fail fast就像创业一样快速的试错，如果发现方向不可行就赶紧打住避免更大的损失。比较典型的fail fast使用就是接口入参时的各种assert和调用第三方时的超时设置，这样即使第三方出现故障也不会导致线程打满拖垮我们的系统。</p>
-<h2 id="兜底与降级">兜底与降级</h2><p>提到了快速失败就不能不说兜底，快速失败是为了尽快的发现错误，避免错误的隐藏和扩大。兜底是为了错误容忍，避免因为非核心流程的失败导致整体功能的不可用。例如我们在获取商品详情时，不能因为获取商品评价信息失败就导致整个商品详情失败；获取某些配置信息时本地也要有一份兜底配置，避免因为配置信息获取不到导致核心业务的失败。如果说兜底是在错误发生时的被动防御，那么降级就是对错误的主动预防了，同样以商品详情为例，在某次活动期间流量暴增，那么可以主动放弃获取商品评价信息，展示商品是否有库存代替具体的库存数量，减小服务器的鸭梨，加快响应速度。</p>
-<h2 id="良好的api设计">良好的api设计</h2><p>设计一个良好的api从来都不是件容易的事情，设计一个良好的RPC调用的api就更加困难。假设有一个通过商品id获取商品详情的需求。<br>最开始我们的api可能是这样的</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Item <span class="function"><span class="title">getItemById</span><span class="params">(Long id)</span></span></span><br></pre></td></tr></table></figure>
-<p>因为是RPC调用，当返回是null的时候调用方懵逼了，这啥情况，是出错了？是超时？是没有商品？，于是对返回的对象进行一次封装，api变成介样</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RpcResult&lt;Item&gt; <span class="function"><span class="title">getItemById</span><span class="params">(Long id)</span></span></span><br></pre></td></tr></table></figure>
-<p>后面产品狗说需要批量获取商品，于是变成批量查询，api变成介样</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RpcResult&lt;Item&gt; <span class="function"><span class="title">getItemsByIds</span><span class="params">(List&lt;Long&gt; ids)</span></span></span><br></pre></td></tr></table></figure>
-<p>后面有个2B调用方一次性传了10W个id过来，几十秒也没能查出来，于是限制最多一次传100个避免长时间执行，api变成介样。</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RpcResult&lt;Item&gt; <span class="function"><span class="title">getItemsByIdsWithLimit</span><span class="params">(Long id)</span></span></span><br></pre></td></tr></table></figure>
-<p>可见良好的RPC的api设计需要考虑   </p>
-<ol>
-<li>返回值需要包含错误码，是业务异常还是网络异常，是否可以重试。   </li>
-<li>减少业务方的调用，将业务方多次调用才能完成的事情封装成一个接口。  </li>
-<li>api的命名和注释要规范，毕竟调用方不清楚实现细节，能够直观看到就是api和注释。</li>
-</ol>
-<p>同时作为调用方也要对接口进行wrapper，解决接口不规范的问题，隔离提供方api升级变更的影响。</p>
-<h2 id="避免单点">避免单点</h2><p>系统不是只运行一次，人生也不是赌博，不要总想着All in。一般对于无状态的就采用多活方案，对于任务调度这种只有一个能运行的可以考虑redis，zookeeper做锁控制，某些系统也会采用一台服务器运行，一台standby的方案，通过心跳检查的方式发现运行的主机挂掉后拉起备机的方案。</p>
-<h2 id="做好提前量">做好提前量</h2><p>考虑到业务的发展，流量爆发的突然性，业界有着系统架构支持10倍增长，系统设计支持5倍增长，系统实现支持2倍增长的说法。数据存储，服务规划这些改动比较麻烦的事情最好在设计之初的考虑清楚，随着业务的发展也要<br>做好提前量，不要等到服务不可用了才想到堆机器。</p>
-<h2 id="预热与发布过程">预热与发布过程</h2><p>除了设计和实现时遵循良好的原则规范，平滑发布也是需要考虑的一点，发布过程的兼容，稳定，可回滚都是在开发之时就要考虑清楚的。除了发布过程之外，还需要考虑发布后活动前的预热，需要通过预热请求提高缓存的命中率，保证热点数据都在缓存中，系统没有经过预热，大促活动来临之时请求瞬间就击穿了空空如也的缓存直接击垮了数据库。</p>
-<p><img src="http://hexo-tuchuan.qiniudn.com/towers.jpg?imageView/1/w/670/h/400" alt=""></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2016/05/25/构建可靠的系统/" data-id="cjdy9ev7e000srjs6hg9oej5j" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/工作/">工作</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/开发/">开发</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/系统设计/">系统设计</a></li></ul>
 
     </footer>
   </div>
@@ -322,6 +334,24 @@
     <h3 class="widget-title">recents</h3>
     <div class="widget">
       <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2018/03/03/所有需要知道的GC知识/" class="thumbnail">
+  
+    <span style="background-image:url(http://hexo-tuchuan.qiniudn.com/jvmspeed.jpg
+)" alt="所有需要知道的GC知识" class="thumbnail-image"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"></p>
+              <p class="item-title"><a href="/2018/03/03/所有需要知道的GC知识/" class="title">所有需要知道的GC知识</a></p>
+              <p class="item-date"><time datetime="2018-03-02T16:24:51.000Z" itemprop="datePublished">2018-03-3</time></p>
+            </div>
+          </li>
         
           <li>
             
@@ -395,24 +425,6 @@
             </div>
           </li>
         
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2017/12/13/archsummit2017见闻和思考/" class="thumbnail">
-  
-    <span style="background-image:url(http://hexo-tuchuan.qiniudn.com/archsummit.jpeg
-)" alt="archsummit2017见闻和思考" class="thumbnail-image"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"></p>
-              <p class="item-title"><a href="/2017/12/13/archsummit2017见闻和思考/" class="title">archsummit2017见闻和思考</a></p>
-              <p class="item-date"><time datetime="2017-12-13T10:31:39.000Z" itemprop="datePublished">2017-12-13</time></p>
-            </div>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -422,7 +434,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">tag cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/ACID/" style="font-size: 10px;">ACID</a> <a href="/tags/AOP/" style="font-size: 11.67px;">AOP</a> <a href="/tags/CAP/" style="font-size: 10px;">CAP</a> <a href="/tags/Cloud-native/" style="font-size: 10px;">Cloud native</a> <a href="/tags/annotation/" style="font-size: 10px;">annotation</a> <a href="/tags/archsummit/" style="font-size: 10px;">archsummit</a> <a href="/tags/gc/" style="font-size: 10px;">gc</a> <a href="/tags/git/" style="font-size: 11.67px;">git</a> <a href="/tags/go/" style="font-size: 10px;">go</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/jackson/" style="font-size: 10px;">jackson</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/json/" style="font-size: 10px;">json</a> <a href="/tags/netty/" style="font-size: 11.67px;">netty</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/quartz/" style="font-size: 10px;">quartz</a> <a href="/tags/reactor/" style="font-size: 10px;">reactor</a> <a href="/tags/spring/" style="font-size: 11.67px;">spring</a> <a href="/tags/tips/" style="font-size: 10px;">tips</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/分布式/" style="font-size: 13.33px;">分布式</a> <a href="/tags/工作/" style="font-size: 18.33px;">工作</a> <a href="/tags/并发/" style="font-size: 13.33px;">并发</a> <a href="/tags/开发/" style="font-size: 16.67px;">开发</a> <a href="/tags/性能/" style="font-size: 11.67px;">性能</a> <a href="/tags/总结/" style="font-size: 13.33px;">总结</a> <a href="/tags/消息队列/" style="font-size: 10px;">消息队列</a> <a href="/tags/滴滴/" style="font-size: 11.67px;">滴滴</a> <a href="/tags/系统设计/" style="font-size: 15px;">系统设计</a> <a href="/tags/缓存/" style="font-size: 11.67px;">缓存</a> <a href="/tags/职业规划/" style="font-size: 10px;">职业规划</a> <a href="/tags/语言/" style="font-size: 10px;">语言</a> <a href="/tags/调度/" style="font-size: 10px;">调度</a> <a href="/tags/软件开发/" style="font-size: 10px;">软件开发</a> <a href="/tags/锁/" style="font-size: 10px;">锁</a> <a href="/tags/阿里/" style="font-size: 15px;">阿里</a>
+      <a href="/tags/ACID/" style="font-size: 10px;">ACID</a> <a href="/tags/AOP/" style="font-size: 11.67px;">AOP</a> <a href="/tags/CAP/" style="font-size: 10px;">CAP</a> <a href="/tags/Cloud-native/" style="font-size: 10px;">Cloud native</a> <a href="/tags/annotation/" style="font-size: 10px;">annotation</a> <a href="/tags/archsummit/" style="font-size: 10px;">archsummit</a> <a href="/tags/gc/" style="font-size: 11.67px;">gc</a> <a href="/tags/git/" style="font-size: 11.67px;">git</a> <a href="/tags/go/" style="font-size: 10px;">go</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/jackson/" style="font-size: 10px;">jackson</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/json/" style="font-size: 10px;">json</a> <a href="/tags/netty/" style="font-size: 11.67px;">netty</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/quartz/" style="font-size: 10px;">quartz</a> <a href="/tags/reactor/" style="font-size: 10px;">reactor</a> <a href="/tags/spring/" style="font-size: 11.67px;">spring</a> <a href="/tags/tips/" style="font-size: 10px;">tips</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/分布式/" style="font-size: 13.33px;">分布式</a> <a href="/tags/工作/" style="font-size: 18.33px;">工作</a> <a href="/tags/并发/" style="font-size: 13.33px;">并发</a> <a href="/tags/开发/" style="font-size: 16.67px;">开发</a> <a href="/tags/性能/" style="font-size: 13.33px;">性能</a> <a href="/tags/总结/" style="font-size: 13.33px;">总结</a> <a href="/tags/消息队列/" style="font-size: 10px;">消息队列</a> <a href="/tags/滴滴/" style="font-size: 11.67px;">滴滴</a> <a href="/tags/系统设计/" style="font-size: 15px;">系统设计</a> <a href="/tags/缓存/" style="font-size: 11.67px;">缓存</a> <a href="/tags/职业规划/" style="font-size: 10px;">职业规划</a> <a href="/tags/语言/" style="font-size: 10px;">语言</a> <a href="/tags/调度/" style="font-size: 10px;">调度</a> <a href="/tags/软件开发/" style="font-size: 10px;">软件开发</a> <a href="/tags/锁/" style="font-size: 10px;">锁</a> <a href="/tags/阿里/" style="font-size: 15px;">阿里</a>
     </div>
   </div>
 

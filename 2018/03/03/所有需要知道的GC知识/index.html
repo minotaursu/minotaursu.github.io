@@ -3,18 +3,25 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Minotaur story</title>
+  <title>所有需要知道的GC知识 | Minotaur story</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="google-site-verification" content="bDBQbYqQqKkNOj4OxUu1rjxMw6nQqWpxzBffZ7yj2kA" />
-  <meta name="description" content="java developer life">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Minotaur story">
-<meta property="og:url" content="http://minotaursu.com/index.html">
+  <meta name="description" content="作为一个java语言开发的应用，为了每一个0.1%的性能提升，折腾过了网络，IO，数据库之后难免要折腾一下GC。写下这篇日志的目的是希望看完这篇日志后，关于GC的问题能从google+stackoverflow寻找答案的过程中解脱出来，99%的GC问题都能独立解决，也方便自己温故知新。
+JVM内存结构目前主流的JVM都将内存分成不同的区域，JVM内存结构主要由堆，方法区和栈组成，堆作为最大一块的内">
+<meta property="og:type" content="article">
+<meta property="og:title" content="所有需要知道的GC知识">
+<meta property="og:url" content="http://minotaursu.com/2018/03/03/所有需要知道的GC知识/index.html">
 <meta property="og:site_name" content="Minotaur story">
-<meta property="og:description" content="java developer life">
+<meta property="og:description" content="作为一个java语言开发的应用，为了每一个0.1%的性能提升，折腾过了网络，IO，数据库之后难免要折腾一下GC。写下这篇日志的目的是希望看完这篇日志后，关于GC的问题能从google+stackoverflow寻找答案的过程中解脱出来，99%的GC问题都能独立解决，也方便自己温故知新。
+JVM内存结构目前主流的JVM都将内存分成不同的区域，JVM内存结构主要由堆，方法区和栈组成，堆作为最大一块的内">
+<meta property="og:image" content="http://hexo-tuchuan.qiniudn.com/jvmspeed.jpg">
+<meta property="og:image" content="http://hexo-tuchuan.qiniudn.com/jvm.png">
+<meta property="og:image" content="http://hexo-tuchuan.qiniudn.com/gcprocess.png">
+<meta property="og:updated_time" content="2018-03-05T03:23:34.075Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Minotaur story">
-<meta name="twitter:description" content="java developer life">
+<meta name="twitter:title" content="所有需要知道的GC知识">
+<meta name="twitter:description" content="作为一个java语言开发的应用，为了每一个0.1%的性能提升，折腾过了网络，IO，数据库之后难免要折腾一下GC。写下这篇日志的目的是希望看完这篇日志后，关于GC的问题能从google+stackoverflow寻找答案的过程中解脱出来，99%的GC问题都能独立解决，也方便自己温故知新。
+JVM内存结构目前主流的JVM都将内存分成不同的区域，JVM内存结构主要由堆，方法区和栈组成，堆作为最大一块的内">
   
   
     <link rel="icon" href="/css/images/favicon.ico">
@@ -114,8 +121,7 @@
 </aside>
 
       
-      <section id="main">
-      <article id="post-所有需要知道的GC知识" class="article article-type-post" itemscope itemprop="blogPost">
+      <section id="main"><article id="post-所有需要知道的GC知识" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
     
@@ -123,8 +129,8 @@
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/03/03/所有需要知道的GC知识/">所有需要知道的GC知识</a>
+    <h1 class="article-title" itemprop="name">
+      所有需要知道的GC知识
     </h1>
   
 
@@ -185,134 +191,23 @@
     </footer>
   </div>
   
-</article>
-
-
-
     
-      <article id="post-2017年终总结" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
+<nav id="article-nav">
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/02/22/2017年终总结/">2017年终总结</a>
-    </h1>
   
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2018/02/22/2017年终总结/">
-      <time datetime="2018-02-22T06:17:55.000Z" itemprop="datePublished">2018-02-22</time>
+    <a href="/2018/02/22/2017年终总结/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">2017年终总结</div>
     </a>
-  </div>
+  
+</nav>
 
 
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <p>作为工作第N年的第M份总结还是要感叹一下时间的飞快, 首先总结一下认为比较重要的几件事情。</p>
-<ol>
-<li>去日本关西玩了一趟，也算是第一次去发达国家了，住的民宿，性价比特别高，日本的交通不是一般的贵。作为消费者喜欢日本的精致服务，但并不想在日本生活。。</li>
-<li>去了南京看中山陵，沧桑国府，金陵一梦。</li>
-<li>老婆去了阿里，工资涨了不少，工作也忙了很多，如果自己还在阿里不离职不晋升可能还没老婆工资高。。</li>
-<li>在滴滴经历了一次晋升，全票通过，精神上得到了认同。</li>
-<li>买了车，还清了除房贷车贷之外的一切贷款，财富从消费阶段转向积累阶段。</li>
-<li>工作上做了很多业务开发之外的工作，学到了不少东西。</li>
-<li>王者农药单排段位达到王者，坚持你所坚持，很多事情比想象的简单。</li>
-<li>星际二战役全通。</li>
-<li>2017年的wishlist完成了60%,希望2018年的wishlist能完成80%以上。</li>
-</ol>
-<p>2017年是工作和生活平衡的一年，前半年更加生活，和老婆一起吃了很多晚饭，周边游国外游都有，也和小伙伴们一起5排过。下半年系统的压力很大，项目也多，工作上尝试了很多方法，做了不少事情，加了不少班，也得到了认可。整体而言工作中生活中都在忙，缺少了悟，2018年还是希望多读一些书(30本以上)，多一些感悟和参悟，对未来有一定的预见。</p>
-<p>2018·wishlist</p>
-<ol>
-<li>云南/亚洲某国行一次，目的地视财力而定</li>
-<li>为知名开源项目贡献一次代码，例如elasticsearch，netty等</li>
-<li>完成 <a href="http://book.douban.com/people/49806902/wish" target="_blank" rel="external">豆瓣阅读列表</a></li>
-<li>做事更有条理，寻找更多的可能性</li>
-<li>学会吉他</li>
-<li>2018年总结时，列出一件自己觉得NB的事情</li>
-</ol>
-<p><img src="http://hexo-tuchuan.qiniudn.com/hzdream.png" alt="人的梦想，是不会终结的"></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2018/02/22/2017年终总结/" data-id="cjednslva003nols6fw6bagaf" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/工作/">工作</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/总结/">总结</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/滴滴/">滴滴</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/阿里/">阿里</a></li></ul>
-
-    </footer>
-  </div>
   
 </article>
 
 
-
-    
-      <article id="post-一次GC耗时超长的问题排查" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/02/22/一次GC耗时超长的问题排查/">一次GC耗时超长的问题排查</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2018/02/22/一次GC耗时超长的问题排查/">
-      <time datetime="2018-02-22T03:57:06.000Z" itemprop="datePublished">2018-02-22</time>
-    </a>
-  </div>
-
-
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <p><img src="http://hexo-tuchuan.qiniudn.com/gc.png" alt=""></p>
-<p>2017年10月某日突然收到FullGC耗时超长的报警，排查发现应用存在周期性FULLGC耗时超长的的情况，每次FULLGC时间长达5s以上，甚至出现过10s以上的FULLGC，导致FULLGC时应用的响应全部超时。最初是怀疑系统有大量的对象没有释放导致FULLGC时间过长，第一时间dump了应用的内存，并没有发现内存泄露的情况。后面查看GC日志发现Rescan阶段weak refs processing的超时都超长，GC日志里大量可见[weak refs processing, 9.7398650 secs]，排查的方向就逐渐转向了weak refs processing 为什么会花费如此长的时间，大家在一起针对代码分析了很久，从jackson的使用，到本地缓存的使用，到NIO的影响，每个人都提出了自己的见解，但是又没有强有力的证据验证自己的结果，按照这个思路排查了一晚上也没有结果。<br>后面分析发现耗时超长的FULLGC只出现在特定的某一台服务器上，该应用的FULLGC耗时在其他服务器上都表现正常，排查发现出现GC耗时过长的服务器还部署着大数据的某个高IO类型的应用，排查的思路又转向了服务器的IO和cpu，但是并没有发现io和cpu的异常情况，排查似乎陷入了困境。<br><img src="http://hexo-tuchuan.qiniudn.com/easygc.png" alt=""><br>过了几天之后找到了一个可视化的GC分析工具<a href="http://gceasy.io/" target="_blank" rel="external">gceasy.io</a> ，分析后发现一个之前一直忽略的现象，GC真实的耗时是远大于用户耗时和系统耗时的，[Times: user=2.56 sys=0.07, real=9.82 secs]。我们知道JVM本身作为一个进程也是由linux系统进行内存分配，而linux的内存空间由两部分构成，物理内存和swap空间，假如GC时有一部分内容被交换到swap，遍历到这部分的时候就需要将其交换回内存，极端情况下甚至会把整个堆分区轮流往SWAP写一遍，而磁盘交换的速度是远慢于物理内存的，如果GC和swap同时发生会导致超长时间的卡顿，通过sar -W -f 命令分析发现swap时间完全吻合发生耗时超长的GC时间，基本可以断定是系统的物理内存不够用导致系统发生swap，最终导致耗时超长的GC发生，关闭linux的swap后引用的GC时间恢复到500ms以下。<br>虽然gc耗时超长的问题得到了解决，但是仔细思考一下就会发现问题的解决完全依赖程序员的推理过程和知识储备，那么是不是可以有更简单更快速的问题排查定位手段，我认为答案是可以的，那就是更加智能化的监控，将业务指标，应用指标，系统指标打通关联，在FULLGC超时报警的时候通知告知业务开发系统发生了swap，并且能展示对订单量和GMV等指标的影响。好的基础设施就像强大的武器，虽然依赖好的枪法用手枪也能杀死敌人，但是手里有把AKM或M16还是更容易吃鸡。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2018/02/22/一次GC耗时超长的问题排查/" data-id="cjednslue0028ols6x5jsgdme" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gc/">gc</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/性能/">性能</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <nav id="page-nav">
-        <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
-      </nav>
-    </section>
+</section>
       
         <aside id="sidebar">
   
