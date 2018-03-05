@@ -145,7 +145,7 @@
     <div class="article-entry" itemprop="articleBody">
       
                 
-        <p><img src="http://hexo-tuchuan.qiniudn.com/jvmspeed.jpg" alt=""><br>作为一个java语言开发的应用，为了每一个0.1%的性能提升，折腾过了网络，IO，数据库之后难免要折腾一下GC。写下这篇日志的目的是希望看完这篇日志后，关于GC的问题能从google+stackoverflow寻找答案的过程中解脱出来，99%的GC问题都能独立解决，也方便自己温故知新。</p>
+        <p><img src="http://hexo-tuchuan.qiniudn.com/jvmspeed.png" alt=""><br>作为一个java语言开发的应用，为了每一个0.1%的性能提升，折腾过了网络，IO，数据库之后难免要折腾一下GC。写下这篇日志的目的是希望看完这篇日志后，关于GC的问题能从google+stackoverflow寻找答案的过程中解脱出来，99%的GC问题都能独立解决，也方便自己温故知新。</p>
 <h1 id="JVM内存结构">JVM内存结构</h1><p>目前主流的JVM都将内存分成不同的区域，JVM内存结构主要由堆，方法区和栈组成，堆作为最大一块的内存又由Eden空间、From Survivor空间、To Survivor空间，Old空间组成。<br><img src="http://hexo-tuchuan.qiniudn.com/jvm.png" alt=""><br>新生代（Young Generation）：大多数对象在新生代中被创建(某些大对象可能直接创建在老年代)，其中很多对象的生命周期很短。<br>一般而言新生代内又分三个区：一个Eden区，两个Survivor区，当Eden区满时，还存活的对象将被复制到其中一个Survivor区。当这个Survivor区满时，此区的存活且不满足“晋升”条件的对象将被复制到另外一个Survivor区。对象每经历一次Minor GC，年龄加1，达到“晋升年龄阈值”后，被放到老年代，这个过程也称为“晋升”。在Serial和ParNew GC两种回收器中，“晋升年龄阈值”通过参数MaxTenuringThreshold设定，默认值为15。<br>老年代（Old Generation）：在新生代中经历了N次垃圾回收后仍然存活的对象，就会被放到年老代，该区域中对象存活率高。老年代的垃圾回收（又称Major GC）通常使用“标记-清理”或“标记-整理”算法。整堆包括新生代和老年代的垃圾回收称为Full GC。</p>
 <h1 id="垃圾回收器">垃圾回收器</h1><p>串行（Serial）回收器是单线程的一个回收器，简单、易实现、效率高。<br>并行（ParNew）回收器是Serial的多线程版，可以充分的利用CPU资源，减少回收的时间。<br>吞吐量优先（Parallel Scavenge）回收器，侧重于吞吐量的控制。<br>并发标记清除（CMS，Concurrent Mark Sweep）回收器是一种以获取最短回收停顿时间为目标的回收器，该回收器是基于“标记-清除”算法实现的。</p>
 <h1 id="一些参数">一些参数</h1><p>-Xms 设置堆的最小空间大小。<br>-Xmx 设置堆的最大空间大小。<br>-Xmn 设置新生代最小空间大小（推荐使用）。<br>-XX:NewSize 设置新生代最小空间大小。<br>-XX:MaxNewSize 设置新生代最大空间大小。<br>-XX:SurvivorRatio 设置Eden:Survivor中的一个比例,默认是8:1:1<br>-XX:PermSize 设置永久代最小空间大小。<br>-XX:MaxPermSize 设置永久代最大空间大小。<br>-Xss 设置每个线程的堆栈大小<br>老年代空间大小=堆空间大小-年轻代大空间大小<br>-XX:+DisableExplicitGC 显示禁止System.gc()，System.gc()变成一行无效的代码，如果系统有使用堆外内存不建议配置这个jvm参数<br>-XX:+UseConcMarkSweepGC 设置老年代为并发收集<br>-XX:+CMSParallelRemarkEnabled 降低标记停顿<br>-XX:+UseCMSCompactAtFullCollection 打开对年老代的压缩。可能会影响性能，但是可以消除碎片<br>-XX:LargePageSizeInBytes 设置内存页的大小<br>-XX+UseCMSInitiatingOccupancyOnly 标志来命令JVM不基于运行时收集的数据来启动CMS垃圾收集周期，始终使用CMSInitiatingPermOccupancyFraction的值（不推荐使用）<br>-XX:CMSInitiatingOccupancyFraction，默认为68，即当年老代的空间使用率达到68%时，会执行一次CMS回收。如果应用程序的内存使用率增长很快，在CMS的执行过程中，已经出现了内存不足，此时，CMS回收就会失败，虚拟机将启动SerialOld串行收集器进行垃圾回收。如果这样，应用程序将完全中断，直到垃圾回收完成，这时，应用程序的停顿时间可能会较长<br>-XX:+CMSScavengeBeforeRemark 强制重新标记前进行一次MinorGC，如果Eden区有大量活跃对象推荐使用。<br>-XX:+PrintGCDetails 输出GC的详细日志<br>-XX:+PrintGCTimeStamps 输出GC的时间戳<br>-XX:+PrintHeapAtGC 在进行GC的前后打印出堆的信息<br>-XX:+PrintTenuringDistribution 指定JVM在每次新生代GC时，输出幸存区中对象的年龄分布</p>
@@ -171,13 +171,13 @@
 <li>老年代大小在合理的范围</li>
 <li>幸存区大小在合理的范围</li>
 </ol>
-<p>堆大小直接影响到GC的频率和时间，业务场景，应用和硬件都会对堆大小的设置产生影响，要想获得一个合适的大小，只能通过不断的测试调优。个人经验是响应时间优先的应用，小于操作系统总内存的1/2（为操作系统和日志采集预留内存）并且不大于16G的范围内堆设置的越大越好。<br>老年代的大小直接影响FULLGC的频率和时间，个人经验是设置成高峰期老年代活跃数据的大小的3倍。<br>幸存区大小会影响晋升到老年代对象的数量，minorGC的持续时间。个人经验是幸存区的大小需要能够容纳存活的对象到达配置的MaxTenuringThreshold年龄，避免promotion failed。</p>
+<p>堆大小直接影响到GC的频率和时间，业务场景，应用和硬件都会对堆大小的设置产生影响，要想获得一个合适的大小，只能通过不断的测试调优。个人经验是响应时间优先的应用为操作系统和日志采集预留出足够的内存并且不大于16G的范围内堆设置的越大越好(如果业务量比较小可能造成浪费)。<br>老年代的大小直接影响FULLGC的频率和时间，个人经验是设置成高峰期老年代活跃数据的大小的3倍。<br>幸存区大小会影响晋升到老年代对象的数量，minorGC的持续时间。个人经验是幸存区的大小需要能够容纳存活的对象到达配置的MaxTenuringThreshold年龄，避免promotion failed。</p>
 <p>参考:<br><a href="https://tech.meituan.com/jvm_optimize.html" target="_blank" rel="external">从实际案例聊聊Java应用的GC优化</a><br><a href="http://www.importnew.com/22886.html" target="_blank" rel="external">JVM 调优 —— GC 长时间停顿问题及解决方法</a><br><a href="https://www.jianshu.com/p/051d566e110d" target="_blank" rel="external">海量连接服务端jvm参数调优杂记</a></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2018/03/03/所有需要知道的GC知识/" data-id="cjednsltp0015ols61duvxg13" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2018/03/03/所有需要知道的GC知识/" data-id="cjedoivqn0015pws6q13soii0" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gc/">gc</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/性能/">性能</a></li></ul>
@@ -247,7 +247,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2018/02/22/2017年终总结/" data-id="cjednslva003nols6fw6bagaf" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2018/02/22/2017年终总结/" data-id="cjedoivs4003npws6ksll1b2d" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/工作/">工作</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/总结/">总结</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/滴滴/">滴滴</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/阿里/">阿里</a></li></ul>
@@ -296,7 +296,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2018/02/22/一次GC耗时超长的问题排查/" data-id="cjednslue0028ols6x5jsgdme" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2018/02/22/一次GC耗时超长的问题排查/" data-id="cjedoivr20028pws6hz777n8a" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gc/">gc</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/性能/">性能</a></li></ul>
@@ -327,7 +327,7 @@
             <div class="item-thumbnail">
               <a href="/2018/03/03/所有需要知道的GC知识/" class="thumbnail">
   
-    <span style="background-image:url(http://hexo-tuchuan.qiniudn.com/jvmspeed.jpg
+    <span style="background-image:url(http://hexo-tuchuan.qiniudn.com/jvmspeed.png
 )" alt="所有需要知道的GC知识" class="thumbnail-image"></span>
   
 </a>
