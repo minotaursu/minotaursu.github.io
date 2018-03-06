@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://minotaursu.com/"/>
-  <updated>2018-03-06T02:52:12.585Z</updated>
+  <updated>2018-03-06T03:22:36.723Z</updated>
   <id>http://minotaursu.com/</id>
   
   <author>
@@ -19,8 +19,8 @@
     <link href="http://minotaursu.com/2018/03/03/%E6%89%80%E6%9C%89%E9%9C%80%E8%A6%81%E7%9F%A5%E9%81%93%E7%9A%84GC%E7%9F%A5%E8%AF%86/"/>
     <id>http://minotaursu.com/2018/03/03/所有需要知道的GC知识/</id>
     <published>2018-03-02T16:24:51.000Z</published>
-    <updated>2018-03-06T02:52:12.585Z</updated>
-    <content type="html"><![CDATA[<p><img src="http://hexo-tuchuan.qiniudn.com/jvmspeed.png" alt=""><br>作为一个java语言开发的应用，为了每一个0.1%的性能提升，折腾过了网络，IO，数据库之后难免要折腾一下GC。写下这篇日志的目的是希望看完这篇日志后，关于GC的问题能从google+stackoverflow寻找答案的过程中解脱出来，99%的GC问题都能独立解决，也方便自己温故知新。</p>
+    <updated>2018-03-06T03:22:36.723Z</updated>
+    <content type="html"><![CDATA[<p><img src="http://hexo-tuchuan.qiniudn.com/jvmspeed.png" alt=""><br>作为一个java语言开发的应用，为了每一个0.1%的性能提升，折腾过了网络，IO，数据库之后难免要折腾一下GC。写下这篇日志的目的是希望看完这篇日志后，关于GC的问题能从google+stackoverflow寻找答案的过程中解脱出来，99%的GC问题都能独立解决，也方便自己温故知新。日志将从JVM内存结构 - 垃圾回收器 - 一些JVM参数 - 看懂GC日志 - 实际案例 - 建议配置 这几个方面详细介绍GC。在写这篇日志的过程中发现越写越长，需要详细介绍和深究原理的内容越来越多，不由得感慨网上的blog只能传递某几个知识点，想要构建一个完整的知识网络还是需要深入阅读相关的书籍，唯有将知识网络构建的越来越严密才能应对遇到的各种问题。</p>
 <h1 id="JVM内存结构">JVM内存结构</h1><p>目前主流的JVM都将内存分成不同的区域，JVM内存结构主要由堆，方法区和栈组成，堆作为最大一块的内存又由Eden空间、From Survivor空间、To Survivor空间，Old空间组成。<br><img src="http://hexo-tuchuan.qiniudn.com/jvm.png" alt=""><br>新生代（Young Generation）：大多数对象在新生代中被创建(某些大对象可能直接创建在老年代)，其中很多对象的生命周期很短。<br>一般而言新生代内又分三个区：一个Eden区，两个Survivor区，当Eden区满时，还存活的对象将被复制到其中一个Survivor区。当这个Survivor区满时，此区的存活且不满足“晋升”条件的对象将被复制到另外一个Survivor区。对象每经历一次Minor GC，年龄加1，达到“晋升年龄阈值”后，被放到老年代，这个过程也称为“晋升”。在Serial和ParNew GC两种回收器中，“晋升年龄阈值”通过参数MaxTenuringThreshold设定，默认值为15。<br>老年代（Old Generation）：在新生代中经历了N次垃圾回收后仍然存活的对象，就会被放到年老代，该区域中对象存活率高。老年代的垃圾回收（又称Major GC）通常使用“标记-清理”或“标记-整理”算法。整堆包括新生代和老年代的垃圾回收称为Full GC。</p>
 <h1 id="垃圾回收器">垃圾回收器</h1><h3 id="串行（Serial）回收器">串行（Serial）回收器</h3><p>串行（Serial）回收器是单线程的一个回收器，简单、易实现、效率高。在串行收集器进行垃圾回收时，Java 应用程序中的线程都需要暂停，等待垃圾回收的完成，这样给用户体验造成较差效果。虽然如此，串行收集器却是一个成熟、经过长时间生产环境考验的极为高效的收集器。新生代串行处理器使用复制算法，实现相对简单，逻辑处理特别高效，且没有线程切换的开销。在诸如单 CPU 处理器或者较小的应用内存等硬件平台不是特别优越的场合，它的性能表现可以超过并行回收器和并发回收器。在 HotSpot 虚拟机中，使用-XX：+UseSerialGC 参数可以指定使用新生代串行收集器和老年代串行收集器。当 JVM 在 Client 模式下运行时，它是默认的垃圾收集器。</p>
 <h3 id="并行（ParNew）回收器">并行（ParNew）回收器</h3><p>并行（ParNew）回收器是Serial的多线程版，可以充分的利用CPU资源，减少回收的时间。并行回收器也是独占式的回收器，在收集过程中，应用程序会全部暂停。但由于并行回收器使用多线程进行垃圾回收，因此，在并发能力比较强的 CPU 上，它产生的停顿时间要短于串行回收器，而在单 CPU 或者并发能力较弱的系统中，并行回收器的效果不会比串行回收器好，由于多线程的压力，它的实际表现很可能比串行回收器差。<br>开启并行回收器可以使用参数-XX:+UseParNewGC，该参数设置新生代使用并行收集器，老年代使用串行收集器。</p>
