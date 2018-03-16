@@ -168,12 +168,12 @@
 <h3 id="谨慎设置重试次数">谨慎设置重试次数</h3><p>合理的设置重试次数即是保护下游也是保护自己，假设重试次数过多会导致服务响应时间的变慢（超时时间*重试次数），并且很容易引起下游的雪崩，导致下游长时间不可用。建议重要的接口设置2次重试，不必要的接口都不要设置重试次数。</p>
 <h1 id="防备上游">防备上游</h1><p>被上游陡增的流量打垮是1024种线上事故中非常经典的另一种，这里区分2种情况来讨论，一种是活动流量，需要预测活动预期的流量峰值，对高资源消耗的非核心功能提前降级，做好压测和降级预案，并设置一定的用户流控。另一种是内部的猪队友作案，可能顺手写个循环就带来10倍的流量增长，这种情况也要设置好系统的流量阀值，并且需要做到流量的按需分配，能够弄清楚流量的来源。<br>最后自己画了一张图，对可能的情况和故障做一个总结。</p>
 <p><img src="http://hexo-tuchuan.qiniudn.com/robust.png" alt=""></p>
-<p>通过上文可以发现监控(量化过去和现在)，压测（预测未来），降级（预防故障，快速止损）对系统的重要性。其中容错下游（熔断）和防备上游（限流）同样需要依靠降级服务实现，提到降级服务我们会想到Hystrix，除此之外滴滴出行有经验的老司机都会选择SDS（service downgrade system），SDS是一个由多位资深工程师开发的纯java语言降级系统，支持访问量，并发量，异常量，超时时间等多个监控指标的降级点，支持滑动窗口，令牌桶等多种算法，在数据可以化方面支持多种数据源（mysql，mongo，elasticsearch，influxdb）的存储和展示，可以选择喜欢的数据源进行降级可视化配置。相信在不久的未来就会开源和大家见面。</p>
+<p>通过上文可以发现监控(量化过去和现在)，压测（预测未来），降级（预防故障，快速止损）对系统的重要性。其中容错下游（熔断）和防备上游（限流）同样需要依靠降级服务实现，提到降级服务我们会想到Hystrix，除此之外滴滴出行有经验的老司机都会选择SDS（service downgrade system），SDS是一个由多位资深工程师开发的纯java语言降级系统，支持访问量，并发量，异常量，超时时间等多个监控指标的降级点，支持滑动窗口，令牌桶等多种算法，在数据可视化方面支持多种数据源（mysql，mongo，elasticsearch，influxdb）的存储和展示，可以选择喜欢的数据源进行降级可视化配置。相信在不久的未来就会开源和大家见面。</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2018/03/12/如何保障高并发系统的稳定性与高可用/" data-id="cjeqzok90001mmsc45yjn39zi" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2018/03/12/如何保障高并发系统的稳定性与高可用/" data-id="cjetd9krz001mwbc4bfxb08jp" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/工作/">工作</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/性能/">性能</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/稳定性/">稳定性</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/高可用/">高可用</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/高并发/">高并发</a></li></ul>
@@ -253,7 +253,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2018/03/03/所有需要知道的GC知识/" data-id="cjeqzok8n0015msc4einl9u5w" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2018/03/03/所有需要知道的GC知识/" data-id="cjetd9krs0015wbc44vg1noe2" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gc/">gc</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/性能/">性能</a></li></ul>
@@ -323,7 +323,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2018/02/22/2017年终总结/" data-id="cjeqzokaa003wmsc4bphwyxpv" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2018/02/22/2017年终总结/" data-id="cjetd9kta003wwbc4g356thwx" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/工作/">工作</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/总结/">总结</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/滴滴/">滴滴</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/阿里/">阿里</a></li></ul>
