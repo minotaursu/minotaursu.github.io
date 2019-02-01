@@ -7,11 +7,11 @@ tags:
 
 ---
 
-![](http://hexo-tuchuan.qiniudn.com/jvmspeed.png)
+![](http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/jvmspeed.png)
 作为一个java语言开发的应用，为了每一个0.1%的性能提升，折腾过了网络，IO，数据库之后难免要折腾一下GC。写下这篇日志的目的是希望看完这篇日志后，关于GC的问题能从google+stackoverflow寻找答案的过程中解脱出来，99%的GC问题都能独立解决，也方便自己温故知新。日志将从JVM内存结构 - 垃圾回收器 - 一些JVM参数 - 看懂GC日志 - 实际案例 - 建议配置 这几个方面详细介绍GC。在写这篇日志的过程中发现越写越长，需要详细介绍和深究原理的内容越来越多，不由得感慨网上的blog只能传递某几个知识点，想要构建一个完整的知识网络还是需要深入阅读相关的书籍，唯有将知识网络构建的越来越严密才能应对遇到的各种问题。
 #JVM内存结构
 目前主流的JVM都将内存分成不同的区域，JVM内存结构主要由堆，方法区和栈组成，堆作为最大一块的内存又由Eden空间、From Survivor空间、To Survivor空间，Old空间组成。
-![](http://hexo-tuchuan.qiniudn.com/jvm.png)
+![](http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/jvm.png)
 新生代（Young Generation）：大多数对象在新生代中被创建(某些大对象可能直接创建在老年代)，其中很多对象的生命周期很短。
 一般而言新生代内又分三个区：一个Eden区，两个Survivor区，当Eden区满时，还存活的对象将被复制到其中一个Survivor区。当这个Survivor区满时，此区的存活且不满足“晋升”条件的对象将被复制到另外一个Survivor区。对象每经历一次Minor GC，年龄加1，达到“晋升年龄阈值”后，被放到老年代，这个过程也称为“晋升”。在Serial和ParNew GC两种回收器中，“晋升年龄阈值”通过参数MaxTenuringThreshold设定，默认值为15。
 老年代（Old Generation）：在新生代中经历了N次垃圾回收后仍然存活的对象，就会被放到年老代，该区域中对象存活率高。老年代的垃圾回收（又称Major GC）通常使用“标记-清理”或“标记-整理”算法。整堆包括新生代和老年代的垃圾回收称为Full GC。
@@ -30,7 +30,7 @@ CMS 工作时，主要步骤有：初始标记、并发标记、并发预清理�
 ###G1回收器 (Garbage First)
 G1收集器是当今收集器技术发展最前沿的成果之一，目标是作为一款服务器的垃圾收集器，因此，它在吞吐量和停顿控制上，预期要优于 CMS 收集器。与 CMS 收集器相比，G1收集器是基于标记-压缩算法的。因此，它不会产生空间碎片，也没有必要在收集完成后，进行一次独占式的碎片整理工作。G1 收集器还可以进行非常精确的停顿控制，这是G1相对CMS的一大优势，降低停顿时间是G1和CMS共同的关注点，但G1除了降低停顿外，还能建立可预测的停顿时间模型，能让使用者明确指定在一个长度为M毫秒的时间片段内，消耗在GC上的时间不得超过N毫秒。使用参数-XX:+UnlockExperimentalVMOptions –XX:+UseG1GC 来启用 G1 回收器，设置 G1 回收器的目标停顿时间：-XX:MaxGCPauseMills=20,-XX:GCPauseIntervalMills=200。
 
-![](http://hexo-tuchuan.qiniudn.com/garbage.png)
+![](http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/garbage.png)
 
 #一些参数
 -Xms 设置堆的最小空间大小。
@@ -58,7 +58,7 @@ G1收集器是当今收集器技术发展最前沿的成果之一，目标是作
 #看懂GC日志
 ###一次典型的minorGC日志示例:
 
-![](http://hexo-tuchuan.qiniudn.com/gcprocess.png)
+![](http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/gcprocess.png)
 
 ###一次典型的CMS GC日志示例:
 

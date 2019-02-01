@@ -7,7 +7,7 @@ tags:
 
 ---
 
-![](http://hexo-tuchuan.qiniudn.com/archsummit.jpeg)
+![](http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/archsummit.jpg)
 
 前几天参加了archsummit的北京站。2天的日程安排的十分紧凑，大多数时间同时有多场专题分享，选择想要听的专题就成了首要的事情，按照感兴趣的，可能用到的，启发思考的原则选择了几场适合自己的专题，这里记录一下大会的见闻和思考。
 
