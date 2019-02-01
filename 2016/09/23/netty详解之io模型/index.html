@@ -26,13 +26,13 @@ Nonblocking I/O
 I/O Multiplexing (select and poll)  
 Signal Driven I/O (SIGIO)  
 Asyn">
-<meta property="og:image" content="http://hexo-tuchuan.qiniudn.com/bio.png">
-<meta property="og:image" content="http://hexo-tuchuan.qiniudn.com/nio.png">
-<meta property="og:image" content="http://hexo-tuchuan.qiniudn.com/mio.png">
-<meta property="og:image" content="http://hexo-tuchuan.qiniudn.com/sio.png">
-<meta property="og:image" content="http://hexo-tuchuan.qiniudn.com/aio.png">
-<meta property="og:image" content="http://hexo-tuchuan.qiniudn.com/dio.png">
-<meta property="og:updated_time" content="2017-02-23T03:38:43.000Z">
+<meta property="og:image" content="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/bio.png">
+<meta property="og:image" content="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/nio.png">
+<meta property="og:image" content="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/mio.png">
+<meta property="og:image" content="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/sio.png">
+<meta property="og:image" content="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/aio.png">
+<meta property="og:image" content="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/dio.png">
+<meta property="og:updated_time" content="2019-02-01T09:02:25.331Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="netty详解之io模型">
 <meta name="twitter:description" content="提起IO模型首先想到的就是同步，异步，阻塞，非阻塞这几个概念。每个概念的含义，解释，概念间的区别这些都是好理解，这里深入*nix系统讲一下IO模型。  
@@ -127,7 +127,7 @@ Asyn">
           
           <td><a href="http://weibo.com/julyflame" target="_blank" title="weibo"><i class="fa fa-weibo"></i></a></td>
           
-          <td><a href="http://hexo-tuchuan.qiniudn.com/logo/weixin.jpg" target="_blank" title="weixin"><i class="fa fa-weixin"></i></a></td>
+          <td><a href="https://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/weixin.jpg" target="_blank" title="weixin"><i class="fa fa-weixin"></i></a></td>
           
           <td><a href="https://twitter.com/minotaursu" target="_blank" title="twitter"><i class="fa fa-twitter"></i></a></td>
           
@@ -181,22 +181,22 @@ Asyn">
 <li>Signal Driven I/O (SIGIO)  </li>
 <li>Asynchronous I/O (the POSIX aio_functions)  </li>
 </ol>
-<h2 id="阻塞_I/O（blocking_IO）">阻塞 I/O（blocking IO）</h2><p><img src="http://hexo-tuchuan.qiniudn.com/bio.png" alt=""></p>
+<h2 id="阻塞_I/O（blocking_IO）">阻塞 I/O（blocking IO）</h2><p><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/bio.png" alt=""></p>
 <p>如图所示，系统调用recvfrom，内核kernel等待数据数据准备完成，在数据准备完成后将数据从内核态拷贝到用户态，recvfrom直到整个过程结束后才完成，在整个过程中经历2次阻塞。</p>
-<h2 id="非阻塞_I/O（nonblocking_IO）">非阻塞 I/O（nonblocking IO）</h2><p><img src="http://hexo-tuchuan.qiniudn.com/nio.png" alt=""></p>
+<h2 id="非阻塞_I/O（nonblocking_IO）">非阻塞 I/O（nonblocking IO）</h2><p><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/nio.png" alt=""></p>
 <p>如图所示，系统调用recvfrom，内核kernel在数据没有准备完成时直接返回，系统会不断轮询，在kernel准备完成数据后将数据从内核态拷贝到用户态，在等待数据完成的过程中并不阻塞。</p>
-<h2 id="I/O_多路复用（_IO_multiplexing）">I/O 多路复用（ IO multiplexing）</h2><p><img src="http://hexo-tuchuan.qiniudn.com/mio.png" alt=""></p>
+<h2 id="I/O_多路复用（_IO_multiplexing）">I/O 多路复用（ IO multiplexing）</h2><p><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/mio.png" alt=""></p>
 <p>如图所示，IO multiplexing 使用select，poll，epoll等实现单个kernel的进程/线程处理多个IO请求，IO复用将等待数据准备和将数据拷贝给应用这两个阶段分开处理，让一个线程（而且是内核级别的线程）来处理所有的等待，一旦有相应的IO事件发生就通知继续完成IO操作，虽然仍然有阻塞和等待，但是等待总是发生在一个线程，这时使用多线程可以保证其他线程一旦唤醒就是处理数据。</p>
-<h2 id="信号驱动_I/O_(Signal_Driven_I/O)">信号驱动 I/O (Signal Driven I/O)</h2><p><img src="http://hexo-tuchuan.qiniudn.com/sio.png" alt=""></p>
+<h2 id="信号驱动_I/O_(Signal_Driven_I/O)">信号驱动 I/O (Signal Driven I/O)</h2><p><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/sio.png" alt=""></p>
 <p>如图所示，系统调用recvfrom试图读取数据，并且直接返回，不管是否有数据可读，内核线程读完数据，给发信号通知应用线程，应用线程收到信息，等待内核线程将数据拷贝给应用线程。</p>
-<h2 id="异步_I/O（asynchronous_IO）">异步 I/O（asynchronous IO）</h2><p><img src="http://hexo-tuchuan.qiniudn.com/aio.png" alt=""></p>
+<h2 id="异步_I/O（asynchronous_IO）">异步 I/O（asynchronous IO）</h2><p><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/aio.png" alt=""></p>
 <p>如图所示，系统调用aio_read，内核kernel直接返回，系统不需要阻塞，继续做其他事情。kernel则进行等待数据准备完成，并将数据拷贝到用户态后，发送signal信号通知系统已经完成。</p>
-<h2 id="各个IO模型的对比">各个IO模型的对比</h2><p><img src="http://hexo-tuchuan.qiniudn.com/dio.png" alt=""></p>
+<h2 id="各个IO模型的对比">各个IO模型的对比</h2><p><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/dio.png" alt=""></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2016/09/23/netty详解之io模型/" data-id="cjetd9ksk002vwbc41b8rdw72" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2016/09/23/netty详解之io模型/" data-id="cjrltoq3q002vg2fydey6ao4a" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/netty/">netty</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nio/">nio</a></li></ul>
@@ -244,7 +244,7 @@ Asyn">
             <div class="item-thumbnail">
               <a href="/2018/03/12/如何保障高并发系统的稳定性与高可用/" class="thumbnail">
   
-    <span style="background-image:url(http://hexo-tuchuan.qiniudn.com/kdn.png
+    <span style="background-image:url(http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/kdn.png
 )" alt="如何保障高并发系统的稳定性与高可用" class="thumbnail-image"></span>
   
 </a>
@@ -262,7 +262,7 @@ Asyn">
             <div class="item-thumbnail">
               <a href="/2018/03/03/所有需要知道的GC知识/" class="thumbnail">
   
-    <span style="background-image:url(http://hexo-tuchuan.qiniudn.com/jvmspeed.png
+    <span style="background-image:url(http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/jvmspeed.png
 )" alt="所有需要知道的GC知识" class="thumbnail-image"></span>
   
 </a>
@@ -280,7 +280,7 @@ Asyn">
             <div class="item-thumbnail">
               <a href="/2018/02/22/2017年终总结/" class="thumbnail">
   
-    <span style="background-image:url(http://hexo-tuchuan.qiniudn.com/hzdream.png
+    <span style="background-image:url(http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/hzdream.png
 )" alt="2017年终总结" class="thumbnail-image"></span>
   
 </a>
@@ -298,7 +298,7 @@ Asyn">
             <div class="item-thumbnail">
               <a href="/2018/02/22/一次GC耗时超长的问题排查/" class="thumbnail">
   
-    <span style="background-image:url(http://hexo-tuchuan.qiniudn.com/gc.png
+    <span style="background-image:url(http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/gc.png
 )" alt="一次GC耗时超长的问题排查" class="thumbnail-image"></span>
   
 </a>
@@ -316,7 +316,7 @@ Asyn">
             <div class="item-thumbnail">
               <a href="/2017/12/22/jackson使用setDateFormat后反序列化错误/" class="thumbnail">
   
-    <span style="background-image:url(http://hexo-tuchuan.qiniudn.com/jackson.png
+    <span style="background-image:url(http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/jackson.png
 )" alt="jackson使用setDateFormat后反序列化错误" class="thumbnail-image"></span>
   
 </a>
@@ -351,7 +351,7 @@ Asyn">
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2018 minotaur<br>
+      &copy; 2019 minotaur<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="https://github.com/minotaursu/hexo-theme-icarus">icarus</a>.
       
 <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1256401841'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s11.cnzz.com/z_stat.php%3Fid%3D1256401841%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>

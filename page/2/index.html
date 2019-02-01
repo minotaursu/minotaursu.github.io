@@ -99,7 +99,7 @@
           
           <td><a href="http://weibo.com/julyflame" target="_blank" title="weibo"><i class="fa fa-weibo"></i></a></td>
           
-          <td><a href="http://hexo-tuchuan.qiniudn.com/logo/weixin.jpg" target="_blank" title="weixin"><i class="fa fa-weixin"></i></a></td>
+          <td><a href="https://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/weixin.jpg" target="_blank" title="weixin"><i class="fa fa-weixin"></i></a></td>
           
           <td><a href="https://twitter.com/minotaursu" target="_blank" title="twitter"><i class="fa fa-twitter"></i></a></td>
           
@@ -145,13 +145,13 @@
     <div class="article-entry" itemprop="articleBody">
       
                 
-        <p><img src="http://hexo-tuchuan.qiniudn.com/gc.png" alt=""></p>
-<p>2017年10月某日突然收到FullGC耗时超长的报警，排查发现应用存在周期性FULLGC耗时超长的的情况，每次FULLGC时间长达5s以上，甚至出现过10s以上的FULLGC，导致FULLGC时应用的响应全部超时。最初是怀疑系统有大量的对象没有释放导致FULLGC时间过长，第一时间dump了应用的内存，并没有发现内存泄露的情况。后面查看GC日志发现Rescan阶段weak refs processing的超时都超长，GC日志里大量可见[weak refs processing, 9.7398650 secs]，排查的方向就逐渐转向了weak refs processing 为什么会花费如此长的时间，大家在一起针对代码分析了很久，从jackson的使用，到本地缓存的使用，到NIO的影响，每个人都提出了自己的见解，但是又没有强有力的证据验证自己的结果，按照这个思路排查了一晚上也没有结果。<br>后面分析发现耗时超长的FULLGC只出现在特定的某一台服务器上，该应用的FULLGC耗时在其他服务器上都表现正常，排查发现出现GC耗时过长的服务器还部署着大数据的某个高IO类型的应用，排查的思路又转向了服务器的IO和cpu，但是并没有发现io和cpu的异常情况，排查似乎陷入了困境。<br><img src="http://hexo-tuchuan.qiniudn.com/easygc.png" alt=""><br>过了几天之后找到了一个可视化的GC分析工具<a href="http://gceasy.io/" target="_blank" rel="external">gceasy.io</a> ，分析后发现一个之前一直忽略的现象，GC真实的耗时是远大于用户耗时和系统耗时的，[Times: user=2.56 sys=0.07, real=9.82 secs]。我们知道JVM本身作为一个进程也是由linux系统进行内存分配，而linux的内存空间由两部分构成，物理内存和swap空间，假如GC时有一部分内容被交换到swap，遍历到这部分的时候就需要将其交换回内存，极端情况下甚至会把整个堆分区轮流往SWAP写一遍，而磁盘交换的速度是远慢于物理内存的，如果GC和swap同时发生会导致超长时间的卡顿，通过sar -W -f 命令分析发现swap时间完全吻合发生耗时超长的GC时间，基本可以断定是系统的物理内存不够用导致系统发生swap，最终导致耗时超长的GC发生，关闭linux的swap后引用的GC时间恢复到500ms以下。<br>虽然gc耗时超长的问题得到了解决，但是仔细思考一下就会发现问题的解决完全依赖程序员的推理过程和知识储备，那么是不是可以有更简单更快速的问题排查定位手段，我认为答案是可以的，那就是更加智能化的监控，将业务指标，应用指标，系统指标打通关联，在FULLGC超时报警的时候通知告知业务开发系统发生了swap，并且能展示对订单量和GMV等指标的影响。好的基础设施就像强大的武器，虽然依赖好的枪法用手枪也能杀死敌人，但是手里有把AKM或M16还是更容易吃鸡。</p>
+        <p><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/gc.png" alt=""></p>
+<p>2017年10月某日突然收到FullGC耗时超长的报警，排查发现应用存在周期性FULLGC耗时超长的的情况，每次FULLGC时间长达5s以上，甚至出现过10s以上的FULLGC，导致FULLGC时应用的响应全部超时。最初是怀疑系统有大量的对象没有释放导致FULLGC时间过长，第一时间dump了应用的内存，并没有发现内存泄露的情况。后面查看GC日志发现Rescan阶段weak refs processing的超时都超长，GC日志里大量可见[weak refs processing, 9.7398650 secs]，排查的方向就逐渐转向了weak refs processing 为什么会花费如此长的时间，大家在一起针对代码分析了很久，从jackson的使用，到本地缓存的使用，到NIO的影响，每个人都提出了自己的见解，但是又没有强有力的证据验证自己的结果，按照这个思路排查了一晚上也没有结果。<br>后面分析发现耗时超长的FULLGC只出现在特定的某一台服务器上，该应用的FULLGC耗时在其他服务器上都表现正常，排查发现出现GC耗时过长的服务器还部署着大数据的某个高IO类型的应用，排查的思路又转向了服务器的IO和cpu，但是并没有发现io和cpu的异常情况，排查似乎陷入了困境。<br><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/easygc.png" alt=""><br>过了几天之后找到了一个可视化的GC分析工具<a href="http://gceasy.io/" target="_blank" rel="external">gceasy.io</a> ，分析后发现一个之前一直忽略的现象，GC真实的耗时是远大于用户耗时和系统耗时的，[Times: user=2.56 sys=0.07, real=9.82 secs]。我们知道JVM本身作为一个进程也是由linux系统进行内存分配，而linux的内存空间由两部分构成，物理内存和swap空间，假如GC时有一部分内容被交换到swap，遍历到这部分的时候就需要将其交换回内存，极端情况下甚至会把整个堆分区轮流往SWAP写一遍，而磁盘交换的速度是远慢于物理内存的，如果GC和swap同时发生会导致超长时间的卡顿，通过sar -W -f 命令分析发现swap时间完全吻合发生耗时超长的GC时间，基本可以断定是系统的物理内存不够用导致系统发生swap，最终导致耗时超长的GC发生，关闭linux的swap后引用的GC时间恢复到500ms以下。<br>虽然gc耗时超长的问题得到了解决，但是仔细思考一下就会发现问题的解决完全依赖程序员的推理过程和知识储备，那么是不是可以有更简单更快速的问题排查定位手段，我认为答案是可以的，那就是更加智能化的监控，将业务指标，应用指标，系统指标打通关联，在FULLGC超时报警的时候通知告知业务开发系统发生了swap，并且能展示对订单量和GMV等指标的影响。好的基础设施就像强大的武器，虽然依赖好的枪法用手枪也能杀死敌人，但是手里有把AKM或M16还是更容易吃鸡。</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2018/02/22/一次GC耗时超长的问题排查/" data-id="cjetd9ksc002hwbc4pqswdalk" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2018/02/22/一次GC耗时超长的问题排查/" data-id="cjrltoq3h002hg2fyn08grzm3" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gc/">gc</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/性能/">性能</a></li></ul>
@@ -194,15 +194,15 @@
     <div class="article-entry" itemprop="articleBody">
       
                 
-        <p><img src="http://hexo-tuchuan.qiniudn.com/jackson.png" alt=""></p>
-<p>最近marketing-activity系统在接入降级服务，出现启动时可以正确获取到降级配置，系统运行一段时间后修改降级策略不生效的问题，之前订单系统，用户系统和其他系统的接入都没问题出现这个问题，肯定是触发了某种特定的case。营销的同学联系我进行排查，排查日志发现是降级服务反序列化Date类型异常，接收到的数据格式是yyyy-MM-dd HH:mm:ss，并不在jackson支持的反序列化格式之内。降级服务的sdk也是使用的jackson进行序列化的，为什么会出现jackson序列化后的数据却不能使用jackson反序列化。<br>接着查看marketing-activity系统的降级服务sdk日志发现一个很诡异的现象，最初发送的序列化后的请求还是时间戳格式的，运行一段时间后就变成了yyyy-MM-dd HH:mm:ss格式，也就是说系统的行为在运行时被改变了。<br><img src="http://hexo-tuchuan.qiniudn.com/sds-log.png" alt=""></p>
-<p>那么到底是什么可以改变系统运行时的序列化逻辑呢？可能出现的主要原因有2种。一种是字节码技术，也就是btrace，greys这些。另一种就是调用jackson本身的api改变了一些属性。显然第二种的可能性更大一些，果然在jsonUitl里发现了蛛丝马迹，toObject允许设置特定的时间格式进行反序列化，调用setDateFormat会导致后续全部的Date类型的序列化都会是yyyy-MM-dd HH:mm:ss格式，自然不能默认设置的jackson反序列化。<br><img src="http://hexo-tuchuan.qiniudn.com/jsonutil.png" alt=""></p>
+        <p><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/jackson.png" alt=""></p>
+<p>最近marketing-activity系统在接入降级服务，出现启动时可以正确获取到降级配置，系统运行一段时间后修改降级策略不生效的问题，之前订单系统，用户系统和其他系统的接入都没问题出现这个问题，肯定是触发了某种特定的case。营销的同学联系我进行排查，排查日志发现是降级服务反序列化Date类型异常，接收到的数据格式是yyyy-MM-dd HH:mm:ss，并不在jackson支持的反序列化格式之内。降级服务的sdk也是使用的jackson进行序列化的，为什么会出现jackson序列化后的数据却不能使用jackson反序列化。<br>接着查看marketing-activity系统的降级服务sdk日志发现一个很诡异的现象，最初发送的序列化后的请求还是时间戳格式的，运行一段时间后就变成了yyyy-MM-dd HH:mm:ss格式，也就是说系统的行为在运行时被改变了。<br><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/sds-log.png" alt=""></p>
+<p>那么到底是什么可以改变系统运行时的序列化逻辑呢？可能出现的主要原因有2种。一种是字节码技术，也就是btrace，greys这些。另一种就是调用jackson本身的api改变了一些属性。显然第二种的可能性更大一些，果然在jsonUitl里发现了蛛丝马迹，toObject允许设置特定的时间格式进行反序列化，调用setDateFormat会导致后续全部的Date类型的序列化都会是yyyy-MM-dd HH:mm:ss格式，自然不能默认设置的jackson反序列化。<br><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/jsonutil.png" alt=""></p>
 <p>至此降级服务改变策略后不生效的根本原因就得到了解答，那么如果某个对象就是要使用yyyy-MM-dd HH:mm:ss 进行序列化和反序列化怎么办，建议使用@JsonFormat 单独对属性进行注释。<br>最后谈谈fastjson和jackson，貌似jackson的各种坑遇到过很多，而fastjson的坑很少，那么为什么jackson还是要比fastjson更流行，真的只是国外的月亮更圆，空气更甜？这个主要是json框架的设计理念偏重点不同，fastjson偏重的是简单和快速，内部实现有很多的hack和magic code。而jackson偏重的是标准和强大，格式支持json，xml，有很多的属性可以设置非常的灵活，也有很多的接口可以自定义进行扩展，导致学习成本比较高，需要详细看过jackson文档才能上手。</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2017/12/22/jackson使用setDateFormat后反序列化错误/" data-id="cjetd9ksu003bwbc4msly5z30" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2017/12/22/jackson使用setDateFormat后反序列化错误/" data-id="cjrltoq43003bg2fygyjpkcov" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/jackson/">jackson</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/json/">json</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/工作/">工作</a></li></ul>
@@ -245,7 +245,7 @@
     <div class="article-entry" itemprop="articleBody">
       
                 
-        <p><img src="http://hexo-tuchuan.qiniudn.com/lang.jpeg" alt=""></p>
+        <p><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/lang.jpg" alt=""></p>
 <p>程序员这个职业经常需要学习新的技术，假如某一天工作上主要使用的语言没落了，或者新的项目需要使用另一门不熟悉的语言开发，那么成本到底有多少，那些是需要重新学习的，又有那些是可以被保留或者继承的。</p>
 <h3 id="需要重新学习的">需要重新学习的</h3><ol>
 <li>语法&amp;语法糖。这应该是最简单的部分，是用大括号分组还是使用缩进分组，条件语句是否需要括号，函数是否可以赋值给变量，是否支持lambda。</li>
@@ -273,7 +273,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2017/12/18/更换一门工作语言的成本/" data-id="cjetd9kro000xwbc484ojmnos" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2017/12/18/更换一门工作语言的成本/" data-id="cjrltoq2d000xg2fy5yu24aib" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/go/">go</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/语言/">语言</a></li></ul>
@@ -304,7 +304,7 @@
             <div class="item-thumbnail">
               <a href="/2018/03/12/如何保障高并发系统的稳定性与高可用/" class="thumbnail">
   
-    <span style="background-image:url(http://hexo-tuchuan.qiniudn.com/kdn.png
+    <span style="background-image:url(http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/kdn.png
 )" alt="如何保障高并发系统的稳定性与高可用" class="thumbnail-image"></span>
   
 </a>
@@ -322,7 +322,7 @@
             <div class="item-thumbnail">
               <a href="/2018/03/03/所有需要知道的GC知识/" class="thumbnail">
   
-    <span style="background-image:url(http://hexo-tuchuan.qiniudn.com/jvmspeed.png
+    <span style="background-image:url(http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/jvmspeed.png
 )" alt="所有需要知道的GC知识" class="thumbnail-image"></span>
   
 </a>
@@ -340,7 +340,7 @@
             <div class="item-thumbnail">
               <a href="/2018/02/22/2017年终总结/" class="thumbnail">
   
-    <span style="background-image:url(http://hexo-tuchuan.qiniudn.com/hzdream.png
+    <span style="background-image:url(http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/hzdream.png
 )" alt="2017年终总结" class="thumbnail-image"></span>
   
 </a>
@@ -358,7 +358,7 @@
             <div class="item-thumbnail">
               <a href="/2018/02/22/一次GC耗时超长的问题排查/" class="thumbnail">
   
-    <span style="background-image:url(http://hexo-tuchuan.qiniudn.com/gc.png
+    <span style="background-image:url(http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/gc.png
 )" alt="一次GC耗时超长的问题排查" class="thumbnail-image"></span>
   
 </a>
@@ -376,7 +376,7 @@
             <div class="item-thumbnail">
               <a href="/2017/12/22/jackson使用setDateFormat后反序列化错误/" class="thumbnail">
   
-    <span style="background-image:url(http://hexo-tuchuan.qiniudn.com/jackson.png
+    <span style="background-image:url(http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/jackson.png
 )" alt="jackson使用setDateFormat后反序列化错误" class="thumbnail-image"></span>
   
 </a>
@@ -411,7 +411,7 @@
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2018 minotaur<br>
+      &copy; 2019 minotaur<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="https://github.com/minotaursu/hexo-theme-icarus">icarus</a>.
       
 <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1256401841'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s11.cnzz.com/z_stat.php%3Fid%3D1256401841%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>

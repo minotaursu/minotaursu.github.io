@@ -99,7 +99,7 @@
           
           <td><a href="http://weibo.com/julyflame" target="_blank" title="weibo"><i class="fa fa-weibo"></i></a></td>
           
-          <td><a href="http://hexo-tuchuan.qiniudn.com/logo/weixin.jpg" target="_blank" title="weixin"><i class="fa fa-weixin"></i></a></td>
+          <td><a href="https://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/weixin.jpg" target="_blank" title="weixin"><i class="fa fa-weixin"></i></a></td>
           
           <td><a href="https://twitter.com/minotaursu" target="_blank" title="twitter"><i class="fa fa-twitter"></i></a></td>
           
@@ -164,7 +164,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2015/12/12/小明的魔法调度框架之旅/" data-id="cjetd9krx001gwbc489xcpz7x" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2015/12/12/小明的魔法调度框架之旅/" data-id="cjrltoq2r001gg2fy0ke6q502" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/quartz/">quartz</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/调度/">调度</a></li></ul>
@@ -207,7 +207,7 @@
     <div class="article-entry" itemprop="articleBody">
       
                 
-        <p>最近团队的版本控制从svn切换到了git，虽说已经使用git有2年多了，也写了一个<a href="http://minotaursu.com/2014/07/01/git%E5%AE%9E%E7%94%A8%E6%94%BB%E7%95%A5/">实用攻略</a>，但是github上的项目使用经验和公司内部团队协作的使用经验还有很多不同。补充下新的使用体会。<br><img src="http://hexo-tuchuan.qiniudn.com/gitflow.png?imageView/1/w/670/h/280" alt=""><br>首先还是看一下git的3个区：working，stage，commit，心中有个概念。</p>
+        <p>最近团队的版本控制从svn切换到了git，虽说已经使用git有2年多了，也写了一个<a href="http://minotaursu.com/2014/07/01/git%E5%AE%9E%E7%94%A8%E6%94%BB%E7%95%A5/">实用攻略</a>，但是github上的项目使用经验和公司内部团队协作的使用经验还有很多不同。补充下新的使用体会。<br><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/gitflow.png?imageView/1/w/670/h/280" alt=""><br>首先还是看一下git的3个区：working，stage，commit，心中有个概念。</p>
 <ol>
 <li><p><strong>github和gitlab账户的共存</strong><br>配置sshkey登录的时候，git只能识别默认的id_rsa的秘钥文件，只有一个账户能够免登，在bash启动脚本中增加ssh-add file 实现多个账户的免登。</p>
 </li>
@@ -232,7 +232,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2015/05/04/git实用攻略二/" data-id="cjetd9ksw003iwbc4xvxjfjvr" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2015/05/04/git实用攻略二/" data-id="cjrltoq45003ig2fy9gpel14a" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/git/">git</a></li></ul>
@@ -277,7 +277,7 @@
                 
         <p>feed系统和火车票售卖系统是2个高访问高并发情况下具体很大挑战的系统。<br>在低访问，低并发的情况下feed系统会变的非常简单，数据模型和业务功能都比较容易设计和实现，主要的挑战就剩如何面对层出不穷的敏感词和花样百出的广告语。相比之下，火车票售卖系统在低并发时也很有趣，假设我是12306的架构师，我会如何设计12306那。</p>
 <h2 id="数据模型">数据模型</h2><p>先将系统进行拆分，独立成用户，车票，下单3个系统，每个系统内部封闭成多个服务，运行在独立的集群上面。这里只对车票系统进行数据模型设计。</p>
-<p>先上ER图 <img src="http://hexo-tuchuan.qiniudn.com/tickets.jpg" alt="数据模型"></p>
+<p>先上ER图 <img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/tickets.jpg" alt="数据模型"></p>
 <p>数据分成动静2部分，车次，站点，座位的数据都是静态的基本不会变，可以通过运营系统提前进行录入生成；车票则根据以上三张表每天动态生成，每条车票记录一个车次上的一个座位号，初始化的始发站，终点站为该车次的始发站和终点站，数据在下单时进行更新。确定了数据模型后进行数据库的垂直和水平拆分，首先按照车次进行分库，将不同的车次hash到几个数据库中，减少每个数据库的负载；然后车票表按天拆分，提前生成3个月的车票表，每张车票表只存储当天发车的车票。</p>
 <h2 id="用例">用例</h2><ul>
 <li>case1：查询<br>假设有一列从北京到深圳的火车D911，途经共20站。用户查询北京到杭州的列车，从cache中取出符合用户查询条件的车次（车次类型，始发站，终点站，始发时间，到站时间），按照车次从cache中取出北京和杭州的站点id和站序，北京站序为0，杭州站序为11。车票表中用<br>‘始发站序&lt;=0 and 终点站序&gt;=11 and 车次=D911 group by 座位类型’<br>的查询条件即可得到每种座位的剩余票数，可以将查询的结果做一个10s的缓存，如果前端展示的不是具体的剩余票量，而是有无票，可以使用一个更长时间的缓存，缓存的失效由服务端控制。</li>
@@ -291,7 +291,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2015/04/13/我设计的12306/" data-id="cjetd9krv001bwbc4xdc3h759" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2015/04/13/我设计的12306/" data-id="cjrltoq2n001bg2fyoyh6bhzo" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/分布式/">分布式</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/工作/">工作</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/开发/">开发</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/系统设计/">系统设计</a></li></ul>
@@ -322,7 +322,7 @@
             <div class="item-thumbnail">
               <a href="/2018/03/12/如何保障高并发系统的稳定性与高可用/" class="thumbnail">
   
-    <span style="background-image:url(http://hexo-tuchuan.qiniudn.com/kdn.png
+    <span style="background-image:url(http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/kdn.png
 )" alt="如何保障高并发系统的稳定性与高可用" class="thumbnail-image"></span>
   
 </a>
@@ -340,7 +340,7 @@
             <div class="item-thumbnail">
               <a href="/2018/03/03/所有需要知道的GC知识/" class="thumbnail">
   
-    <span style="background-image:url(http://hexo-tuchuan.qiniudn.com/jvmspeed.png
+    <span style="background-image:url(http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/jvmspeed.png
 )" alt="所有需要知道的GC知识" class="thumbnail-image"></span>
   
 </a>
@@ -358,7 +358,7 @@
             <div class="item-thumbnail">
               <a href="/2018/02/22/2017年终总结/" class="thumbnail">
   
-    <span style="background-image:url(http://hexo-tuchuan.qiniudn.com/hzdream.png
+    <span style="background-image:url(http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/hzdream.png
 )" alt="2017年终总结" class="thumbnail-image"></span>
   
 </a>
@@ -376,7 +376,7 @@
             <div class="item-thumbnail">
               <a href="/2018/02/22/一次GC耗时超长的问题排查/" class="thumbnail">
   
-    <span style="background-image:url(http://hexo-tuchuan.qiniudn.com/gc.png
+    <span style="background-image:url(http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/gc.png
 )" alt="一次GC耗时超长的问题排查" class="thumbnail-image"></span>
   
 </a>
@@ -394,7 +394,7 @@
             <div class="item-thumbnail">
               <a href="/2017/12/22/jackson使用setDateFormat后反序列化错误/" class="thumbnail">
   
-    <span style="background-image:url(http://hexo-tuchuan.qiniudn.com/jackson.png
+    <span style="background-image:url(http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/jackson.png
 )" alt="jackson使用setDateFormat后反序列化错误" class="thumbnail-image"></span>
   
 </a>
@@ -429,7 +429,7 @@
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2018 minotaur<br>
+      &copy; 2019 minotaur<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="https://github.com/minotaursu/hexo-theme-icarus">icarus</a>.
       
 <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1256401841'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s11.cnzz.com/z_stat.php%3Fid%3D1256401841%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>

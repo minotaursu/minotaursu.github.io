@@ -12,8 +12,8 @@
 <meta property="og:url" content="http://minotaursu.com/2017/04/12/使用AOP记录应用调用链开销/index.html">
 <meta property="og:site_name" content="Minotaur story">
 <meta property="og:description" content="最近系统出现了一次线上的性能问题，本来以为目前的QPS应该是不会出现任何问题的，结果微服务还是比较容易因为某个点的问题导致雪崩的。。。出了性能问题就要做分析，正统的思路是要不断进行压测用JProfiler进行分析。后来自己简单搞了一下使用AOP抓取调用树和开销，看起来效果还不错，加上动态开关可以偶尔在线上用一下。代码提交到了github。本身的实现类似树的深度优先遍历，一个节点有多个子节点，在进入">
-<meta property="og:image" content="http://hexo-tuchuan.qiniudn.com/profiler.png">
-<meta property="og:updated_time" content="2017-04-12T05:14:39.000Z">
+<meta property="og:image" content="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/profiler.png">
+<meta property="og:updated_time" content="2019-02-01T09:02:25.334Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="使用AOP记录应用调用链开销">
 <meta name="twitter:description" content="最近系统出现了一次线上的性能问题，本来以为目前的QPS应该是不会出现任何问题的，结果微服务还是比较容易因为某个点的问题导致雪崩的。。。出了性能问题就要做分析，正统的思路是要不断进行压测用JProfiler进行分析。后来自己简单搞了一下使用AOP抓取调用树和开销，看起来效果还不错，加上动态开关可以偶尔在线上用一下。代码提交到了github。本身的实现类似树的深度优先遍历，一个节点有多个子节点，在进入">
@@ -101,7 +101,7 @@
           
           <td><a href="http://weibo.com/julyflame" target="_blank" title="weibo"><i class="fa fa-weibo"></i></a></td>
           
-          <td><a href="http://hexo-tuchuan.qiniudn.com/logo/weixin.jpg" target="_blank" title="weixin"><i class="fa fa-weixin"></i></a></td>
+          <td><a href="https://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/weixin.jpg" target="_blank" title="weixin"><i class="fa fa-weixin"></i></a></td>
           
           <td><a href="https://twitter.com/minotaursu" target="_blank" title="twitter"><i class="fa fa-twitter"></i></a></td>
           
@@ -146,12 +146,12 @@
     <div class="article-entry" itemprop="articleBody">
       
                 
-        <p>最近系统出现了一次线上的性能问题，本来以为目前的QPS应该是不会出现任何问题的，结果微服务还是比较容易因为某个点的问题导致雪崩的。。。出了性能问题就要做分析，正统的思路是要不断进行压测用JProfiler进行分析。后来自己简单搞了一下使用AOP抓取调用树和开销，看起来效果还不错，加上动态开关可以偶尔在线上用一下。代码提交到了<a href="https://github.com/minotaursu/profilerAop" target="_blank" rel="external">github</a>。本身的实现类似树的深度优先遍历，一个节点有多个子节点，在进入方法之前enter，在退出方法后release，都被release了就可以打印调用树日志了。而webx的profiler本身就提供了这种实现，大大的减少了开发时间。虽然之前在使用webx的时候总是觉得不爽，没有springmvc来的简洁，layout,action,screen也不适合移动时代的开发，现在都是rest服务或者使用api gateway配置api了，但不得不说webx的很多思想还是值得深入学习的，很多工具也很适合开源使用。一个框架能够稳定运行在各种业务场景，大范围推广使用本身就是了件不起的事情，这里给webx点个赞。<br>最后来看一下profiler的demo效果。<br><img src="http://hexo-tuchuan.qiniudn.com/profiler.png" alt=""></p>
+        <p>最近系统出现了一次线上的性能问题，本来以为目前的QPS应该是不会出现任何问题的，结果微服务还是比较容易因为某个点的问题导致雪崩的。。。出了性能问题就要做分析，正统的思路是要不断进行压测用JProfiler进行分析。后来自己简单搞了一下使用AOP抓取调用树和开销，看起来效果还不错，加上动态开关可以偶尔在线上用一下。代码提交到了<a href="https://github.com/minotaursu/profilerAop" target="_blank" rel="external">github</a>。本身的实现类似树的深度优先遍历，一个节点有多个子节点，在进入方法之前enter，在退出方法后release，都被release了就可以打印调用树日志了。而webx的profiler本身就提供了这种实现，大大的减少了开发时间。虽然之前在使用webx的时候总是觉得不爽，没有springmvc来的简洁，layout,action,screen也不适合移动时代的开发，现在都是rest服务或者使用api gateway配置api了，但不得不说webx的很多思想还是值得深入学习的，很多工具也很适合开源使用。一个框架能够稳定运行在各种业务场景，大范围推广使用本身就是了件不起的事情，这里给webx点个赞。<br>最后来看一下profiler的demo效果。<br><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/profiler.png" alt=""></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2017/04/12/使用AOP记录应用调用链开销/" data-id="cjetd9ks60023wbc4voa6hrap" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2017/04/12/使用AOP记录应用调用链开销/" data-id="cjrltoq380023g2fyz5qk7z6n" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/AOP/">AOP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/spring/">spring</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/性能/">性能</a></li></ul>
@@ -199,7 +199,7 @@
             <div class="item-thumbnail">
               <a href="/2018/03/12/如何保障高并发系统的稳定性与高可用/" class="thumbnail">
   
-    <span style="background-image:url(http://hexo-tuchuan.qiniudn.com/kdn.png
+    <span style="background-image:url(http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/kdn.png
 )" alt="如何保障高并发系统的稳定性与高可用" class="thumbnail-image"></span>
   
 </a>
@@ -217,7 +217,7 @@
             <div class="item-thumbnail">
               <a href="/2018/03/03/所有需要知道的GC知识/" class="thumbnail">
   
-    <span style="background-image:url(http://hexo-tuchuan.qiniudn.com/jvmspeed.png
+    <span style="background-image:url(http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/jvmspeed.png
 )" alt="所有需要知道的GC知识" class="thumbnail-image"></span>
   
 </a>
@@ -235,7 +235,7 @@
             <div class="item-thumbnail">
               <a href="/2018/02/22/2017年终总结/" class="thumbnail">
   
-    <span style="background-image:url(http://hexo-tuchuan.qiniudn.com/hzdream.png
+    <span style="background-image:url(http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/hzdream.png
 )" alt="2017年终总结" class="thumbnail-image"></span>
   
 </a>
@@ -253,7 +253,7 @@
             <div class="item-thumbnail">
               <a href="/2018/02/22/一次GC耗时超长的问题排查/" class="thumbnail">
   
-    <span style="background-image:url(http://hexo-tuchuan.qiniudn.com/gc.png
+    <span style="background-image:url(http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/gc.png
 )" alt="一次GC耗时超长的问题排查" class="thumbnail-image"></span>
   
 </a>
@@ -271,7 +271,7 @@
             <div class="item-thumbnail">
               <a href="/2017/12/22/jackson使用setDateFormat后反序列化错误/" class="thumbnail">
   
-    <span style="background-image:url(http://hexo-tuchuan.qiniudn.com/jackson.png
+    <span style="background-image:url(http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/jackson.png
 )" alt="jackson使用setDateFormat后反序列化错误" class="thumbnail-image"></span>
   
 </a>
@@ -306,7 +306,7 @@
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2018 minotaur<br>
+      &copy; 2019 minotaur<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="https://github.com/minotaursu/hexo-theme-icarus">icarus</a>.
       
 <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1256401841'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s11.cnzz.com/z_stat.php%3Fid%3D1256401841%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>

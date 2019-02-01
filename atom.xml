@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://minotaursu.com/"/>
-  <updated>2018-03-16T03:10:41.230Z</updated>
+  <updated>2019-02-01T09:02:25.352Z</updated>
   <id>http://minotaursu.com/</id>
   
   <author>
@@ -19,8 +19,8 @@
     <link href="http://minotaursu.com/2018/03/12/%E5%A6%82%E4%BD%95%E4%BF%9D%E9%9A%9C%E9%AB%98%E5%B9%B6%E5%8F%91%E7%B3%BB%E7%BB%9F%E7%9A%84%E7%A8%B3%E5%AE%9A%E6%80%A7%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/"/>
     <id>http://minotaursu.com/2018/03/12/如何保障高并发系统的稳定性与高可用/</id>
     <published>2018-03-12T10:49:33.000Z</published>
-    <updated>2018-03-16T03:10:41.230Z</updated>
-    <content type="html"><![CDATA[<p>要论如何搞垮一家互联网公司，速度最快的不是产品经理的胡乱决策，运营的无休止的烧钱，客服人员对客户的冷漠，一定是系统核心功能持续的不可用，一次大规模的故障可能造成几千万的损失，市值大量蒸发，PR风险，甚至工信部的约谈。<br><img src="http://hexo-tuchuan.qiniudn.com/kdn.png" alt=""></p>
+    <updated>2019-02-01T09:02:25.352Z</updated>
+    <content type="html"><![CDATA[<p>要论如何搞垮一家互联网公司，速度最快的不是产品经理的胡乱决策，运营的无休止的烧钱，客服人员对客户的冷漠，一定是系统核心功能持续的不可用，一次大规模的故障可能造成几千万的损失，市值大量蒸发，PR风险，甚至工信部的约谈。<br><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/kdn.png" alt=""></p>
 <p>一般的系统对全年可用性要求是99%或者99.9%，而影响着千万人日常生活的系统一般都要求全年系统可用性在4个9以上，这可不是一个容易达到的目标，那么如何避免故障，保障系统的稳定性与高可用，根据总结别人的方法和自身的经验，想要做好稳定性与高可用有16字心决</p>
 <blockquote>
 <p>完善基础，做好自身，容错下游，防备上游</p>
@@ -42,11 +42,11 @@
 <h3 id="一定要设置超时时间">一定要设置超时时间</h3><p>假设某服务的响应时间是50ms，线程池是200，假设系统没有超时时间设置，响应时间从50ms突变到5000ms，瞬间就能打满线程池导致服务不可用。为了保证系统不被下游的变慢拖垮一定要设置超时时间，建议内部接口都设置在200ms以下，依赖第三方公网服务的接口设置在1500ms以下。</p>
 <h3 id="谨慎设置重试次数">谨慎设置重试次数</h3><p>合理的设置重试次数即是保护下游也是保护自己，假设重试次数过多会导致服务响应时间的变慢（超时时间*重试次数），并且很容易引起下游的雪崩，导致下游长时间不可用。建议重要的接口设置2次重试，不必要的接口都不要设置重试次数。</p>
 <h1 id="防备上游">防备上游</h1><p>被上游陡增的流量打垮是1024种线上事故中非常经典的另一种，这里区分2种情况来讨论，一种是活动流量，需要预测活动预期的流量峰值，对高资源消耗的非核心功能提前降级，做好压测和降级预案，并设置一定的用户流控。另一种是内部的猪队友作案，可能顺手写个循环就带来10倍的流量增长，这种情况也要设置好系统的流量阀值，并且需要做到流量的按需分配，能够弄清楚流量的来源。<br>最后自己画了一张图，对可能的情况和故障做一个总结。</p>
-<p><img src="http://hexo-tuchuan.qiniudn.com/robust.png" alt=""></p>
+<p><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/robust.png" alt=""></p>
 <p>通过上文可以发现监控(量化过去和现在)，压测（预测未来），降级（预防故障，快速止损）对系统的重要性。其中容错下游（熔断）和防备上游（限流）同样需要依靠降级服务实现，提到降级服务我们会想到Hystrix，除此之外滴滴出行有经验的老司机都会选择SDS（service downgrade system），SDS是一个由多位资深工程师开发的纯java语言降级系统，支持访问量，并发量，异常量，超时时间等多个监控指标的降级点，支持滑动窗口，令牌桶等多种算法，在数据可视化方面支持多种数据源（mysql，mongo，elasticsearch，influxdb）的存储和展示，可以选择喜欢的数据源进行降级可视化配置。相信在不久的未来就会开源和大家见面。</p>
 ]]></content>
     <summary type="html">
-    <![CDATA[<p>要论如何搞垮一家互联网公司，速度最快的不是产品经理的胡乱决策，运营的无休止的烧钱，客服人员对客户的冷漠，一定是系统核心功能持续的不可用，一次大规模的故障可能造成几千万的损失，市值大量蒸发，PR风险，甚至工信部的约谈。<br><img src="http://hexo-tuc]]>
+    <![CDATA[<p>要论如何搞垮一家互联网公司，速度最快的不是产品经理的胡乱决策，运营的无休止的烧钱，客服人员对客户的冷漠，一定是系统核心功能持续的不可用，一次大规模的故障可能造成几千万的损失，市值大量蒸发，PR风险，甚至工信部的约谈。<br><img src="http://raw.gith]]>
     </summary>
     
       <category term="工作" scheme="http://minotaursu.com/tags/%E5%B7%A5%E4%BD%9C/"/>
@@ -66,17 +66,17 @@
     <link href="http://minotaursu.com/2018/03/03/%E6%89%80%E6%9C%89%E9%9C%80%E8%A6%81%E7%9F%A5%E9%81%93%E7%9A%84GC%E7%9F%A5%E8%AF%86/"/>
     <id>http://minotaursu.com/2018/03/03/所有需要知道的GC知识/</id>
     <published>2018-03-02T16:24:51.000Z</published>
-    <updated>2018-03-06T03:42:49.350Z</updated>
-    <content type="html"><![CDATA[<p><img src="http://hexo-tuchuan.qiniudn.com/jvmspeed.png" alt=""><br>作为一个java语言开发的应用，为了每一个0.1%的性能提升，折腾过了网络，IO，数据库之后难免要折腾一下GC。写下这篇日志的目的是希望看完这篇日志后，关于GC的问题能从google+stackoverflow寻找答案的过程中解脱出来，99%的GC问题都能独立解决，也方便自己温故知新。日志将从JVM内存结构 - 垃圾回收器 - 一些JVM参数 - 看懂GC日志 - 实际案例 - 建议配置 这几个方面详细介绍GC。在写这篇日志的过程中发现越写越长，需要详细介绍和深究原理的内容越来越多，不由得感慨网上的blog只能传递某几个知识点，想要构建一个完整的知识网络还是需要深入阅读相关的书籍，唯有将知识网络构建的越来越严密才能应对遇到的各种问题。</p>
-<h1 id="JVM内存结构">JVM内存结构</h1><p>目前主流的JVM都将内存分成不同的区域，JVM内存结构主要由堆，方法区和栈组成，堆作为最大一块的内存又由Eden空间、From Survivor空间、To Survivor空间，Old空间组成。<br><img src="http://hexo-tuchuan.qiniudn.com/jvm.png" alt=""><br>新生代（Young Generation）：大多数对象在新生代中被创建(某些大对象可能直接创建在老年代)，其中很多对象的生命周期很短。<br>一般而言新生代内又分三个区：一个Eden区，两个Survivor区，当Eden区满时，还存活的对象将被复制到其中一个Survivor区。当这个Survivor区满时，此区的存活且不满足“晋升”条件的对象将被复制到另外一个Survivor区。对象每经历一次Minor GC，年龄加1，达到“晋升年龄阈值”后，被放到老年代，这个过程也称为“晋升”。在Serial和ParNew GC两种回收器中，“晋升年龄阈值”通过参数MaxTenuringThreshold设定，默认值为15。<br>老年代（Old Generation）：在新生代中经历了N次垃圾回收后仍然存活的对象，就会被放到年老代，该区域中对象存活率高。老年代的垃圾回收（又称Major GC）通常使用“标记-清理”或“标记-整理”算法。整堆包括新生代和老年代的垃圾回收称为Full GC。</p>
+    <updated>2019-02-01T09:02:25.338Z</updated>
+    <content type="html"><![CDATA[<p><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/jvmspeed.png" alt=""><br>作为一个java语言开发的应用，为了每一个0.1%的性能提升，折腾过了网络，IO，数据库之后难免要折腾一下GC。写下这篇日志的目的是希望看完这篇日志后，关于GC的问题能从google+stackoverflow寻找答案的过程中解脱出来，99%的GC问题都能独立解决，也方便自己温故知新。日志将从JVM内存结构 - 垃圾回收器 - 一些JVM参数 - 看懂GC日志 - 实际案例 - 建议配置 这几个方面详细介绍GC。在写这篇日志的过程中发现越写越长，需要详细介绍和深究原理的内容越来越多，不由得感慨网上的blog只能传递某几个知识点，想要构建一个完整的知识网络还是需要深入阅读相关的书籍，唯有将知识网络构建的越来越严密才能应对遇到的各种问题。</p>
+<h1 id="JVM内存结构">JVM内存结构</h1><p>目前主流的JVM都将内存分成不同的区域，JVM内存结构主要由堆，方法区和栈组成，堆作为最大一块的内存又由Eden空间、From Survivor空间、To Survivor空间，Old空间组成。<br><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/jvm.png" alt=""><br>新生代（Young Generation）：大多数对象在新生代中被创建(某些大对象可能直接创建在老年代)，其中很多对象的生命周期很短。<br>一般而言新生代内又分三个区：一个Eden区，两个Survivor区，当Eden区满时，还存活的对象将被复制到其中一个Survivor区。当这个Survivor区满时，此区的存活且不满足“晋升”条件的对象将被复制到另外一个Survivor区。对象每经历一次Minor GC，年龄加1，达到“晋升年龄阈值”后，被放到老年代，这个过程也称为“晋升”。在Serial和ParNew GC两种回收器中，“晋升年龄阈值”通过参数MaxTenuringThreshold设定，默认值为15。<br>老年代（Old Generation）：在新生代中经历了N次垃圾回收后仍然存活的对象，就会被放到年老代，该区域中对象存活率高。老年代的垃圾回收（又称Major GC）通常使用“标记-清理”或“标记-整理”算法。整堆包括新生代和老年代的垃圾回收称为Full GC。</p>
 <h1 id="垃圾回收器">垃圾回收器</h1><h3 id="串行（Serial）回收器">串行（Serial）回收器</h3><p>串行（Serial）回收器是单线程的一个回收器，简单、易实现、效率高。在串行收集器进行垃圾回收时，Java 应用程序中的线程都需要暂停，等待垃圾回收的完成，这样给用户体验造成较差效果。虽然如此，串行收集器却是一个成熟、经过长时间生产环境考验的极为高效的收集器。新生代串行处理器使用复制算法，实现相对简单，逻辑处理特别高效，且没有线程切换的开销。在诸如单 CPU 处理器或者较小的应用内存等硬件平台不是特别优越的场合，它的性能表现可以超过并行回收器和并发回收器。在 HotSpot 虚拟机中，使用-XX：+UseSerialGC 参数可以指定使用新生代串行收集器和老年代串行收集器。当 JVM 在 Client 模式下运行时，它是默认的垃圾收集器。</p>
 <h3 id="并行（ParNew）回收器">并行（ParNew）回收器</h3><p>并行（ParNew）回收器是Serial的多线程版，可以充分的利用CPU资源，减少回收的时间。并行回收器也是独占式的回收器，在收集过程中，应用程序会全部暂停。但由于并行回收器使用多线程进行垃圾回收，因此，在并发能力比较强的 CPU 上，它产生的停顿时间要短于串行回收器，而在单 CPU 或者并发能力较弱的系统中，并行回收器的效果不会比串行回收器好，由于多线程的压力，它的实际表现很可能比串行回收器差。<br>开启并行回收器可以使用参数-XX:+UseParNewGC，该参数设置新生代使用并行收集器，老年代使用串行收集器。</p>
 <h3 id="吞吐量优先（Parallel_Scavenge）回收器">吞吐量优先（Parallel Scavenge）回收器</h3><p>吞吐量优先（Parallel Scavenge）回收器，侧重于吞吐量的控制。从表面上看，它和并行收集器一样都是多线程、使用复制算法的并行收集器。但是，并行Parallel Scavenge集器有一个重要的特点：它非常关注系统的吞吐量。使用-XX:+UseParallelOldGC 可以在新生代和老生代都使用并行回收收集器，这是一对非常关注吞吐量的垃圾收集器组合，在对吞吐量敏感的系统中，可以考虑使用。参数-XX:ParallelGCThreads也可以用于设置垃圾回收时的线程数量。另外值得注意的一点是，Parallel Scavenge收集器无法与CMS收集器配合使用。</p>
 <h3 id="并发标记清除（CMS，Concurrent_Mark_Sweep）回收器">并发标记清除（CMS，Concurrent Mark Sweep）回收器</h3><p>并发标记清除（CMS，Concurrent Mark Sweep）回收器是一种以获取最短回收停顿时间为目标的回收器，该回收器是基于“标记-清除”算法实现的。与并行回收收集器不同，CMS 收集器主要关注于系统停顿时间。CMS 是 Concurrent Mark Sweep 的缩写，意为并发标记清除，从名称上可以得知，它使用的是标记-清除算法，同时它又是一个使用多线程并发回收的垃圾收集器。<br>CMS 工作时，主要步骤有：初始标记、并发标记、并发预清理、重新标记、并发清除和重置。其中初始标记和重新标记是独占系统资源的，而并发标记、并发清除和并发重置是可以和用户线程一起执行的。因此，从整体上来说，CMS 收集不是独占式的，它可以在应用程序运行过程中进行垃圾回收。</p>
 <h3 id="G1回收器_(Garbage_First)">G1回收器 (Garbage First)</h3><p>G1收集器是当今收集器技术发展最前沿的成果之一，目标是作为一款服务器的垃圾收集器，因此，它在吞吐量和停顿控制上，预期要优于 CMS 收集器。与 CMS 收集器相比，G1收集器是基于标记-压缩算法的。因此，它不会产生空间碎片，也没有必要在收集完成后，进行一次独占式的碎片整理工作。G1 收集器还可以进行非常精确的停顿控制，这是G1相对CMS的一大优势，降低停顿时间是G1和CMS共同的关注点，但G1除了降低停顿外，还能建立可预测的停顿时间模型，能让使用者明确指定在一个长度为M毫秒的时间片段内，消耗在GC上的时间不得超过N毫秒。使用参数-XX:+UnlockExperimentalVMOptions –XX:+UseG1GC 来启用 G1 回收器，设置 G1 回收器的目标停顿时间：-XX:MaxGCPauseMills=20,-XX:GCPauseIntervalMills=200。</p>
-<p><img src="http://hexo-tuchuan.qiniudn.com/garbage.png" alt=""></p>
+<p><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/garbage.png" alt=""></p>
 <h1 id="一些参数">一些参数</h1><p>-Xms 设置堆的最小空间大小。<br>-Xmx 设置堆的最大空间大小。<br>-Xmn 设置新生代最小空间大小（推荐使用）。<br>-XX:NewSize 设置新生代最小空间大小。<br>-XX:MaxNewSize 设置新生代最大空间大小。<br>-XX:SurvivorRatio 设置Eden:Survivor中的一个比例,默认是8:1:1<br>-XX:PermSize 设置永久代最小空间大小。<br>-XX:MaxPermSize 设置永久代最大空间大小。<br>-Xss 设置每个线程的堆栈大小<br>老年代空间大小=堆空间大小-年轻代大空间大小<br>-XX:+DisableExplicitGC 显示禁止System.gc()，System.gc()变成一行无效的代码，如果系统有使用堆外内存不建议配置这个jvm参数<br>-XX:+UseConcMarkSweepGC 设置老年代为并发收集<br>-XX:+CMSParallelRemarkEnabled 降低标记停顿<br>-XX:+UseCMSCompactAtFullCollection 打开对年老代的压缩。可能会影响性能，但是可以消除碎片<br>-XX:LargePageSizeInBytes 设置内存页的大小<br>-XX+UseCMSInitiatingOccupancyOnly 标志来命令JVM不基于运行时收集的数据来启动CMS垃圾收集周期，始终使用CMSInitiatingPermOccupancyFraction的值（不推荐使用）<br>-XX:CMSInitiatingOccupancyFraction，默认为68，即当年老代的空间使用率达到68%时，会执行一次CMS回收。如果应用程序的内存使用率增长很快，在CMS的执行过程中，已经出现了内存不足，此时，CMS回收就会失败，虚拟机将启动SerialOld串行收集器进行垃圾回收。如果这样，应用程序将完全中断，直到垃圾回收完成，这时，应用程序的停顿时间可能会较长<br>-XX:+CMSScavengeBeforeRemark 强制重新标记前进行一次MinorGC，如果Eden区有大量活跃对象推荐使用。<br>-XX:+PrintGCDetails 输出GC的详细日志<br>-XX:+PrintGCTimeStamps 输出GC的时间戳<br>-XX:+PrintHeapAtGC 在进行GC的前后打印出堆的信息<br>-XX:+PrintTenuringDistribution 指定JVM在每次新生代GC时，输出幸存区中对象的年龄分布</p>
-<h1 id="看懂GC日志">看懂GC日志</h1><h3 id="一次典型的minorGC日志示例:">一次典型的minorGC日志示例:</h3><p><img src="http://hexo-tuchuan.qiniudn.com/gcprocess.png" alt=""></p>
+<h1 id="看懂GC日志">看懂GC日志</h1><h3 id="一次典型的minorGC日志示例:">一次典型的minorGC日志示例:</h3><p><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/gcprocess.png" alt=""></p>
 <h3 id="一次典型的CMS_GC日志示例:">一次典型的CMS GC日志示例:</h3><p>39.910: [GC 39.910: [ParNew: 261760K-&gt;0K(261952K), 0.2314667 secs] 262017K-&gt;26386K(1048384K), 0.2318679 secs]<br>新生代使用 (ParNew 并行)回收器。新生代容量为261952K，GC回收后占用从261760K降到0,耗时0.2314667秒。(译注：262017K-&gt;26386K(1048384K), 0.2318679 secs 表示整个堆占用从262017K 降至26386K,费时0.2318679)</p>
 <p>40.146: [GC [1 CMS-initial-mark: 26386K(786432K)] 26404K(1048384K), 0.0074495 secs]<br>开始使用CMS回收器进行老年代回收。初始标记(CMS-initial-mark)阶段,这个阶段标记由根可以直接到达的对象，标记期间整个应用线程会暂停。<br>老年代容量为786432K,CMS 回收器在空间占用达到 26386K 时被触发</p>
 <p>40.154: [CMS-concurrent-mark-start]<br>开始并发标记(concurrent-mark-start) 阶段，在第一个阶段被暂停的线程重新开始运行，由前阶段标记过的对象出发，所有可到达的对象都在本阶段中标记。</p>
@@ -102,7 +102,7 @@
 <p>参考:<br><a href="https://tech.meituan.com/jvm_optimize.html" target="_blank" rel="external">从实际案例聊聊Java应用的GC优化</a><br><a href="http://www.importnew.com/22886.html" target="_blank" rel="external">JVM 调优 —— GC 长时间停顿问题及解决方法</a><br><a href="https://www.jianshu.com/p/051d566e110d" target="_blank" rel="external">海量连接服务端jvm参数调优杂记</a></p>
 ]]></content>
     <summary type="html">
-    <![CDATA[<p><img src="http://hexo-tuchuan.qiniudn.com/jvmspeed.png" alt=""><br>作为一个java语言开发的应用，为了每一个0.1%的性能提升，折腾过了网络，IO，数据库之后难免要折腾一下GC。写下这篇日志的目的是希望看完]]>
+    <![CDATA[<p><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/jvmspeed.png" alt=""><br>作为一个java语言开发的应用，为了每一个0.]]>
     </summary>
     
       <category term="gc" scheme="http://minotaursu.com/tags/gc/"/>
@@ -118,7 +118,7 @@
     <link href="http://minotaursu.com/2018/02/22/2017%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/"/>
     <id>http://minotaursu.com/2018/02/22/2017年终总结/</id>
     <published>2018-02-22T06:17:55.000Z</published>
-    <updated>2018-02-22T08:42:18.665Z</updated>
+    <updated>2019-02-01T09:02:25.324Z</updated>
     <content type="html"><![CDATA[<p>作为工作第N年的第M份总结还是要感叹一下时间的飞快, 首先总结一下认为比较重要的几件事情。</p>
 <ol>
 <li>去日本关西玩了一趟，也算是第一次去发达国家了，住的民宿，性价比特别高，日本的交通不是一般的贵。作为消费者喜欢日本的精致服务，但并不想在日本生活。。</li>
@@ -141,7 +141,7 @@
 <li>学会吉他</li>
 <li>2018年总结时，列出一件自己觉得NB的事情</li>
 </ol>
-<p><img src="http://hexo-tuchuan.qiniudn.com/hzdream.png" alt="人的梦想，是不会终结的"></p>
+<p><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/hzdream.png" alt="人的梦想，是不会终结的"></p>
 ]]></content>
     <summary type="html">
     <![CDATA[<p>作为工作第N年的第M份总结还是要感叹一下时间的飞快, 首先总结一下认为比较重要的几件事情。</p>
@@ -164,13 +164,13 @@
     <link href="http://minotaursu.com/2018/02/22/%E4%B8%80%E6%AC%A1GC%E8%80%97%E6%97%B6%E8%B6%85%E9%95%BF%E7%9A%84%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/"/>
     <id>http://minotaursu.com/2018/02/22/一次GC耗时超长的问题排查/</id>
     <published>2018-02-22T03:57:06.000Z</published>
-    <updated>2018-02-22T07:15:54.555Z</updated>
-    <content type="html"><![CDATA[<p><img src="http://hexo-tuchuan.qiniudn.com/gc.png" alt=""></p>
-<p>2017年10月某日突然收到FullGC耗时超长的报警，排查发现应用存在周期性FULLGC耗时超长的的情况，每次FULLGC时间长达5s以上，甚至出现过10s以上的FULLGC，导致FULLGC时应用的响应全部超时。最初是怀疑系统有大量的对象没有释放导致FULLGC时间过长，第一时间dump了应用的内存，并没有发现内存泄露的情况。后面查看GC日志发现Rescan阶段weak refs processing的超时都超长，GC日志里大量可见[weak refs processing, 9.7398650 secs]，排查的方向就逐渐转向了weak refs processing 为什么会花费如此长的时间，大家在一起针对代码分析了很久，从jackson的使用，到本地缓存的使用，到NIO的影响，每个人都提出了自己的见解，但是又没有强有力的证据验证自己的结果，按照这个思路排查了一晚上也没有结果。<br>后面分析发现耗时超长的FULLGC只出现在特定的某一台服务器上，该应用的FULLGC耗时在其他服务器上都表现正常，排查发现出现GC耗时过长的服务器还部署着大数据的某个高IO类型的应用，排查的思路又转向了服务器的IO和cpu，但是并没有发现io和cpu的异常情况，排查似乎陷入了困境。<br><img src="http://hexo-tuchuan.qiniudn.com/easygc.png" alt=""><br>过了几天之后找到了一个可视化的GC分析工具<a href="http://gceasy.io/" target="_blank" rel="external">gceasy.io</a> ，分析后发现一个之前一直忽略的现象，GC真实的耗时是远大于用户耗时和系统耗时的，[Times: user=2.56 sys=0.07, real=9.82 secs]。我们知道JVM本身作为一个进程也是由linux系统进行内存分配，而linux的内存空间由两部分构成，物理内存和swap空间，假如GC时有一部分内容被交换到swap，遍历到这部分的时候就需要将其交换回内存，极端情况下甚至会把整个堆分区轮流往SWAP写一遍，而磁盘交换的速度是远慢于物理内存的，如果GC和swap同时发生会导致超长时间的卡顿，通过sar -W -f 命令分析发现swap时间完全吻合发生耗时超长的GC时间，基本可以断定是系统的物理内存不够用导致系统发生swap，最终导致耗时超长的GC发生，关闭linux的swap后引用的GC时间恢复到500ms以下。<br>虽然gc耗时超长的问题得到了解决，但是仔细思考一下就会发现问题的解决完全依赖程序员的推理过程和知识储备，那么是不是可以有更简单更快速的问题排查定位手段，我认为答案是可以的，那就是更加智能化的监控，将业务指标，应用指标，系统指标打通关联，在FULLGC超时报警的时候通知告知业务开发系统发生了swap，并且能展示对订单量和GMV等指标的影响。好的基础设施就像强大的武器，虽然依赖好的枪法用手枪也能杀死敌人，但是手里有把AKM或M16还是更容易吃鸡。</p>
+    <updated>2019-02-01T09:02:25.335Z</updated>
+    <content type="html"><![CDATA[<p><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/gc.png" alt=""></p>
+<p>2017年10月某日突然收到FullGC耗时超长的报警，排查发现应用存在周期性FULLGC耗时超长的的情况，每次FULLGC时间长达5s以上，甚至出现过10s以上的FULLGC，导致FULLGC时应用的响应全部超时。最初是怀疑系统有大量的对象没有释放导致FULLGC时间过长，第一时间dump了应用的内存，并没有发现内存泄露的情况。后面查看GC日志发现Rescan阶段weak refs processing的超时都超长，GC日志里大量可见[weak refs processing, 9.7398650 secs]，排查的方向就逐渐转向了weak refs processing 为什么会花费如此长的时间，大家在一起针对代码分析了很久，从jackson的使用，到本地缓存的使用，到NIO的影响，每个人都提出了自己的见解，但是又没有强有力的证据验证自己的结果，按照这个思路排查了一晚上也没有结果。<br>后面分析发现耗时超长的FULLGC只出现在特定的某一台服务器上，该应用的FULLGC耗时在其他服务器上都表现正常，排查发现出现GC耗时过长的服务器还部署着大数据的某个高IO类型的应用，排查的思路又转向了服务器的IO和cpu，但是并没有发现io和cpu的异常情况，排查似乎陷入了困境。<br><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/easygc.png" alt=""><br>过了几天之后找到了一个可视化的GC分析工具<a href="http://gceasy.io/" target="_blank" rel="external">gceasy.io</a> ，分析后发现一个之前一直忽略的现象，GC真实的耗时是远大于用户耗时和系统耗时的，[Times: user=2.56 sys=0.07, real=9.82 secs]。我们知道JVM本身作为一个进程也是由linux系统进行内存分配，而linux的内存空间由两部分构成，物理内存和swap空间，假如GC时有一部分内容被交换到swap，遍历到这部分的时候就需要将其交换回内存，极端情况下甚至会把整个堆分区轮流往SWAP写一遍，而磁盘交换的速度是远慢于物理内存的，如果GC和swap同时发生会导致超长时间的卡顿，通过sar -W -f 命令分析发现swap时间完全吻合发生耗时超长的GC时间，基本可以断定是系统的物理内存不够用导致系统发生swap，最终导致耗时超长的GC发生，关闭linux的swap后引用的GC时间恢复到500ms以下。<br>虽然gc耗时超长的问题得到了解决，但是仔细思考一下就会发现问题的解决完全依赖程序员的推理过程和知识储备，那么是不是可以有更简单更快速的问题排查定位手段，我认为答案是可以的，那就是更加智能化的监控，将业务指标，应用指标，系统指标打通关联，在FULLGC超时报警的时候通知告知业务开发系统发生了swap，并且能展示对订单量和GMV等指标的影响。好的基础设施就像强大的武器，虽然依赖好的枪法用手枪也能杀死敌人，但是手里有把AKM或M16还是更容易吃鸡。</p>
 ]]></content>
     <summary type="html">
-    <![CDATA[<p><img src="http://hexo-tuchuan.qiniudn.com/gc.png" alt=""></p>
-<p>2017年10月某日突然收到FullGC耗时超长的报警，排查发现应用存在周期性FULLGC耗时超长的的情况，每次FULLGC时间长达5s以上，甚]]>
+    <![CDATA[<p><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/gc.png" alt=""></p>
+<p>2017年10月某日突然收到FullGC耗时超长的]]>
     </summary>
     
       <category term="gc" scheme="http://minotaursu.com/tags/gc/"/>
@@ -186,15 +186,15 @@
     <link href="http://minotaursu.com/2017/12/22/jackson%E4%BD%BF%E7%94%A8setDateFormat%E5%90%8E%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%94%99%E8%AF%AF/"/>
     <id>http://minotaursu.com/2017/12/22/jackson使用setDateFormat后反序列化错误/</id>
     <published>2017-12-22T04:08:57.000Z</published>
-    <updated>2017-12-22T04:11:15.181Z</updated>
-    <content type="html"><![CDATA[<p><img src="http://hexo-tuchuan.qiniudn.com/jackson.png" alt=""></p>
-<p>最近marketing-activity系统在接入降级服务，出现启动时可以正确获取到降级配置，系统运行一段时间后修改降级策略不生效的问题，之前订单系统，用户系统和其他系统的接入都没问题出现这个问题，肯定是触发了某种特定的case。营销的同学联系我进行排查，排查日志发现是降级服务反序列化Date类型异常，接收到的数据格式是yyyy-MM-dd HH:mm:ss，并不在jackson支持的反序列化格式之内。降级服务的sdk也是使用的jackson进行序列化的，为什么会出现jackson序列化后的数据却不能使用jackson反序列化。<br>接着查看marketing-activity系统的降级服务sdk日志发现一个很诡异的现象，最初发送的序列化后的请求还是时间戳格式的，运行一段时间后就变成了yyyy-MM-dd HH:mm:ss格式，也就是说系统的行为在运行时被改变了。<br><img src="http://hexo-tuchuan.qiniudn.com/sds-log.png" alt=""></p>
-<p>那么到底是什么可以改变系统运行时的序列化逻辑呢？可能出现的主要原因有2种。一种是字节码技术，也就是btrace，greys这些。另一种就是调用jackson本身的api改变了一些属性。显然第二种的可能性更大一些，果然在jsonUitl里发现了蛛丝马迹，toObject允许设置特定的时间格式进行反序列化，调用setDateFormat会导致后续全部的Date类型的序列化都会是yyyy-MM-dd HH:mm:ss格式，自然不能默认设置的jackson反序列化。<br><img src="http://hexo-tuchuan.qiniudn.com/jsonutil.png" alt=""></p>
+    <updated>2019-02-01T09:02:25.329Z</updated>
+    <content type="html"><![CDATA[<p><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/jackson.png" alt=""></p>
+<p>最近marketing-activity系统在接入降级服务，出现启动时可以正确获取到降级配置，系统运行一段时间后修改降级策略不生效的问题，之前订单系统，用户系统和其他系统的接入都没问题出现这个问题，肯定是触发了某种特定的case。营销的同学联系我进行排查，排查日志发现是降级服务反序列化Date类型异常，接收到的数据格式是yyyy-MM-dd HH:mm:ss，并不在jackson支持的反序列化格式之内。降级服务的sdk也是使用的jackson进行序列化的，为什么会出现jackson序列化后的数据却不能使用jackson反序列化。<br>接着查看marketing-activity系统的降级服务sdk日志发现一个很诡异的现象，最初发送的序列化后的请求还是时间戳格式的，运行一段时间后就变成了yyyy-MM-dd HH:mm:ss格式，也就是说系统的行为在运行时被改变了。<br><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/sds-log.png" alt=""></p>
+<p>那么到底是什么可以改变系统运行时的序列化逻辑呢？可能出现的主要原因有2种。一种是字节码技术，也就是btrace，greys这些。另一种就是调用jackson本身的api改变了一些属性。显然第二种的可能性更大一些，果然在jsonUitl里发现了蛛丝马迹，toObject允许设置特定的时间格式进行反序列化，调用setDateFormat会导致后续全部的Date类型的序列化都会是yyyy-MM-dd HH:mm:ss格式，自然不能默认设置的jackson反序列化。<br><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/jsonutil.png" alt=""></p>
 <p>至此降级服务改变策略后不生效的根本原因就得到了解答，那么如果某个对象就是要使用yyyy-MM-dd HH:mm:ss 进行序列化和反序列化怎么办，建议使用@JsonFormat 单独对属性进行注释。<br>最后谈谈fastjson和jackson，貌似jackson的各种坑遇到过很多，而fastjson的坑很少，那么为什么jackson还是要比fastjson更流行，真的只是国外的月亮更圆，空气更甜？这个主要是json框架的设计理念偏重点不同，fastjson偏重的是简单和快速，内部实现有很多的hack和magic code。而jackson偏重的是标准和强大，格式支持json，xml，有很多的属性可以设置非常的灵活，也有很多的接口可以自定义进行扩展，导致学习成本比较高，需要详细看过jackson文档才能上手。</p>
 ]]></content>
     <summary type="html">
-    <![CDATA[<p><img src="http://hexo-tuchuan.qiniudn.com/jackson.png" alt=""></p>
-<p>最近marketing-activity系统在接入降级服务，出现启动时可以正确获取到降级配置，系统运行一段时间后修改降级策略不生效的问]]>
+    <![CDATA[<p><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/jackson.png" alt=""></p>
+<p>最近marketing-activity]]>
     </summary>
     
       <category term="jackson" scheme="http://minotaursu.com/tags/jackson/"/>
@@ -212,8 +212,8 @@
     <link href="http://minotaursu.com/2017/12/18/%E6%9B%B4%E6%8D%A2%E4%B8%80%E9%97%A8%E5%B7%A5%E4%BD%9C%E8%AF%AD%E8%A8%80%E7%9A%84%E6%88%90%E6%9C%AC/"/>
     <id>http://minotaursu.com/2017/12/18/更换一门工作语言的成本/</id>
     <published>2017-12-18T08:21:21.000Z</published>
-    <updated>2017-12-22T08:27:42.020Z</updated>
-    <content type="html"><![CDATA[<p><img src="http://hexo-tuchuan.qiniudn.com/lang.jpeg" alt=""></p>
+    <updated>2019-02-01T09:02:25.349Z</updated>
+    <content type="html"><![CDATA[<p><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/lang.jpg" alt=""></p>
 <p>程序员这个职业经常需要学习新的技术，假如某一天工作上主要使用的语言没落了，或者新的项目需要使用另一门不熟悉的语言开发，那么成本到底有多少，那些是需要重新学习的，又有那些是可以被保留或者继承的。</p>
 <h3 id="需要重新学习的">需要重新学习的</h3><ol>
 <li>语法&amp;语法糖。这应该是最简单的部分，是用大括号分组还是使用缩进分组，条件语句是否需要括号，函数是否可以赋值给变量，是否支持lambda。</li>
@@ -239,8 +239,8 @@
 <p>需要重新学习的主要集中在工具层面，保留的主要是思想和原理。看起来重新学习一门语言就像一个内力深厚的高手不再用剑改学刀法，问题不会很大，但也不是毫无风险，初学期遇到一个难缠的对手也容易乱拳打死老师傅。可能需要一个月到半年的熟悉期。</p>
 ]]></content>
     <summary type="html">
-    <![CDATA[<p><img src="http://hexo-tuchuan.qiniudn.com/lang.jpeg" alt=""></p>
-<p>程序员这个职业经常需要学习新的技术，假如某一天工作上主要使用的语言没落了，或者新的项目需要使用另一门不熟悉的语言开发，那么成本到底有多少，]]>
+    <![CDATA[<p><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/lang.jpg" alt=""></p>
+<p>程序员这个职业经常需要学习新的技术，假如某一天]]>
     </summary>
     
       <category term="go" scheme="http://minotaursu.com/tags/go/"/>
@@ -258,8 +258,8 @@
     <link href="http://minotaursu.com/2017/12/13/archsummit2017%E8%A7%81%E9%97%BB%E5%92%8C%E6%80%9D%E8%80%83/"/>
     <id>http://minotaursu.com/2017/12/13/archsummit2017见闻和思考/</id>
     <published>2017-12-13T10:31:39.000Z</published>
-    <updated>2017-12-13T12:45:53.469Z</updated>
-    <content type="html"><![CDATA[<p><img src="http://hexo-tuchuan.qiniudn.com/archsummit.jpeg" alt=""></p>
+    <updated>2019-02-01T09:02:25.326Z</updated>
+    <content type="html"><![CDATA[<p><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/archsummit.jpg" alt=""></p>
 <p>前几天参加了archsummit的北京站。2天的日程安排的十分紧凑，大多数时间同时有多场专题分享，选择想要听的专题就成了首要的事情，按照感兴趣的，可能用到的，启发思考的原则选择了几场适合自己的专题，这里记录一下大会的见闻和思考。</p>
 <h2 id="创新是人类的自信">创新是人类的自信</h2><p><strong>推荐指数：4星</strong><br>王坚博士的演讲作为archsummit的开场show拉开了archsummit的帷幕，开场就提出了一个很大的愿景:开一个会能够让50年以后的人开很多会来讨论，每天在世界上开的各种会议数以千万计，能够到达这种目标的会议真是十年难遇，显然要到达这个目标需要巨大的创新，可能是基础理论层面的创新或是定义了某些原理和标准。接下的分享主题都围绕着年轻，创新，自信，三者是相辅相成的，只有挑战离年轻人更近，未来才会离我们更近。虽然分享的时间很短，可以感受到王坚博士是一个有智慧有趣的人，以及非常的有工程师精神。</p>
 <h2 id="算法无处不在：Hulu当今和未来的技术架构">算法无处不在：Hulu当今和未来的技术架构</h2><p><strong>推荐指数：3星</strong><br>hulu讲了算法在视频广告业务的应用，算法如何带来更好的用户体验和更高的收入，接下来讲的人工智能平台是很好的工程实践，如何让算法的实现优化验证更容易，如何让更多的人员参与到这个过程，基础设施的建设能够提高工程生产力，服务于更多的场景，产生更多的价值。</p>
@@ -275,8 +275,8 @@
 <h2 id="说些什么">说些什么</h2><p>互联网的发展史， 从最初的单项传播信息的门户模式 到搜索引擎，微博这种线上双向信息互动的模式，到现在如火如荼的各类各种移动互联网，到高速发展的人工智能和云计算。整体的业务，架构越来越复杂，越来越向着技术密集，资本密集方向发展<br>。对于创业者来说，一方面要面对可能的来自BAT的业务同质化竞争威胁，一方面拥有着BAT深耕出的互联网环境带来的便利，如何找到合适的切入方向就是首要解决的问题。对于互联网研发人员说来，业务复杂度，规模与高可用带来的挑战越来越高，同时开源社区的蓬勃发展也带来了越来越多的可能性，怎样利用好开源资源解决自身的业务问题也变得更加重要。如何在一个知识大爆炸的时代保持独立思考，选择适合自己的方向终将成为重要的技能之一，乔教主的那句 Stay Hungry,Stay Foolish 也许就是最好的解答。</p>
 ]]></content>
     <summary type="html">
-    <![CDATA[<p><img src="http://hexo-tuchuan.qiniudn.com/archsummit.jpeg" alt=""></p>
-<p>前几天参加了archsummit的北京站。2天的日程安排的十分紧凑，大多数时间同时有多场专题分享，选择想要听的专题就成了首要的]]>
+    <![CDATA[<p><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/archsummit.jpg" alt=""></p>
+<p>前几天参加了archsummit的]]>
     </summary>
     
       <category term="Cloud native" scheme="http://minotaursu.com/tags/Cloud-native/"/>
@@ -292,7 +292,7 @@
     <link href="http://minotaursu.com/2017/04/27/%E8%B0%88%E8%B0%88%E5%BE%AE%E4%BF%A1%E7%BA%A2%E5%8C%85%E7%9A%84%E8%AE%BE%E8%AE%A1%E5%AE%9E%E7%8E%B0/"/>
     <id>http://minotaursu.com/2017/04/27/谈谈微信红包的设计实现/</id>
     <published>2017-04-27T07:19:48.000Z</published>
-    <updated>2017-04-28T05:15:30.000Z</updated>
+    <updated>2019-02-01T09:02:25.350Z</updated>
     <content type="html"><![CDATA[<p>红包功能的设计实现是一个很有趣的话题，主要的功能是P个人抢总金额M的N个红包，满足先抢的N个人能抢到红包。如果这是一个leetcode的算法题目难度应该是easy，只要保证Ni抢到的金额区间在[0.01,2倍剩余金额平均值）就能ac。<br>将算法带入到真实的工程实现，问题就要复杂得多，如果达到微信的量级，明显要考虑的有以下几点。</p>
 <ol>
 <li>拆红包</li>
@@ -311,7 +311,7 @@
 <h1 id="网络流量峰值">网络流量峰值</h1><p>大量用户同时抢红包是否会造成网络拥塞，发红包和抢红包最好在同一个IDC。</p>
 <h1 id="对账">对账</h1><p>考虑到拆红包凭证和入账是异步的2套系统，以及出现故障的可能，需要定时对账保证数据的一致性。</p>
 <h1 id="降级">降级</h1><p>在cache故障时有限流的使用DB进行服务，在资源紧张的时候关闭掉非核心流程，在实时入账请求量过大时，延迟批量入账。</p>
-<p><img src="http://hexo-tuchuan.qiniudn.com/wechat-small.jpg" alt=""><br>Reference:<br><a href="https://www.zybuluo.com/yulin718/note/93148" target="_blank" rel="external">https://www.zybuluo.com/yulin718/note/93148</a></p>
+<p><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/wechat-small.jpg" alt=""><br>Reference:<br><a href="https://www.zybuluo.com/yulin718/note/93148" target="_blank" rel="external">https://www.zybuluo.com/yulin718/note/93148</a></p>
 ]]></content>
     <summary type="html">
     <![CDATA[<p>红包功能的设计实现是一个很有趣的话题，主要的功能是P个人抢总金额M的N个红包，满足先抢的N个人能抢到红包。如果这是一个leetcode的算法题目难度应该是easy，只要保证Ni抢到的金额区间在[0.01,2倍剩余金额平均值）就能ac。<br>将算法带入到真实的工程实现，问题]]>
@@ -330,8 +330,8 @@
     <link href="http://minotaursu.com/2017/04/12/%E4%BD%BF%E7%94%A8AOP%E8%AE%B0%E5%BD%95%E5%BA%94%E7%94%A8%E8%B0%83%E7%94%A8%E9%93%BE%E5%BC%80%E9%94%80/"/>
     <id>http://minotaursu.com/2017/04/12/使用AOP记录应用调用链开销/</id>
     <published>2017-04-12T04:47:04.000Z</published>
-    <updated>2017-04-12T05:14:39.000Z</updated>
-    <content type="html"><![CDATA[<p>最近系统出现了一次线上的性能问题，本来以为目前的QPS应该是不会出现任何问题的，结果微服务还是比较容易因为某个点的问题导致雪崩的。。。出了性能问题就要做分析，正统的思路是要不断进行压测用JProfiler进行分析。后来自己简单搞了一下使用AOP抓取调用树和开销，看起来效果还不错，加上动态开关可以偶尔在线上用一下。代码提交到了<a href="https://github.com/minotaursu/profilerAop" target="_blank" rel="external">github</a>。本身的实现类似树的深度优先遍历，一个节点有多个子节点，在进入方法之前enter，在退出方法后release，都被release了就可以打印调用树日志了。而webx的profiler本身就提供了这种实现，大大的减少了开发时间。虽然之前在使用webx的时候总是觉得不爽，没有springmvc来的简洁，layout,action,screen也不适合移动时代的开发，现在都是rest服务或者使用api gateway配置api了，但不得不说webx的很多思想还是值得深入学习的，很多工具也很适合开源使用。一个框架能够稳定运行在各种业务场景，大范围推广使用本身就是了件不起的事情，这里给webx点个赞。<br>最后来看一下profiler的demo效果。<br><img src="http://hexo-tuchuan.qiniudn.com/profiler.png" alt=""></p>
+    <updated>2019-02-01T09:02:25.334Z</updated>
+    <content type="html"><![CDATA[<p>最近系统出现了一次线上的性能问题，本来以为目前的QPS应该是不会出现任何问题的，结果微服务还是比较容易因为某个点的问题导致雪崩的。。。出了性能问题就要做分析，正统的思路是要不断进行压测用JProfiler进行分析。后来自己简单搞了一下使用AOP抓取调用树和开销，看起来效果还不错，加上动态开关可以偶尔在线上用一下。代码提交到了<a href="https://github.com/minotaursu/profilerAop" target="_blank" rel="external">github</a>。本身的实现类似树的深度优先遍历，一个节点有多个子节点，在进入方法之前enter，在退出方法后release，都被release了就可以打印调用树日志了。而webx的profiler本身就提供了这种实现，大大的减少了开发时间。虽然之前在使用webx的时候总是觉得不爽，没有springmvc来的简洁，layout,action,screen也不适合移动时代的开发，现在都是rest服务或者使用api gateway配置api了，但不得不说webx的很多思想还是值得深入学习的，很多工具也很适合开源使用。一个框架能够稳定运行在各种业务场景，大范围推广使用本身就是了件不起的事情，这里给webx点个赞。<br>最后来看一下profiler的demo效果。<br><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/profiler.png" alt=""></p>
 ]]></content>
     <summary type="html">
     <![CDATA[<p>最近系统出现了一次线上的性能问题，本来以为目前的QPS应该是不会出现任何问题的，结果微服务还是比较容易因为某个点的问题导致雪崩的。。。出了性能问题就要做分析，正统的思路是要不断进行压测用JProfiler进行分析。后来自己简单搞了一下使用AOP抓取调用树和开销，看起来效果还]]>
@@ -352,7 +352,7 @@
     <link href="http://minotaursu.com/2017/04/06/2016%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/"/>
     <id>http://minotaursu.com/2017/04/06/2016年终总结/</id>
     <published>2017-04-06T11:38:08.000Z</published>
-    <updated>2018-02-22T08:30:37.344Z</updated>
+    <updated>2019-02-01T09:02:25.324Z</updated>
     <content type="html"><![CDATA[<p>在2017年过去小半年之后，还是决定回顾一下过去的2016，写了这个年终总结。2016年初拿到了驾照，装修好了房子，看着勇士在总决赛被逆转痛失冠军，在G20期间出去玩了一趟，算是2016年比较重要的几件事情。 工作上运维了一整年的elasticsearch，支持了后台和BI的部分业务，贡献了大量的代码，也重构了很多的代码。在工作2年之后对系统大部分功能都比较熟悉，心理感觉有些疲倦，代驾也是一个拼内功，拼服务的行业，少会有爆发式的增长，市场的空间清晰可见。年后去前东家的云计算部门面试了一趟，希望能争取一个满意的offer，前东家给了一个base提升了一些，但算上滴滴的未固化的期权是降薪的offer。对于这种变化不大的offer最是难以选择，考虑了很久纠结了很久，最后还咨询了很多前同事的意见，大部分人是不建议我去。 工作上，行业，部门，老板，薪水都满意的情况实在难以出现。总体来说，2016年是变好的一年，并没有多少糟心的事情，日子很平静。2017年对自己的期待就是空杯心态，精益求精吧。</p>
 <p>2017·wishlist</p>
 <ol>
@@ -363,7 +363,7 @@
 <li>改进计费系统的持续集成方案</li>
 <li>2017年总结时，列出一件自己觉得NB的事情</li>
 </ol>
-<p><img src="http://hexo-tuchuan.qiniudn.com/cup.jpeg" alt="空杯心态,精益求精"></p>
+<p><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/cup.jpg" alt="空杯心态,精益求精"></p>
 ]]></content>
     <summary type="html">
     <![CDATA[<p>在2017年过去小半年之后，还是决定回顾一下过去的2016，写了这个年终总结。2016年初拿到了驾照，装修好了房子，看着勇士在总决赛被逆转痛失冠军，在G20期间出去玩了一趟，算是2016年比较重要的几件事情。 工作上运维了一整年的elasticsearch，支持了后台和BI]]>

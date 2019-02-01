@@ -14,12 +14,12 @@ Reactor模式Reactor模式就是这样一种机制，利用事件驱动减少工
 <meta property="og:site_name" content="Minotaur story">
 <meta property="og:description" content="假设在办理各种证件时分为填表，审核，制作3个过程，每个过程用时10分钟，这样一个工作人员需要30分钟办理一个证件。那么有没有办法提供效率，减少等待时间呢。可以让一个专门的工作人员，每个顾客到来时就负责让顾客填表，在顾客填好表后交给其他工作人员审核。这样其他功能人员的工作效率就从30分钟提高到了20分钟。
 Reactor模式Reactor模式就是这样一种机制，利用事件驱动减少工作线程的等待时间。Re">
-<meta property="og:image" content="http://hexo-tuchuan.qiniudn.com/reactor3.png">
-<meta property="og:image" content="http://hexo-tuchuan.qiniudn.com/reactor4.png">
-<meta property="og:image" content="http://hexo-tuchuan.qiniudn.com/reactor5.png">
-<meta property="og:image" content="http://hexo-tuchuan.qiniudn.com/reactor1.png">
-<meta property="og:image" content="http://hexo-tuchuan.qiniudn.com/reactor2.png">
-<meta property="og:updated_time" content="2017-02-23T03:39:30.000Z">
+<meta property="og:image" content="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/reactor3.png">
+<meta property="og:image" content="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/reactor4.png">
+<meta property="og:image" content="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/reactor5.png">
+<meta property="og:image" content="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/reactor1.png">
+<meta property="og:image" content="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/reactor2.png">
+<meta property="og:updated_time" content="2019-02-01T09:02:25.332Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="netty详解之reactor模型">
 <meta name="twitter:description" content="假设在办理各种证件时分为填表，审核，制作3个过程，每个过程用时10分钟，这样一个工作人员需要30分钟办理一个证件。那么有没有办法提供效率，减少等待时间呢。可以让一个专门的工作人员，每个顾客到来时就负责让顾客填表，在顾客填好表后交给其他工作人员审核。这样其他功能人员的工作效率就从30分钟提高到了20分钟。
@@ -108,7 +108,7 @@ Reactor模式Reactor模式就是这样一种机制，利用事件驱动减少工
           
           <td><a href="http://weibo.com/julyflame" target="_blank" title="weibo"><i class="fa fa-weibo"></i></a></td>
           
-          <td><a href="http://hexo-tuchuan.qiniudn.com/logo/weixin.jpg" target="_blank" title="weixin"><i class="fa fa-weixin"></i></a></td>
+          <td><a href="https://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/weixin.jpg" target="_blank" title="weixin"><i class="fa fa-weixin"></i></a></td>
           
           <td><a href="https://twitter.com/minotaursu" target="_blank" title="twitter"><i class="fa fa-twitter"></i></a></td>
           
@@ -156,19 +156,19 @@ Reactor模式Reactor模式就是这样一种机制，利用事件驱动减少工
         <p>假设在办理各种证件时分为填表，审核，制作3个过程，每个过程用时10分钟，这样一个工作人员需要30分钟办理一个证件。那么有没有办法提供效率，减少等待时间呢。可以让一个专门的工作人员，每个顾客到来时就负责让顾客填表，在顾客填好表后交给其他工作人员审核。这样其他功能人员的工作效率就从30分钟提高到了20分钟。</p>
 <h2 id="Reactor模式">Reactor模式</h2><p>Reactor模式就是这样一种机制，利用事件驱动减少工作线程的等待时间。Reactor模式是处理并发I/O比较常见的一种模式，用于同步I/O，中心思想是将所有要处理的I/O事件注册到一个中心I/O多路复用器上，同时主线程阻塞在多路复用器上；一旦有I/O事件<strong>准备就绪</strong>(区别在于多路复用器是边沿触发还是水平触发)，多路复用器返回并将相应I/O事件分发到对应的处理器中。</p>
 <h2 id="单线程模型">单线程模型</h2><p>这是最简单的单Reactor单线程模型。Reactor线程是个多面手，负责多路分离套接字，Accept新连接，并分派请求到处理器链中。该模型适用于处理器链中业务处理组件能快速完成的场景。不过这种单线程模型不能充分利用多核资源，所以实际使用的不多。 </p>
-<p><img src="http://hexo-tuchuan.qiniudn.com/reactor3.png" alt=""></p>
+<p><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/reactor3.png" alt=""></p>
 <h2 id="多线程模型（单Reactor）">多线程模型（单Reactor）</h2><p>相比上一种模型，该模型在事件处理器（Handler）链部分采用了多线程（线程池），也是后端程序常用的模型。 </p>
-<p><img src="http://hexo-tuchuan.qiniudn.com/reactor4.png" alt=""></p>
+<p><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/reactor4.png" alt=""></p>
 <h2 id="多线程模型（多Reactor）">多线程模型（多Reactor）</h2><p>这个模型比起第二种模型，它是将Reactor分成两部分，mainReactor负责监听并accept新连接，然后将建立的socket通过多路复用器（Acceptor）分派给subReactor。subReactor负责多路分离已连接的socket，读写网络数据；业务处理功能，其交给worker线程池完成。通常，subReactor个数上可与CPU个数等同。</p>
-<p><img src="http://hexo-tuchuan.qiniudn.com/reactor5.png" alt="">  </p>
-<h2 id="服务端通信时序">服务端通信时序</h2><p><img src="http://hexo-tuchuan.qiniudn.com/reactor1.png" alt="服务端通信序列图"></p>
-<h2 id="客户端通信时序">客户端通信时序</h2><p><img src="http://hexo-tuchuan.qiniudn.com/reactor2.png" alt="客户端通信序列图"></p>
+<p><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/reactor5.png" alt="">  </p>
+<h2 id="服务端通信时序">服务端通信时序</h2><p><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/reactor1.png" alt="服务端通信序列图"></p>
+<h2 id="客户端通信时序">客户端通信时序</h2><p><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/reactor2.png" alt="客户端通信序列图"></p>
 <p>Netty的IO线程NioEventLoop由于聚合了多路复用器Selector，可以同时并发处理成百上千个客户端Channel，由于读写操作都是非阻塞的，这就可以充分提升IO线程的运行效率，避免由于频繁IO阻塞导致的线程挂起。这从根本上解决了传统同步阻塞IO一连接一线程模型，架构的性能、弹性伸缩能力和可靠性都得到了极大的提升。</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2016/09/23/netty详解之reactor模型/" data-id="cjetd9ksh002owbc4t3ghjf9t" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2016/09/23/netty详解之reactor模型/" data-id="cjrltoq3n002og2fyorv8x9s8" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/io/">io</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/netty/">netty</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/reactor/">reactor</a></li></ul>
@@ -216,7 +216,7 @@ Reactor模式Reactor模式就是这样一种机制，利用事件驱动减少工
             <div class="item-thumbnail">
               <a href="/2018/03/12/如何保障高并发系统的稳定性与高可用/" class="thumbnail">
   
-    <span style="background-image:url(http://hexo-tuchuan.qiniudn.com/kdn.png
+    <span style="background-image:url(http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/kdn.png
 )" alt="如何保障高并发系统的稳定性与高可用" class="thumbnail-image"></span>
   
 </a>
@@ -234,7 +234,7 @@ Reactor模式Reactor模式就是这样一种机制，利用事件驱动减少工
             <div class="item-thumbnail">
               <a href="/2018/03/03/所有需要知道的GC知识/" class="thumbnail">
   
-    <span style="background-image:url(http://hexo-tuchuan.qiniudn.com/jvmspeed.png
+    <span style="background-image:url(http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/jvmspeed.png
 )" alt="所有需要知道的GC知识" class="thumbnail-image"></span>
   
 </a>
@@ -252,7 +252,7 @@ Reactor模式Reactor模式就是这样一种机制，利用事件驱动减少工
             <div class="item-thumbnail">
               <a href="/2018/02/22/2017年终总结/" class="thumbnail">
   
-    <span style="background-image:url(http://hexo-tuchuan.qiniudn.com/hzdream.png
+    <span style="background-image:url(http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/hzdream.png
 )" alt="2017年终总结" class="thumbnail-image"></span>
   
 </a>
@@ -270,7 +270,7 @@ Reactor模式Reactor模式就是这样一种机制，利用事件驱动减少工
             <div class="item-thumbnail">
               <a href="/2018/02/22/一次GC耗时超长的问题排查/" class="thumbnail">
   
-    <span style="background-image:url(http://hexo-tuchuan.qiniudn.com/gc.png
+    <span style="background-image:url(http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/gc.png
 )" alt="一次GC耗时超长的问题排查" class="thumbnail-image"></span>
   
 </a>
@@ -288,7 +288,7 @@ Reactor模式Reactor模式就是这样一种机制，利用事件驱动减少工
             <div class="item-thumbnail">
               <a href="/2017/12/22/jackson使用setDateFormat后反序列化错误/" class="thumbnail">
   
-    <span style="background-image:url(http://hexo-tuchuan.qiniudn.com/jackson.png
+    <span style="background-image:url(http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/jackson.png
 )" alt="jackson使用setDateFormat后反序列化错误" class="thumbnail-image"></span>
   
 </a>
@@ -323,7 +323,7 @@ Reactor模式Reactor模式就是这样一种机制，利用事件驱动减少工
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2018 minotaur<br>
+      &copy; 2019 minotaur<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="https://github.com/minotaursu/hexo-theme-icarus">icarus</a>.
       
 <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1256401841'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s11.cnzz.com/z_stat.php%3Fid%3D1256401841%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
