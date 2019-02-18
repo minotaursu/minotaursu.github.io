@@ -82,7 +82,7 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        28
+        29
         <span>posts</span>
       </div>
       <div class="article-info-block">
@@ -115,6 +115,65 @@
 
       
       <section id="main">
+      <article id="post-jar包冲突与inode" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2014/12/24/jar包冲突与inode/">jar包冲突与inode</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2014/12/24/jar包冲突与inode/">
+      <time datetime="2014-12-24T06:20:40.000Z" itemprop="datePublished">2014-12-24</time>
+    </a>
+  </div>
+
+
+          
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <h2 id="包冲突">包冲突</h2><p>几乎上点规模的java系统就会遇到jar冲突，不负责任的讲排除依赖成了每次发布上线前必做的工作。虽然问题的本质都是jar冲突，但是表现上却有很多不同，从NoSuchMethodError,ClassNotFoundException到field找不到,作用域错误；并且触发冲突条件也不相同，最好并且最常见的是在应用启动时抛出异常，比较恶心的是运行时是某些特殊的边界条件下抛出异常特别。<br>在某些领域，某些境界提出问题，发现问题比解决问题具有更高的价值，但应用开发显然不属于这种高端领域，对于一般的jar冲突我的做法如下。</p>
+<ol>
+<li>查看log中的异常堆栈信息，在idea中CTRL+N，一般会发现多个类。</li>
+<li>如果1搞不定，可以加入jvm参数-verbose:class，log里会打印出类的加载信息。</li>
+<li>确定jar包名，执行mvn dependency:tree&gt;tree.log。</li>
+<li>如果是lib中的包冲突就排除相应的jar。</li>
+<li>如果不能exclusion，声明一个路径最短，最靠前的dependency。告诉maven，畜生！用这个版本的jar。</li>
+<li>如果是容器||中间件的包和应用lib包冲突，就升级容器||中间件。</li>
+</ol>
+<h2 id="inode">inode</h2><p>在jar冲突中有一种情况就是日常是没问题的，生产环境存在冲突，甚至是生产环境中一部分机器存在冲突，这个是因为tomcat等容器的classLoader加载顺序是不排序的，依赖于底层文件系统的顺序，具体到*nix中就是inode的顺序，每个inode中保存了文件系统的一个文件对象的元信息存储，简单的将就是文件在扇区中的索引值。</p>
+<p>可以使用 ls -li 和 stat查看inode，鉴于安全等原因以免引起不必要的麻烦，就不截图了。</p>
+<h2 id="finally">finally</h2><p>实际上大部分的jar都是向后兼容的，如果maven能够按照最高版本依赖（其实也是有问题的），而不是最短路径依赖，相信这个问题会好很多。实际开发中，可以使用maven的依赖冲突检测插件进行事先排除；也可以在部署的lib中查找下进行事后处理；有些发布系统会提前告知本次发布相比与上次新增了那些jar，删除了那些jar，这是一个比较好的策略，毕竟更简单的方法具有更好的执行性。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://minotaursu.com/2014/12/24/jar包冲突与inode/" data-id="cjsa2illi003cuafyfcac28n4" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/开发/">开发</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
       <article id="post-CAS" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -155,7 +214,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2014/11/05/CAS/" data-id="cjrltoq4k003tg2fye287hsid" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2014/11/05/CAS/" data-id="cjsa2illx003xuafy6ktg4wi1" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/并发/">并发</a></li></ul>
@@ -218,80 +277,10 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2014/11/03/java-Lock/" data-id="cjrltoq3w0033g2fyvjm6nbdc" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2014/11/03/java-Lock/" data-id="cjsa2illg0037uafym691zrdl" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/并发/">并发</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/锁/">锁</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-jdk7jdk8新特性概述" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2014/10/27/jdk7jdk8新特性概述/">jdk7jdk8新特性概述</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2014/10/27/jdk7jdk8新特性概述/">
-      <time datetime="2014-10-27T13:43:38.000Z" itemprop="datePublished">2014-10-27</time>
-    </a>
-  </div>
-
-
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <p>在oracle停止对jdk6更新，jdk8发布之后，公司终于要把生产环境更新到jdk7，下面列一下jdk7,8的可能需要关注的新特性。</p>
-<h2 id="jdk7">jdk7</h2><ul>
-<li>G1垃圾回收</li>
-<li>fork-join框架</li>
-<li>二进制变量</li>
-<li>Switch支持String类型</li>
-<li>try-with-resource</li>
-<li>简化泛型</li>
-<li>catch多个异常</li>
-<li>InvokeDynamic</li>
-<li>更多NIO的API</li>
-</ul>
-<h2 id="jdk8">jdk8</h2><ul>
-<li>lambda</li>
-<li>Nashorn JavaScript Engine</li>
-<li>JDBC 4.2</li>
-<li>Bulk Data Operations for Collections</li>
-<li>Base64</li>
-<li>新的时间函数</li>
-<li>HTTP URL Permissions</li>
-<li>Repeating Annotations</li>
-</ul>
-<p>新特性链接：<br><a href="http://openjdk.java.net/projects/jdk7/features" target="_blank" rel="external">http://openjdk.java.net/projects/jdk7/features</a><br><a href="http://openjdk.java.net/projects/jdk8/features" target="_blank" rel="external">http://openjdk.java.net/projects/jdk8/features</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2014/10/27/jdk7jdk8新特性概述/" data-id="cjrltoq3u0030g2fy7xe9qdmo" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/jdk/">jdk</a></li></ul>
 
     </footer>
   </div>
@@ -313,6 +302,23 @@
     <h3 class="widget-title">recents</h3>
     <div class="widget">
       <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2019/02/18/我的类库选择/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"></p>
+              <p class="item-title"><a href="/2019/02/18/我的类库选择/" class="title">我的类库选择</a></p>
+              <p class="item-date"><time datetime="2019-02-18T08:14:43.000Z" itemprop="datePublished">2019-02-18</time></p>
+            </div>
+          </li>
         
           <li>
             
@@ -383,24 +389,6 @@
               <p class="item-category"></p>
               <p class="item-title"><a href="/2018/02/22/一次GC耗时超长的问题排查/" class="title">一次GC耗时超长的问题排查</a></p>
               <p class="item-date"><time datetime="2018-02-22T03:57:06.000Z" itemprop="datePublished">2018-02-22</time></p>
-            </div>
-          </li>
-        
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2017/12/22/jackson使用setDateFormat后反序列化错误/" class="thumbnail">
-  
-    <span style="background-image:url(http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/jackson.png
-)" alt="jackson使用setDateFormat后反序列化错误" class="thumbnail-image"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"></p>
-              <p class="item-title"><a href="/2017/12/22/jackson使用setDateFormat后反序列化错误/" class="title">jackson使用setDateFormat后反序列化错误</a></p>
-              <p class="item-date"><time datetime="2017-12-22T04:08:57.000Z" itemprop="datePublished">2017-12-22</time></p>
             </div>
           </li>
         

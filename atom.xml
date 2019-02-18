@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://minotaursu.com/"/>
-  <updated>2019-02-01T09:02:25.352Z</updated>
+  <updated>2019-02-18T08:18:19.672Z</updated>
   <id>http://minotaursu.com/</id>
   
   <author>
@@ -13,6 +13,45 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[我的类库选择]]></title>
+    <link href="http://minotaursu.com/2019/02/18/%E6%88%91%E7%9A%84%E7%B1%BB%E5%BA%93%E9%80%89%E6%8B%A9/"/>
+    <id>http://minotaursu.com/2019/02/18/我的类库选择/</id>
+    <published>2019-02-18T08:14:43.000Z</published>
+    <updated>2019-02-18T08:18:19.672Z</updated>
+    <content type="html"><![CDATA[<p>好的类库可以提升简化代码，提高开发效率，这里列出一些我常用的类库。</p>
+<ol>
+<li>json相关<br>fastjson，jackson。fastjson偏重的是简单和快速，内部实现有很多的hack。而jackson偏重的是标准和强大。国内项目使用fastjson会多一些。</li>
+<li>date相关<br>joda-time。</li>
+<li>io相关<br>guava。</li>
+<li>集合相关<br>guava。</li>
+<li>数学计算<br>guava。</li>
+<li>内存缓存。<br>guava。</li>
+<li>xml相关<br>xstream。</li>
+<li>html相关<br>jsoup。</li>
+<li>bean mapper<br>dozer，cglib。dozer最灵活，性能比较差，cglib的beancopier基于ASM字节码实现，性能接近getter/setter方法，少量对象mapper建议使用dozer。</li>
+<li>字节码<br>Javassist，asm。Javassist的使用更加方便。</li>
+<li>模版引擎<br>freemaker，velocity。freemaker功能更强大，velocity 简单，性能好，内部模版渲染建议使用freemaker，大量页面生成使用velocity。</li>
+<li>http相关<br>okhttp</li>
+<li>日志相关<br>slf4j</li>
+<li>网络相关<br>netty</li>
+<li>测试相关<br>junit，mockito。写单元测试的开发才是负责的RD</li>
+</ol>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>好的类库可以提升简化代码，提高开发效率，这里列出一些我常用的类库。</p>
+<ol>
+<li>json相关<br>fastjson，jackson。fastjson偏重的是简单和快速，内部实现有很多的hack。而jackson偏重的是标准和强大。国内项目使用fastjson]]>
+    </summary>
+    
+      <category term="java" scheme="http://minotaursu.com/tags/java/"/>
+    
+      <category term="工作" scheme="http://minotaursu.com/tags/%E5%B7%A5%E4%BD%9C/"/>
+    
+      <category term="开发" scheme="http://minotaursu.com/tags/%E5%BC%80%E5%8F%91/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[如何保障高并发系统的稳定性与高可用]]></title>
@@ -344,38 +383,6 @@
       <category term="spring" scheme="http://minotaursu.com/tags/spring/"/>
     
       <category term="性能" scheme="http://minotaursu.com/tags/%E6%80%A7%E8%83%BD/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[2016年终总结]]></title>
-    <link href="http://minotaursu.com/2017/04/06/2016%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/"/>
-    <id>http://minotaursu.com/2017/04/06/2016年终总结/</id>
-    <published>2017-04-06T11:38:08.000Z</published>
-    <updated>2019-02-01T09:02:25.324Z</updated>
-    <content type="html"><![CDATA[<p>在2017年过去小半年之后，还是决定回顾一下过去的2016，写了这个年终总结。2016年初拿到了驾照，装修好了房子，看着勇士在总决赛被逆转痛失冠军，在G20期间出去玩了一趟，算是2016年比较重要的几件事情。 工作上运维了一整年的elasticsearch，支持了后台和BI的部分业务，贡献了大量的代码，也重构了很多的代码。在工作2年之后对系统大部分功能都比较熟悉，心理感觉有些疲倦，代驾也是一个拼内功，拼服务的行业，少会有爆发式的增长，市场的空间清晰可见。年后去前东家的云计算部门面试了一趟，希望能争取一个满意的offer，前东家给了一个base提升了一些，但算上滴滴的未固化的期权是降薪的offer。对于这种变化不大的offer最是难以选择，考虑了很久纠结了很久，最后还咨询了很多前同事的意见，大部分人是不建议我去。 工作上，行业，部门，老板，薪水都满意的情况实在难以出现。总体来说，2016年是变好的一年，并没有多少糟心的事情，日子很平静。2017年对自己的期待就是空杯心态，精益求精吧。</p>
-<p>2017·wishlist</p>
-<ol>
-<li>日本/九寨沟行一次，目的地视财力而定</li>
-<li>为知名开源项目贡献一次代码，例如elasticsearch，netty等</li>
-<li>完成 <a href="http://book.douban.com/people/49806902/wish" target="_blank" rel="external">豆瓣阅读列表</a></li>
-<li>blog的最高uv到达100</li>
-<li>改进计费系统的持续集成方案</li>
-<li>2017年总结时，列出一件自己觉得NB的事情</li>
-</ol>
-<p><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/cup.jpg" alt="空杯心态,精益求精"></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>在2017年过去小半年之后，还是决定回顾一下过去的2016，写了这个年终总结。2016年初拿到了驾照，装修好了房子，看着勇士在总决赛被逆转痛失冠军，在G20期间出去玩了一趟，算是2016年比较重要的几件事情。 工作上运维了一整年的elasticsearch，支持了后台和BI]]>
-    </summary>
-    
-      <category term="工作" scheme="http://minotaursu.com/tags/%E5%B7%A5%E4%BD%9C/"/>
-    
-      <category term="总结" scheme="http://minotaursu.com/tags/%E6%80%BB%E7%BB%93/"/>
-    
-      <category term="滴滴" scheme="http://minotaursu.com/tags/%E6%BB%B4%E6%BB%B4/"/>
-    
-      <category term="阿里" scheme="http://minotaursu.com/tags/%E9%98%BF%E9%87%8C/"/>
     
   </entry>
   
