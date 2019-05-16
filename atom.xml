@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://minotaursu.com/"/>
-  <updated>2019-05-16T11:09:51.652Z</updated>
+  <updated>2019-05-16T12:04:22.822Z</updated>
   <id>http://minotaursu.com/</id>
   
   <author>
@@ -19,8 +19,8 @@
     <link href="http://minotaursu.com/2019/05/16/%E6%88%91%E5%AF%B9%E6%9C%AA%E6%9D%A5%E6%8A%80%E6%9C%AF%E8%B6%8B%E5%8A%BF%E7%9A%84%E4%B8%80%E4%BA%9B%E7%9C%8B%E6%B3%95/"/>
     <id>http://minotaursu.com/2019/05/16/我对未来技术趋势的一些看法/</id>
     <published>2019-05-16T09:40:27.000Z</published>
-    <updated>2019-05-16T11:09:51.652Z</updated>
-    <content type="html"><![CDATA[<p><img src="https://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/skycity.jpg" alt=""><br>预测未来的技术发展方向是件有趣又有意义的事情，正确的选择技术发展方向对于技术选型，业务发展和职业规划都起着至关重要的作用。日常的需求沟通，项目管理，设计编码，运维部署工作能带给我们满足感和安全感，但是在脚踩大地之外偶尔也需要仰望一下星空，看看未来是什么样子，这里就神棍一把，说一下我对未来技术发展趋势的一些看法。</p>
+    <updated>2019-05-16T12:04:22.822Z</updated>
+    <content type="html"><![CDATA[<p><img src="https://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/skycity.jpg" alt=""><br>预测未来的技术发展方向是件有趣又有意义的事情，正确的判断技术发展方向对于技术选型，业务发展和职业规划都起着至关重要的作用。日常的需求沟通，项目管理，设计编码，运维部署工作能带给我们满足感和安全感，但是在脚踩大地之外偶尔也需要仰望一下星空，看看未来是什么样子，这里就神棍一把，说一下我对未来技术发展趋势的一些看法。</p>
 <h1 id="困难与挑战">困难与挑战</h1><p>在预测未来之前，首先分析一下程序员的日常工作中遇到哪些困难与挑战。</p>
 <h3 id="需求和设计">需求和设计</h3><p>在需求沟通阶段，程序员需要准确的获取PRD上的需求信息，并对业务的价值和发展有一定的预判。根据以上的信息进行技术选型，数据建模，设计抽象。在这个过程中主要的挑战有：</p>
 <ul>
