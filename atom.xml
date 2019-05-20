@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://minotaursu.com/"/>
-  <updated>2019-05-16T12:13:21.798Z</updated>
+  <updated>2019-05-20T03:24:03.685Z</updated>
   <id>http://minotaursu.com/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://minotaursu.com/2019/05/16/%E6%88%91%E5%AF%B9%E6%9C%AA%E6%9D%A5%E6%8A%80%E6%9C%AF%E8%B6%8B%E5%8A%BF%E7%9A%84%E4%B8%80%E4%BA%9B%E7%9C%8B%E6%B3%95/"/>
     <id>http://minotaursu.com/2019/05/16/我对未来技术趋势的一些看法/</id>
     <published>2019-05-16T09:40:27.000Z</published>
-    <updated>2019-05-16T12:13:21.798Z</updated>
+    <updated>2019-05-20T03:24:03.685Z</updated>
     <content type="html"><![CDATA[<p><img src="https://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/skycity.jpg" alt=""><br>预测未来的技术发展方向是件有趣又有意义的事情，正确的判断技术发展方向对于技术选型，业务发展和职业规划都起着至关重要的作用。日常的需求沟通，项目管理，设计编码，运维部署工作能带给我们满足感和安全感，但是在脚踩大地之外偶尔也需要仰望一下星空，看看未来是什么样子，这里就神棍一把，说一下我对未来技术发展趋势的一些看法。</p>
 <h1 id="困难与挑战">困难与挑战</h1><p>在预测未来之前，首先分析一下程序员的日常工作中遇到哪些困难与挑战。</p>
 <h3 id="需求和设计">需求和设计</h3><p>在需求沟通阶段，程序员需要准确的获取PRD上的需求信息，并对业务的价值和发展有一定的预判。根据以上的信息进行技术选型，数据建模，设计抽象。在这个过程中主要的挑战有：</p>
@@ -56,7 +56,7 @@
 <li>热点数据<br>高并发在秒杀等场景中也会导致热点数据问题，在DB中会导致严重的锁冲突性能急剧下降，在cache中会导致缓存穿透，击穿，雪崩等问题。</li>
 </ul>
 <h3 id="业务约束">业务约束</h3><p>不同业务的特点也会带来不一样的挑战，例如很多金融业务会要求强一致而非最终一致，计费等业务的错误容忍度也远低于社区，微博突发热点话题的业务特点也会带来更大的技术挑战。</p>
-<h1 id="趋势：一切皆代码，无处不AI">趋势：一切皆代码，无处不AI</h1><p>分析了软件开发过程中面临的困难与挑战之后，终于来到了激动人心的未来技术趋势部分。无论是大到工业革命还是小到技术微创新，本质上都会发展生产力，解放生产力，未来技术的发展肯定也会极大的改变软件开发行业，和其他的行业一样，分化成标准化，规划化，规模化的大规模工业制成品模式和少部分知识密集型的研发模式。对于未来的技术趋势我认为是—<strong>一切皆代码，无处不AI</strong>，软件开发的整个生命周期都通过代码的形式进行组织和编排，同时有AI参与到需求，设计，编码，测试，运维的每个阶段，软件开发变的非常容易，极大的降低门槛。 针对上述遇到的困难与挑战，具体看一下已经出现的和可能出现的解决方案。</p>
+<h1 id="趋势：一切皆代码，无处不AI">趋势：一切皆代码，无处不AI</h1><p>分析了软件开发过程中面临的困难与挑战之后，终于来到了激动人心的未来技术趋势部分。无论是大到工业革命还是小到技术微创新，本质上都会发展生产力，解放生产力，未来技术的发展肯定也会极大的改变软件开发行业，和其他的行业一样，分化成标准化，规范化，规模化的大规模工业制成品模式和少部分知识密集型的研发模式。对于未来的技术趋势我认为是—<strong>一切皆代码，无处不AI</strong>，软件开发的整个生命周期都通过代码的形式进行组织和编排，同时有AI参与到需求，设计，编码，测试，运维的每个阶段，软件开发变的非常容易，极大的降低门槛。 针对上述遇到的困难与挑战，具体看一下已经出现的和可能出现的解决方案。</p>
 <h3 id="需求与设计">需求与设计</h3><p>在需求和设计阶段我认为未来的趋势是<strong>SaaS的繁荣+专家系统+更快的原型构建工具</strong>。随着云计算的发展，数据的积累和SaaS自身发展，SaaS会逐步取代外包软件研发和自建研发团队，直接购买SaaS服务将会是中小型公司的第一选择。AI+SaaS会改变SaaS千篇一律的缺点，专家系统根据企业的业务特点生成个性化，定制化，智能化的解决方案。在原型构建领域会出现类Sql的语言，程序员不必再告诉计算机怎么做，只需要声明式编程即可。</p>
 <h3 id="编码和测试">编码和测试</h3><p>在编码和测试阶段我认为未来的趋势是<strong>更简单的并发编程+所见即所得编程+AI辅助编程+持续集成</strong>。在未来TDD会成为主流，写单元测试不再是一项增加成本的额外工作，而且真正成为提高生产力的工具，在所见即所得的编程模式中写的每写一行代码都能直接看到单元测试的运行过程和当前结果，AI辅助编程会使得未来实现一个模块就如同当前调用一个类库一样简单，每次的commmit都会触发独立的持续集成流程，软件的开发难度会有大幅下降，开发效率会有极大的提升。</p>
 <h3 id="部署和运维-1">部署和运维</h3><p>在部署和运维领域我认为未来的趋势是<strong>容器+AI+故障自动定位+故障转移/恢复</strong>。在高可用架构下人往往成为最大的瓶颈，从故障发生到故障发现到故障定位到故障止损到根因分析，即使有着最强大的监控工具和最高效的处理流程大部分故障依然需要人的介入，故障恢复时间也存在极大的不确定性，同时7✖24的oncall也给人带来极大的精神压力。故障的定位本质上是一个封闭的领域，非常适合机器学习在故障定位中发挥作用，在未来代码部署之后AI就开始学习，当故障发生时可以自动扩容+限流+降级+定位根因+故障转移，甚至可以自动的打一段代码补丁快速止损。</p>
@@ -72,11 +72,7 @@
     
       <category term="架构" scheme="http://minotaursu.com/tags/%E6%9E%B6%E6%9E%84/"/>
     
-      <category term="系统" scheme="http://minotaursu.com/tags/%E7%B3%BB%E7%BB%9F/"/>
-    
       <category term="职业规划" scheme="http://minotaursu.com/tags/%E8%81%8C%E4%B8%9A%E8%A7%84%E5%88%92/"/>
-    
-      <category term="设计" scheme="http://minotaursu.com/tags/%E8%AE%BE%E8%AE%A1/"/>
     
       <category term="软件开发" scheme="http://minotaursu.com/tags/%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91/"/>
     
@@ -87,7 +83,7 @@
     <link href="http://minotaursu.com/2019/04/29/java%E4%BF%9D%E7%95%99%E5%B0%8F%E6%95%B0%E7%82%B9%E5%90%8E2%E4%BD%8D%E6%A0%BC%E5%BC%8F%E5%8C%96%E9%97%AE%E9%A2%98/"/>
     <id>http://minotaursu.com/2019/04/29/java保留小数点后2位格式化问题/</id>
     <published>2019-04-29T06:07:43.000Z</published>
-    <updated>2019-04-29T06:12:13.808Z</updated>
+    <updated>2019-05-20T03:17:42.263Z</updated>
     <content type="html"><![CDATA[<p>最近在做应用的jdk7升级8和核心类库升级的工作。发现一个把Double格式化成String的函数并不是每次都按照4舍5入进行格式化，例如1.325的运行结果是1.32，而12.345的运行结果则是12.35。这个问题是因为在二进制中并没有一个值能准确的表示这个十进制的小数值，只是非常接近这个十进制数值。</p>
 <p><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/java-bug.png" alt=""></p>
 <p>如果希望所见即所得的获取格式化结果，可以使用BigDecimal.toPlainString或者String.format代替DecimalFormat 进行浮点数格式化。<br>相同的情况也存在于new BigDecimal和BigDecimal.valueof中，使用new BigDecimal(double val)会得到更精准的值，但是BigDecimal.valueof才是所见即所得。</p>
@@ -98,11 +94,11 @@
     
       <category term="java" scheme="http://minotaursu.com/tags/java/"/>
     
-      <category term="jdk7" scheme="http://minotaursu.com/tags/jdk7/"/>
-    
       <category term="jdk8" scheme="http://minotaursu.com/tags/jdk8/"/>
     
-      <category term="开发" scheme="http://minotaursu.com/tags/%E5%BC%80%E5%8F%91/"/>
+      <category term="语言陷阱" scheme="http://minotaursu.com/tags/%E8%AF%AD%E8%A8%80%E9%99%B7%E9%98%B1/"/>
+    
+      <category term="软件开发" scheme="http://minotaursu.com/tags/%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91/"/>
     
   </entry>
   
@@ -165,7 +161,7 @@
     <link href="http://minotaursu.com/2019/02/18/%E6%88%91%E7%9A%84%E7%B1%BB%E5%BA%93%E9%80%89%E6%8B%A9/"/>
     <id>http://minotaursu.com/2019/02/18/我的类库选择/</id>
     <published>2019-02-18T08:14:43.000Z</published>
-    <updated>2019-02-18T08:18:19.672Z</updated>
+    <updated>2019-05-20T03:20:16.457Z</updated>
     <content type="html"><![CDATA[<p>好的类库可以提升简化代码，提高开发效率，这里列出一些我常用的类库。</p>
 <ol>
 <li>json相关<br>fastjson，jackson。fastjson偏重的是简单和快速，内部实现有很多的hack。而jackson偏重的是标准和强大。国内项目使用fastjson会多一些。</li>
@@ -195,7 +191,7 @@
     
       <category term="工作" scheme="http://minotaursu.com/tags/%E5%B7%A5%E4%BD%9C/"/>
     
-      <category term="开发" scheme="http://minotaursu.com/tags/%E5%BC%80%E5%8F%91/"/>
+      <category term="软件开发" scheme="http://minotaursu.com/tags/%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91/"/>
     
   </entry>
   
@@ -204,7 +200,7 @@
     <link href="http://minotaursu.com/2018/03/12/%E5%A6%82%E4%BD%95%E4%BF%9D%E9%9A%9C%E9%AB%98%E5%B9%B6%E5%8F%91%E7%B3%BB%E7%BB%9F%E7%9A%84%E7%A8%B3%E5%AE%9A%E6%80%A7%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/"/>
     <id>http://minotaursu.com/2018/03/12/如何保障高并发系统的稳定性与高可用/</id>
     <published>2018-03-12T10:49:33.000Z</published>
-    <updated>2019-02-01T09:02:25.352Z</updated>
+    <updated>2019-05-20T03:24:45.927Z</updated>
     <content type="html"><![CDATA[<p>要论如何搞垮一家互联网公司，速度最快的不是产品经理的胡乱决策，运营的无休止的烧钱，客服人员对客户的冷漠，一定是系统核心功能持续的不可用，一次大规模的故障可能造成几千万的损失，市值大量蒸发，PR风险，甚至工信部的约谈。<br><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/kdn.png" alt=""></p>
 <p>一般的系统对全年可用性要求是99%或者99.9%，而影响着千万人日常生活的系统一般都要求全年系统可用性在4个9以上，这可不是一个容易达到的目标，那么如何避免故障，保障系统的稳定性与高可用，根据总结别人的方法和自身的经验，想要做好稳定性与高可用有16字心决</p>
 <blockquote>
@@ -371,7 +367,7 @@
     <link href="http://minotaursu.com/2017/12/22/jackson%E4%BD%BF%E7%94%A8setDateFormat%E5%90%8E%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%94%99%E8%AF%AF/"/>
     <id>http://minotaursu.com/2017/12/22/jackson使用setDateFormat后反序列化错误/</id>
     <published>2017-12-22T04:08:57.000Z</published>
-    <updated>2019-02-01T09:02:25.329Z</updated>
+    <updated>2019-05-17T10:02:36.753Z</updated>
     <content type="html"><![CDATA[<p><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/jackson.png" alt=""></p>
 <p>最近marketing-activity系统在接入降级服务，出现启动时可以正确获取到降级配置，系统运行一段时间后修改降级策略不生效的问题，之前订单系统，用户系统和其他系统的接入都没问题出现这个问题，肯定是触发了某种特定的case。营销的同学联系我进行排查，排查日志发现是降级服务反序列化Date类型异常，接收到的数据格式是yyyy-MM-dd HH:mm:ss，并不在jackson支持的反序列化格式之内。降级服务的sdk也是使用的jackson进行序列化的，为什么会出现jackson序列化后的数据却不能使用jackson反序列化。<br>接着查看marketing-activity系统的降级服务sdk日志发现一个很诡异的现象，最初发送的序列化后的请求还是时间戳格式的，运行一段时间后就变成了yyyy-MM-dd HH:mm:ss格式，也就是说系统的行为在运行时被改变了。<br><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/sds-log.png" alt=""></p>
 <p>那么到底是什么可以改变系统运行时的序列化逻辑呢？可能出现的主要原因有2种。一种是字节码技术，也就是btrace，greys这些。另一种就是调用jackson本身的api改变了一些属性。显然第二种的可能性更大一些，果然在jsonUitl里发现了蛛丝马迹，toObject允许设置特定的时间格式进行反序列化，调用setDateFormat会导致后续全部的Date类型的序列化都会是yyyy-MM-dd HH:mm:ss格式，自然不能默认设置的jackson反序列化。<br><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/jsonutil.png" alt=""></p>
@@ -386,9 +382,7 @@
     
       <category term="java" scheme="http://minotaursu.com/tags/java/"/>
     
-      <category term="json" scheme="http://minotaursu.com/tags/json/"/>
-    
-      <category term="工作" scheme="http://minotaursu.com/tags/%E5%B7%A5%E4%BD%9C/"/>
+      <category term="语言陷阱" scheme="http://minotaursu.com/tags/%E8%AF%AD%E8%A8%80%E9%99%B7%E9%98%B1/"/>
     
   </entry>
   
