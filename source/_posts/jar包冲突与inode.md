@@ -1,8 +1,8 @@
 title: jar包冲突与inode
 date: 2014-12-24 14:20:40
 tags:
-- java
-- 开发
+- 类冲突
+- 部署
 
 ---
 

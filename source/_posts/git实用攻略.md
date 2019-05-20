@@ -1,6 +1,9 @@
 title: git实用攻略
 date: 2014-07-01 16:03:36
-tags: git
+tags:
+- git
+- 工具 
+
 ---
 一直以来都是在mac的iterm2和windows的cygwin上通过命令行的方式使用git，今天决定整理下常用的git命令，作为简明实用的帮助手册，方便以后查找。
 ## git 配置

@@ -2,8 +2,9 @@ title: archsummit2017见闻和思考
 date: 2017-12-13 18:31:39
 tags:
 - archsummit
-- Cloud native
+- 架构 
 - 系统设计
+- 云计算
 
 ---
 
