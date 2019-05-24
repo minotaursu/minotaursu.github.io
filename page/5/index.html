@@ -82,11 +82,11 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        32
+        33
         <span>posts</span>
       </div>
       <div class="article-info-block">
-        45
+        47
         <span>tags</span>
       </div>
     </div>
@@ -115,6 +115,72 @@
 
       
       <section id="main">
+      <article id="post-谈谈微信红包的设计实现" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/04/27/谈谈微信红包的设计实现/">微信红包的设计实现</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2017/04/27/谈谈微信红包的设计实现/">
+      <time datetime="2017-04-27T07:19:48.000Z" itemprop="datePublished">2017-04-27</time>
+    </a>
+  </div>
+
+
+          
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <p>红包功能的设计实现是一个很有趣的话题，主要的功能是P个人抢总金额M的N个红包，满足先抢的N个人能抢到红包。如果这是一个leetcode的算法题目难度应该是easy。<br>将算法带入到真实的工程实现，问题就要复杂得多，如果达到微信的量级，明显要考虑的有以下几点。</p>
+<ol>
+<li>拆红包</li>
+<li>高并发读</li>
+<li>并发写</li>
+<li>网络流量峰值</li>
+<li>对账</li>
+<li>降级</li>
+<li>故障恢复</li>
+</ol>
+<h1 id="拆红包">拆红包</h1><p>拆红包有预拆包和实时拆包2种策略</p>
+<h2 id="预拆包策略">预拆包策略</h2><p>预拆包的策略在发红包时将金额M的红包拆分成N份，将分配好的结果放入内存队列或者cache，通过incr操作在用户抢红包时分配预算好的红包slot，预算的策略可以避免对共享资源的操作，减少了锁竞争，服务本身是无状态的，设计和实现相对简单，伸缩性较好。劣势是需要额外的存储空间，如果存在大量活跃红包或者红包份数很多时会增加成本。</p>
+<h2 id="实时拆包">实时拆包</h2><p>实时拆包的策略在用户抢红包时实时拆包计算金额，这样只需要保存剩余红包数量和金额，不需要额外保存每个预拆包的红包金额。使用预拆包的策略会面临并发写的问题，如果多个拆红包的请求同时执行会导致数据不一致引起超发的问题，可以使用CAS操作实现乐观锁保证并发拆包不会出现问题。</p>
+<h1 id="高并发读">高并发读</h1><p>应对高并发读的通常思路是业务层拦截过滤无效请求，使用有效的缓存。可以使用Cache层decr功能记录请求红包的用户数，当decr到0后就拦截后面的请求直接返回，对DAO层也要增加相应的缓存减少数据库的压力。</p>
+<h1 id="并发写">并发写</h1><p>应对并发写的通常思路是串行化和乐观锁。在用户抢红包时实时拆包计算金额，每抢到一个红包，就cas更新剩余金额和红包个数，同时在DB中记录凭证，考虑到DB的写入压力，需要做分库分表，冷热分离。</p>
+<h1 id="网络流量峰值">网络流量峰值</h1><p>大量用户同时抢红包是否会造成网络拥塞，发红包和抢红包最好在同一个IDC。</p>
+<h1 id="对账">对账</h1><p>考虑到拆红包凭证和入账是异步的2套系统，以及出现故障的可能，需要定时对账保证数据的一致性。</p>
+<h1 id="降级">降级</h1><p>在cache故障时有限流的使用DB进行服务，在资源紧张的时候关闭掉非核心流程，在实时入账请求量过大时，延迟批量入账。</p>
+<p><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/wechat-small.jpg" alt=""><br>Reference:<br><a href="https://www.zybuluo.com/yulin718/note/93148" target="_blank" rel="external">https://www.zybuluo.com/yulin718/note/93148</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://minotaursu.com/2017/04/27/谈谈微信红包的设计实现/" data-id="cjw1v16fm000098fyppeqyd08" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/架构/">架构</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/系统设计/">系统设计</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/软件开发/">软件开发</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
       <article id="post-使用AOP记录应用调用链开销" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -150,7 +216,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2017/04/12/使用AOP记录应用调用链开销/" data-id="cjvvt759v002grjs65o1fshvd" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2017/04/12/使用AOP记录应用调用链开销/" data-id="cjw1v16j6002m98fygawd6j70" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/AOP/">AOP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/spring/">spring</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/性能/">性能</a></li></ul>
@@ -208,92 +274,10 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2017/04/06/2016年终总结/" data-id="cjvvt75be004mrjs6i0203gxf" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2017/04/06/2016年终总结/" data-id="cjw1v16kn004y98fyet5k3ixq" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/工作/">工作</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/总结/">总结</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/滴滴/">滴滴</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/阿里/">阿里</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-消息队列之简要设计" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/11/06/消息队列之简要设计/">消息队列之简要设计</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2016/11/06/消息队列之简要设计/">
-      <time datetime="2016-11-06T02:03:36.000Z" itemprop="datePublished">2016-11-6</time>
-    </a>
-  </div>
-
-
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <h2 id="消息队列的基本功能">消息队列的基本功能</h2><p>消息队列作为系统解耦，流量控制的利器，成为分布式系统核心组件之一。在日常的开发我们享受了使用消息队列带来的便利，那么如果要自己实现一个消息队列应该入手。本文不深入讨论具体，成熟的消息队列如kafka，rocketmq等，主要介绍一下基本功能，思想和设计。<br>首先转换一下角色，作为产品经理给自己提出一个实现消息队列的需求，那么首先列一下消息队列必备的功能有哪些。</p>
-<ul>
-<li>消息堆积</li>
-<li>消息持久化</li>
-<li>消息顺序</li>
-<li>消息最少投递一次</li>
-<li>支持多topic</li>
-<li>相同topic支持多consumer</li>
-<li>消息回溯</li>
-<li>集群功能</li>
-<li>负载均衡</li>
-</ul>
-<p>一个简单的消息队列基本功能如上，在某些特殊的场景还需要支持事务，消息重试等功能。此外除了功能部分，还需要尽可能优化性能，提供监控功能帮助报警和排查问题。</p>
-<h2 id="消息队列的设计实现">消息队列的设计实现</h2><p>明确了功能需求，接下来就要考虑如何实现一个消息列队。<br>消息队列主要涉及到三个部分，通信协议+存储+消费关系维护。</p>
-<h4 id="通信协议">通信协议</h4><p>极简版的消息队列甚至只需要一个redis就可以，按照topic将序列化的数据存储到redis，消费端使用redis的incr功能获取锁，获取到锁的consumer不断的轮询获取消息。当然这种极简版的消息队列是不能通过复杂的生产环境检验的，系统的可靠性也不能保证。这里将极简版的消息队列升级一下，使用成熟的RPC框架实现通信协议，将一次同步RPC调用变成2次PRC+存储，PRC框架帮我们解决了负载均衡，服务发现，通信协议，序列化/反序列化等问题。同时RPC框架也保证了通信层面的高可用。</p>
-<h4 id="存储选择">存储选择</h4><p>对于分布式系统，存储的选择有以下几种</p>
-<ul>
-<li>内存</li>
-<li>本地文件系统</li>
-<li>分布式文件系统</li>
-<li>nosql</li>
-<li>rdbms<br>从速度上内存显然是最快的，对于允许消息丢失，消息堆积能力要求不高的场景(例如日志)，内存会是比较好的选择。rdbms则是最简单的实现可靠存储的方案，很适合用在可靠性要求很高，最终一致性的场景(例如交易消息)，对于不需要100%保证数据完整性的场景，要求性能和消息堆积的场景，hbase也是一个很好的选择。</li>
-</ul>
-<h4 id="消费关系">消费关系</h4><p>在消息存储在broker上后，需要的就是将消息正确的投递到消费者，消息的投递分为广播和单播, 最常见的使用场景是组内单播，组间广播，同一个集群使用相同的group注册订阅，通常消息队列本身不维护消费订阅关系，使用例如zookeeper等成熟的系统维护消费关系，在消费关系发生变化时下发通知。</p>
-<h2 id="队列特性">队列特性</h2><p>确定了消息队列的模块功能需求后，还需要考虑队列的特性需求，这里重点考虑消息丢失，消息确认，消息重复，消息顺序性，投递方式</p>
-<h4 id="消息丢失">消息丢失</h4><p>消息丢失可能发生在3种情况</p>
-<ul>
-<li>生产者-&gt; 队列</li>
-<li>队列-&gt; 消费者</li>
-<li>队列持久化本身<br>在生产者产生消息到队列的过程可能由于网络问题，宕机等原因没有达到消息队列，或者到达队列后并没有返回消息，这时可以通过重试等方式解决。队列到消费者时也会存在同样的问题，可以通过增加一个标识，投递消息前先标记成待完成状态，在收到消费者确认成功的回复后标记成完成。可以看到消息丢失和消息重复是一个硬币的2面, 保证消息不丢失也会带来消息重复的问题。</li>
-</ul>
-<h4 id="消息确认">消息确认</h4><p>消息确认就是将2次RPC变成3次RPC。在某些场景默认auto ack是可以的，但也需要支持消息者主动ack，在之后的某个时间重新投递</p>
-<h4 id="消息重复">消息重复</h4><p>上面提到，在需要保证消息不丢失的场景，因为对投递失败的情况不可确定是失败，还是超时，需要进行重发，一定会带来消息的重复，这里要考虑的是如何减少重复，可以根据一定的规则(业务id+业务名)，数据库唯一主键，分布式主键等产生messageId（为了方便排查问题，一定要有messageId）, 对比清除周期内记录的messageId，如果messageId相同就认为是重复的消息。</p>
-<h4 id="消息顺序性">消息顺序性</h4><p>比较简单有效的实现消息顺序性的方式就是单线程生产者+单线程消费者+每个消费线程对应一个单独队列, 排除消息丢失的情况，可以做到严格有序。</p>
-<h4 id="投递方式">投递方式</h4><p>消息队列的投递方式可以分为push和pull2种，一种模型的某些场景下的优点，在另一些场景就可能是缺点。无论是push还是pull，都存在各种的利弊。<br>push的优点就是及时性，缺点就是受限于消费者的消费能力，可能造成消息的堆积，broker会不断给消费者发送不能处理的消息。<br>pull的优点的就是主动权掌握在消费方，可以根据自己的消息速度进行消息拉取，缺点就是消费方不知道什么时候可以获取的最新的消息，会有消息延迟和忙等。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2016/11/06/消息队列之简要设计/" data-id="cjvvt758s000krjs6gwlj1r4r" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/分布式/">分布式</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/消息队列/">消息队列</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/系统设计/">系统设计</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/软件开发/">软件开发</a></li></ul>
 
     </footer>
   </div>
@@ -315,6 +299,24 @@
     <h3 class="widget-title">recents</h3>
     <div class="widget">
       <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2019/05/24/如何成为高效学习的程序员/" class="thumbnail">
+  
+    <span style="background-image:url(http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/goway.jpg
+)" alt="如何成为高效学习的程序员" class="thumbnail-image"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"></p>
+              <p class="item-title"><a href="/2019/05/24/如何成为高效学习的程序员/" class="title">如何成为高效学习的程序员</a></p>
+              <p class="item-date"><time datetime="2019-05-24T09:01:16.000Z" itemprop="datePublished">2019-05-24</time></p>
+            </div>
+          </li>
         
           <li>
             
@@ -387,24 +389,6 @@
             </div>
           </li>
         
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2018/03/12/如何保障高并发系统的稳定性与高可用/" class="thumbnail">
-  
-    <span style="background-image:url(http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/kdn.png
-)" alt="如何保障高并发系统的稳定性与高可用" class="thumbnail-image"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"></p>
-              <p class="item-title"><a href="/2018/03/12/如何保障高并发系统的稳定性与高可用/" class="title">如何保障高并发系统的稳定性与高可用</a></p>
-              <p class="item-date"><time datetime="2018-03-12T10:49:33.000Z" itemprop="datePublished">2018-03-12</time></p>
-            </div>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -414,7 +398,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">tag cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/ACID/" style="font-size: 10px;">ACID</a> <a href="/tags/AOP/" style="font-size: 11.43px;">AOP</a> <a href="/tags/CAP/" style="font-size: 10px;">CAP</a> <a href="/tags/annotation/" style="font-size: 10px;">annotation</a> <a href="/tags/archsummit/" style="font-size: 10px;">archsummit</a> <a href="/tags/gc/" style="font-size: 11.43px;">gc</a> <a href="/tags/git/" style="font-size: 11.43px;">git</a> <a href="/tags/go/" style="font-size: 10px;">go</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/jackson/" style="font-size: 10px;">jackson</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/jdk8/" style="font-size: 10px;">jdk8</a> <a href="/tags/netty/" style="font-size: 11.43px;">netty</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/quartz/" style="font-size: 10px;">quartz</a> <a href="/tags/reactor/" style="font-size: 10px;">reactor</a> <a href="/tags/spring/" style="font-size: 11.43px;">spring</a> <a href="/tags/tips/" style="font-size: 10px;">tips</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/云计算/" style="font-size: 10px;">云计算</a> <a href="/tags/分布式/" style="font-size: 12.86px;">分布式</a> <a href="/tags/工作/" style="font-size: 18.57px;">工作</a> <a href="/tags/工具/" style="font-size: 11.43px;">工具</a> <a href="/tags/并发/" style="font-size: 12.86px;">并发</a> <a href="/tags/性能/" style="font-size: 15.71px;">性能</a> <a href="/tags/总结/" style="font-size: 12.86px;">总结</a> <a href="/tags/架构/" style="font-size: 12.86px;">架构</a> <a href="/tags/消息队列/" style="font-size: 10px;">消息队列</a> <a href="/tags/滴滴/" style="font-size: 11.43px;">滴滴</a> <a href="/tags/稳定性/" style="font-size: 11.43px;">稳定性</a> <a href="/tags/类冲突/" style="font-size: 10px;">类冲突</a> <a href="/tags/系统设计/" style="font-size: 15.71px;">系统设计</a> <a href="/tags/缓存/" style="font-size: 11.43px;">缓存</a> <a href="/tags/职业规划/" style="font-size: 12.86px;">职业规划</a> <a href="/tags/语言/" style="font-size: 10px;">语言</a> <a href="/tags/语言陷阱/" style="font-size: 11.43px;">语言陷阱</a> <a href="/tags/调度/" style="font-size: 10px;">调度</a> <a href="/tags/软件开发/" style="font-size: 17.14px;">软件开发</a> <a href="/tags/部署/" style="font-size: 10px;">部署</a> <a href="/tags/锁/" style="font-size: 10px;">锁</a> <a href="/tags/阿里/" style="font-size: 14.29px;">阿里</a> <a href="/tags/高可用/" style="font-size: 11.43px;">高可用</a> <a href="/tags/高并发/" style="font-size: 11.43px;">高并发</a>
+      <a href="/tags/ACID/" style="font-size: 10px;">ACID</a> <a href="/tags/AOP/" style="font-size: 11.43px;">AOP</a> <a href="/tags/CAP/" style="font-size: 10px;">CAP</a> <a href="/tags/annotation/" style="font-size: 10px;">annotation</a> <a href="/tags/archsummit/" style="font-size: 10px;">archsummit</a> <a href="/tags/gc/" style="font-size: 11.43px;">gc</a> <a href="/tags/git/" style="font-size: 11.43px;">git</a> <a href="/tags/go/" style="font-size: 10px;">go</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/jackson/" style="font-size: 10px;">jackson</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/jdk8/" style="font-size: 10px;">jdk8</a> <a href="/tags/netty/" style="font-size: 11.43px;">netty</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/quartz/" style="font-size: 10px;">quartz</a> <a href="/tags/reactor/" style="font-size: 10px;">reactor</a> <a href="/tags/spring/" style="font-size: 11.43px;">spring</a> <a href="/tags/tips/" style="font-size: 10px;">tips</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/云计算/" style="font-size: 10px;">云计算</a> <a href="/tags/分布式/" style="font-size: 12.86px;">分布式</a> <a href="/tags/学习/" style="font-size: 10px;">学习</a> <a href="/tags/工作/" style="font-size: 18.57px;">工作</a> <a href="/tags/工具/" style="font-size: 11.43px;">工具</a> <a href="/tags/并发/" style="font-size: 12.86px;">并发</a> <a href="/tags/性能/" style="font-size: 15.71px;">性能</a> <a href="/tags/总结/" style="font-size: 12.86px;">总结</a> <a href="/tags/架构/" style="font-size: 12.86px;">架构</a> <a href="/tags/消息队列/" style="font-size: 10px;">消息队列</a> <a href="/tags/滴滴/" style="font-size: 11.43px;">滴滴</a> <a href="/tags/稳定性/" style="font-size: 11.43px;">稳定性</a> <a href="/tags/类冲突/" style="font-size: 10px;">类冲突</a> <a href="/tags/系统设计/" style="font-size: 15.71px;">系统设计</a> <a href="/tags/缓存/" style="font-size: 11.43px;">缓存</a> <a href="/tags/职业规划/" style="font-size: 14.29px;">职业规划</a> <a href="/tags/语言/" style="font-size: 10px;">语言</a> <a href="/tags/语言陷阱/" style="font-size: 11.43px;">语言陷阱</a> <a href="/tags/调度/" style="font-size: 10px;">调度</a> <a href="/tags/软件开发/" style="font-size: 17.14px;">软件开发</a> <a href="/tags/软技能/" style="font-size: 10px;">软技能</a> <a href="/tags/部署/" style="font-size: 10px;">部署</a> <a href="/tags/锁/" style="font-size: 10px;">锁</a> <a href="/tags/阿里/" style="font-size: 14.29px;">阿里</a> <a href="/tags/高可用/" style="font-size: 11.43px;">高可用</a> <a href="/tags/高并发/" style="font-size: 11.43px;">高并发</a>
     </div>
   </div>
 

@@ -82,11 +82,11 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        32
+        33
         <span>posts</span>
       </div>
       <div class="article-info-block">
-        45
+        47
         <span>tags</span>
       </div>
     </div>
@@ -115,6 +115,57 @@
 
       
       <section id="main">
+      <article id="post-jackson使用setDateFormat后反序列化错误" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/12/22/jackson使用setDateFormat后反序列化错误/">jackson使用setDateFormat后反序列化错误</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2017/12/22/jackson使用setDateFormat后反序列化错误/">
+      <time datetime="2017-12-22T04:08:57.000Z" itemprop="datePublished">2017-12-22</time>
+    </a>
+  </div>
+
+
+          
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <p><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/jackson.png" alt=""></p>
+<p>最近marketing-activity系统在接入降级服务，出现启动时可以正确获取到降级配置，系统运行一段时间后修改降级策略不生效的问题，之前订单系统，用户系统和其他系统的接入都没问题出现这个问题，肯定是触发了某种特定的case。营销的同学联系我进行排查，排查日志发现是降级服务反序列化Date类型异常，接收到的数据格式是yyyy-MM-dd HH:mm:ss，并不在jackson支持的反序列化格式之内。降级服务的sdk也是使用的jackson进行序列化的，为什么会出现jackson序列化后的数据却不能使用jackson反序列化。<br>接着查看marketing-activity系统的降级服务sdk日志发现一个很诡异的现象，最初发送的序列化后的请求还是时间戳格式的，运行一段时间后就变成了yyyy-MM-dd HH:mm:ss格式，也就是说系统的行为在运行时被改变了。<br><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/sds-log.png" alt=""></p>
+<p>那么到底是什么可以改变系统运行时的序列化逻辑呢？可能出现的主要原因有2种。一种是字节码技术，也就是btrace，greys这些。另一种就是调用jackson本身的api改变了一些属性。显然第二种的可能性更大一些，果然在jsonUitl里发现了蛛丝马迹，toObject允许设置特定的时间格式进行反序列化，调用setDateFormat会导致后续全部的Date类型的序列化都会是yyyy-MM-dd HH:mm:ss格式，自然不能默认设置的jackson反序列化。<br><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/jsonutil.png" alt=""></p>
+<p>至此降级服务改变策略后不生效的根本原因就得到了解答，那么如果某个对象就是要使用yyyy-MM-dd HH:mm:ss 进行序列化和反序列化怎么办，建议使用@JsonFormat 单独对属性进行注释。<br>最后谈谈fastjson和jackson，貌似jackson的各种坑遇到过很多，而fastjson的坑很少，那么为什么jackson还是要比fastjson更流行，真的只是国外的月亮更圆，空气更甜？这个主要是json框架的设计理念偏重点不同，fastjson偏重的是简单和快速，内部实现有很多的hack和magic code。而jackson偏重的是标准和强大，格式支持json，xml，有很多的属性可以设置非常的灵活，也有很多的接口可以自定义进行扩展，导致学习成本比较高，需要详细看过jackson文档才能上手。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://minotaursu.com/2017/12/22/jackson使用setDateFormat后反序列化错误/" data-id="cjw1v16k6004498fy7qq5zy4h" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/jackson/">jackson</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/语言陷阱/">语言陷阱</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
       <article id="post-更换一门工作语言的成本" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -173,7 +224,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2017/12/18/更换一门工作语言的成本/" data-id="cjvvt7597000wrjs6ms8t7k9g" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2017/12/18/更换一门工作语言的成本/" data-id="cjw1v16hw000x98fypnpcor4b" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/go/">go</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/语言/">语言</a></li></ul>
@@ -234,76 +285,10 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2017/12/13/archsummit2017见闻和思考/" data-id="cjvvt75b50045rjs6q6sl7488" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2017/12/13/archsummit2017见闻和思考/" data-id="cjw1v16ke004h98fya5nfhl86" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/archsummit/">archsummit</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/云计算/">云计算</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/架构/">架构</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/系统设计/">系统设计</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-谈谈微信红包的设计实现" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/27/谈谈微信红包的设计实现/">微信红包的设计实现</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2017/04/27/谈谈微信红包的设计实现/">
-      <time datetime="2017-04-27T07:19:48.000Z" itemprop="datePublished">2017-04-27</time>
-    </a>
-  </div>
-
-
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <p>红包功能的设计实现是一个很有趣的话题，主要的功能是P个人抢总金额M的N个红包，满足先抢的N个人能抢到红包。如果这是一个leetcode的算法题目难度应该是easy。<br>将算法带入到真实的工程实现，问题就要复杂得多，如果达到微信的量级，明显要考虑的有以下几点。</p>
-<ol>
-<li>拆红包</li>
-<li>高并发读</li>
-<li>并发写</li>
-<li>网络流量峰值</li>
-<li>对账</li>
-<li>降级</li>
-<li>故障恢复</li>
-</ol>
-<h1 id="拆红包">拆红包</h1><p>拆红包有预拆包和实时拆包2种策略</p>
-<h2 id="预拆包策略">预拆包策略</h2><p>预拆包的策略在发红包时将金额M的红包拆分成N份，将分配好的结果放入内存队列或者cache，通过incr操作在用户抢红包时分配预算好的红包slot，预算的策略可以避免对共享资源的操作，减少了锁竞争，服务本身是无状态的，设计和实现相对简单，伸缩性较好。劣势是需要额外的存储空间，如果存在大量活跃红包或者红包份数很多时会增加成本。</p>
-<h2 id="实时拆包">实时拆包</h2><p>实时拆包的策略在用户抢红包时实时拆包计算金额，这样只需要保存剩余红包数量和金额，不需要额外保存每个预拆包的红包金额。使用预拆包的策略会面临并发写的问题，如果多个拆红包的请求同时执行会导致数据不一致引起超发的问题，可以使用CAS操作实现乐观锁保证并发拆包不会出现问题。</p>
-<h1 id="高并发读">高并发读</h1><p>应对高并发读的通常思路是业务层拦截过滤无效请求，使用有效的缓存。可以使用Cache层decr功能记录请求红包的用户数，当decr到0后就拦截后面的请求直接返回，对DAO层也要增加相应的缓存减少数据库的压力。</p>
-<h1 id="并发写">并发写</h1><p>应对并发写的通常思路是串行化和乐观锁。在用户抢红包时实时拆包计算金额，每抢到一个红包，就cas更新剩余金额和红包个数，同时在DB中记录凭证，考虑到DB的写入压力，需要做分库分表，冷热分离。</p>
-<h1 id="网络流量峰值">网络流量峰值</h1><p>大量用户同时抢红包是否会造成网络拥塞，发红包和抢红包最好在同一个IDC。</p>
-<h1 id="对账">对账</h1><p>考虑到拆红包凭证和入账是异步的2套系统，以及出现故障的可能，需要定时对账保证数据的一致性。</p>
-<h1 id="降级">降级</h1><p>在cache故障时有限流的使用DB进行服务，在资源紧张的时候关闭掉非核心流程，在实时入账请求量过大时，延迟批量入账。</p>
-<p><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/wechat-small.jpg" alt=""><br>Reference:<br><a href="https://www.zybuluo.com/yulin718/note/93148" target="_blank" rel="external">https://www.zybuluo.com/yulin718/note/93148</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2017/04/27/谈谈微信红包的设计实现/" data-id="cjvvt757h0000rjs68x20u6cu" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/架构/">架构</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/系统设计/">系统设计</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/软件开发/">软件开发</a></li></ul>
 
     </footer>
   </div>
@@ -325,6 +310,24 @@
     <h3 class="widget-title">recents</h3>
     <div class="widget">
       <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2019/05/24/如何成为高效学习的程序员/" class="thumbnail">
+  
+    <span style="background-image:url(http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/goway.jpg
+)" alt="如何成为高效学习的程序员" class="thumbnail-image"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"></p>
+              <p class="item-title"><a href="/2019/05/24/如何成为高效学习的程序员/" class="title">如何成为高效学习的程序员</a></p>
+              <p class="item-date"><time datetime="2019-05-24T09:01:16.000Z" itemprop="datePublished">2019-05-24</time></p>
+            </div>
+          </li>
         
           <li>
             
@@ -397,24 +400,6 @@
             </div>
           </li>
         
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2018/03/12/如何保障高并发系统的稳定性与高可用/" class="thumbnail">
-  
-    <span style="background-image:url(http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/kdn.png
-)" alt="如何保障高并发系统的稳定性与高可用" class="thumbnail-image"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"></p>
-              <p class="item-title"><a href="/2018/03/12/如何保障高并发系统的稳定性与高可用/" class="title">如何保障高并发系统的稳定性与高可用</a></p>
-              <p class="item-date"><time datetime="2018-03-12T10:49:33.000Z" itemprop="datePublished">2018-03-12</time></p>
-            </div>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -424,7 +409,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">tag cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/ACID/" style="font-size: 10px;">ACID</a> <a href="/tags/AOP/" style="font-size: 11.43px;">AOP</a> <a href="/tags/CAP/" style="font-size: 10px;">CAP</a> <a href="/tags/annotation/" style="font-size: 10px;">annotation</a> <a href="/tags/archsummit/" style="font-size: 10px;">archsummit</a> <a href="/tags/gc/" style="font-size: 11.43px;">gc</a> <a href="/tags/git/" style="font-size: 11.43px;">git</a> <a href="/tags/go/" style="font-size: 10px;">go</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/jackson/" style="font-size: 10px;">jackson</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/jdk8/" style="font-size: 10px;">jdk8</a> <a href="/tags/netty/" style="font-size: 11.43px;">netty</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/quartz/" style="font-size: 10px;">quartz</a> <a href="/tags/reactor/" style="font-size: 10px;">reactor</a> <a href="/tags/spring/" style="font-size: 11.43px;">spring</a> <a href="/tags/tips/" style="font-size: 10px;">tips</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/云计算/" style="font-size: 10px;">云计算</a> <a href="/tags/分布式/" style="font-size: 12.86px;">分布式</a> <a href="/tags/工作/" style="font-size: 18.57px;">工作</a> <a href="/tags/工具/" style="font-size: 11.43px;">工具</a> <a href="/tags/并发/" style="font-size: 12.86px;">并发</a> <a href="/tags/性能/" style="font-size: 15.71px;">性能</a> <a href="/tags/总结/" style="font-size: 12.86px;">总结</a> <a href="/tags/架构/" style="font-size: 12.86px;">架构</a> <a href="/tags/消息队列/" style="font-size: 10px;">消息队列</a> <a href="/tags/滴滴/" style="font-size: 11.43px;">滴滴</a> <a href="/tags/稳定性/" style="font-size: 11.43px;">稳定性</a> <a href="/tags/类冲突/" style="font-size: 10px;">类冲突</a> <a href="/tags/系统设计/" style="font-size: 15.71px;">系统设计</a> <a href="/tags/缓存/" style="font-size: 11.43px;">缓存</a> <a href="/tags/职业规划/" style="font-size: 12.86px;">职业规划</a> <a href="/tags/语言/" style="font-size: 10px;">语言</a> <a href="/tags/语言陷阱/" style="font-size: 11.43px;">语言陷阱</a> <a href="/tags/调度/" style="font-size: 10px;">调度</a> <a href="/tags/软件开发/" style="font-size: 17.14px;">软件开发</a> <a href="/tags/部署/" style="font-size: 10px;">部署</a> <a href="/tags/锁/" style="font-size: 10px;">锁</a> <a href="/tags/阿里/" style="font-size: 14.29px;">阿里</a> <a href="/tags/高可用/" style="font-size: 11.43px;">高可用</a> <a href="/tags/高并发/" style="font-size: 11.43px;">高并发</a>
+      <a href="/tags/ACID/" style="font-size: 10px;">ACID</a> <a href="/tags/AOP/" style="font-size: 11.43px;">AOP</a> <a href="/tags/CAP/" style="font-size: 10px;">CAP</a> <a href="/tags/annotation/" style="font-size: 10px;">annotation</a> <a href="/tags/archsummit/" style="font-size: 10px;">archsummit</a> <a href="/tags/gc/" style="font-size: 11.43px;">gc</a> <a href="/tags/git/" style="font-size: 11.43px;">git</a> <a href="/tags/go/" style="font-size: 10px;">go</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/jackson/" style="font-size: 10px;">jackson</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/jdk8/" style="font-size: 10px;">jdk8</a> <a href="/tags/netty/" style="font-size: 11.43px;">netty</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/quartz/" style="font-size: 10px;">quartz</a> <a href="/tags/reactor/" style="font-size: 10px;">reactor</a> <a href="/tags/spring/" style="font-size: 11.43px;">spring</a> <a href="/tags/tips/" style="font-size: 10px;">tips</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/云计算/" style="font-size: 10px;">云计算</a> <a href="/tags/分布式/" style="font-size: 12.86px;">分布式</a> <a href="/tags/学习/" style="font-size: 10px;">学习</a> <a href="/tags/工作/" style="font-size: 18.57px;">工作</a> <a href="/tags/工具/" style="font-size: 11.43px;">工具</a> <a href="/tags/并发/" style="font-size: 12.86px;">并发</a> <a href="/tags/性能/" style="font-size: 15.71px;">性能</a> <a href="/tags/总结/" style="font-size: 12.86px;">总结</a> <a href="/tags/架构/" style="font-size: 12.86px;">架构</a> <a href="/tags/消息队列/" style="font-size: 10px;">消息队列</a> <a href="/tags/滴滴/" style="font-size: 11.43px;">滴滴</a> <a href="/tags/稳定性/" style="font-size: 11.43px;">稳定性</a> <a href="/tags/类冲突/" style="font-size: 10px;">类冲突</a> <a href="/tags/系统设计/" style="font-size: 15.71px;">系统设计</a> <a href="/tags/缓存/" style="font-size: 11.43px;">缓存</a> <a href="/tags/职业规划/" style="font-size: 14.29px;">职业规划</a> <a href="/tags/语言/" style="font-size: 10px;">语言</a> <a href="/tags/语言陷阱/" style="font-size: 11.43px;">语言陷阱</a> <a href="/tags/调度/" style="font-size: 10px;">调度</a> <a href="/tags/软件开发/" style="font-size: 17.14px;">软件开发</a> <a href="/tags/软技能/" style="font-size: 10px;">软技能</a> <a href="/tags/部署/" style="font-size: 10px;">部署</a> <a href="/tags/锁/" style="font-size: 10px;">锁</a> <a href="/tags/阿里/" style="font-size: 14.29px;">阿里</a> <a href="/tags/高可用/" style="font-size: 11.43px;">高可用</a> <a href="/tags/高并发/" style="font-size: 11.43px;">高并发</a>
     </div>
   </div>
 
