@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://minotaursu.com/"/>
-  <updated>2019-05-24T09:20:10.035Z</updated>
+  <updated>2019-05-31T13:23:50.181Z</updated>
   <id>http://minotaursu.com/</id>
   
   <author>
@@ -15,11 +15,57 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title><![CDATA[浅谈Lambda架构和Kappa架构]]></title>
+    <link href="http://minotaursu.com/2019/05/31/%E6%B5%85%E8%B0%88Lambda%E6%9E%B6%E6%9E%84%E5%92%8CKappa%E6%9E%B6%E6%9E%84/"/>
+    <id>http://minotaursu.com/2019/05/31/浅谈Lambda架构和Kappa架构/</id>
+    <published>2019-05-31T13:17:38.000Z</published>
+    <updated>2019-05-31T13:23:50.181Z</updated>
+    <content type="html"><![CDATA[<h1 id="数据系统的本质">数据系统的本质</h1><p>query = function(all data)，对于数据系统的本质Marz提出了一个简单的公式。在大部分情况，在数据集上执行查询函数立即就能获得结果，但是当数据量到达一定量级时，function则需要变的更加复杂。针对OLTP场景的解决方案通常是shard（pre-sharding和auto-sharding ），针对OLAP场景的解决方案通常则是lambda架构和kappa架构。</p>
+<h1 id="Lambda架构">Lambda架构</h1><p>Lambda架构是一个融合了批处理和近实时计算的大数据处理架构，由Storm的作者Nathan Marz提出，其设计目的在于提供一个能满足大数据系统关键特性的架构，包括高容错、低延迟、可扩展等。其整合离线计算与实时计算，融合不可变性、读写分离和复杂性隔离等原则，可集成Hadoop, Kafka, Spark，Storm等各类大数据组件。目前成为了业界大部分公司的数据处理架构的标配解决方案。<br>一个典型的lambda架构如下：<br><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/lambda.png" alt=""><br>lambda架构分为三层: Batch, speed and serving。</p>
+<h3 id="Batch_Layer">Batch Layer</h3><p>Batch Layer的功能是存储数据集，并且在数据集上运行数据处理函数，例如hadoop和MapReduce。</p>
+<h3 id="Speed_Layer">Speed Layer</h3><p>Batch Layer可以很好的处理离线数据，但有很多场景数据不断实时生成，并且需要实时查询处理。Speed Layer的功能是处理批处理周期之间的增量实时数据。提供近实时的数据处理和业务快速响应。</p>
+<h3 id="Serving_Layer">Serving Layer</h3><p>Serving Layer用于响应用户的查询请求，合并Batch View和Realtime View中的结果数据集到最终的数据集。</p>
+<p>这种架构主要面向的场景是逻辑比较复杂同时又希望延迟比较低的异步处理程序，比如搜索引擎、推荐引擎等。<br>系统从一个流中读取被我们定义为不可变的数据，分别灌入实时系统如Storm和批处理系统如Hadoop，然后各自输出自己的结果，这些结果会在查询端进行合并。当然，这种系统也可有很多变种，比如上图中的Kafka也可替换成其他的分布式队列，Storm也可以替换成其他的流式计算引擎。</p>
+<h3 id="Lambda架构的不足">Lambda架构的不足</h3><p>虽然Lambda架构具有诸多优点，以其成熟稳定的架构成为多数公司的大数据处理架构标配，但是也有一些不足：</p>
+<ul>
+<li>开发周期长：针对需求的变化既需要做批处理开发也需要做流式计算开发，重复的开发工作使开发周期更长。</li>
+<li>结果不一致：由于批处理和实时计算走的是两个计算框架和计算程序，不同开发人员对业务的理解也可能会不一致，算出的结果往往不同。</li>
+<li>存储成本大：由于批处理程序往往会产生很多中间表，造成数据膨胀，加大了存储成本。</li>
+</ul>
+<h1 id="kappa架构">kappa架构</h1><p>Kappa 架构是LinkedIn的Jay Kreps结合实际经验和个人体会，针对Lambda架构进行深度剖析，提出使用统一的流式计算架构来应对全量历史数据和增量实时数据。Kappa架构的核心思想，包括以下三点：</p>
+<ul>
+<li>用Kafka或者类似MQ队列系统收集各种各样的数据，你需要几天的数据量就保存几天。</li>
+<li>当需要全量重新计算时，重新起一个流计算实例，从头开始读取数据进行处理，并输出到一个新的结果存储中。</li>
+<li>当新的实例做完后，停止老的流计算实例，并把老的一些结果删除。<br>一个典型的kappa架构如下：<br><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/kappa.png" alt=""></li>
+</ul>
+<h3 id="Kappa架构的不足">Kappa架构的不足</h3><p>Kappa架构的优点在于将实时和离线代码统一起来，方便维护而且统一了计算框架和数据口径。但是也有相应的不足：</p>
+<ul>
+<li>吞吐能力成为海量数据处理的瓶颈。面对海量的历史数据，流式计算的吞吐能力和并发能力往往力不从心，无法满足即时性要求。</li>
+<li>更高的服务器成本。相比于批处理，流式计算有着更高的计算成本和存储成本。</li>
+</ul>
+<h1 id="如何选择">如何选择</h1><p>从长远看人力成本一定会远大于机器成本，系统的吞吐量可以随着硬件能力的提升和架构设计优化而改善。在大部分领域kappa架构可能是更适合的选择。</p>
+<p>参考:<br><a href="http://www.databasetube.com/database/big-data-lambda-architecture/" target="_blank" rel="external">Big Data Lambda Architecture</a><br><a href="https://www.oreilly.com/ideas/questioning-the-lambda-architecture" target="_blank" rel="external">questioning the lambda architecture</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h1 id="数据系统的本质">数据系统的本质</h1><p>query = function(all data)，对于数据系统的本质Marz提出了一个简单的公式。在大部分情况，在数据集上执行查询函数立即就能获得结果，但是当数据量到达一定量级时，function则需要变的更加复]]>
+    </summary>
+    
+      <category term="大数据" scheme="http://minotaursu.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+    
+      <category term="存储" scheme="http://minotaursu.com/tags/%E5%AD%98%E5%82%A8/"/>
+    
+      <category term="架构" scheme="http://minotaursu.com/tags/%E6%9E%B6%E6%9E%84/"/>
+    
+      <category term="系统设计" scheme="http://minotaursu.com/tags/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[如何成为高效学习的程序员]]></title>
     <link href="http://minotaursu.com/2019/05/24/%E5%A6%82%E4%BD%95%E6%88%90%E4%B8%BA%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%9A%84%E7%A8%8B%E5%BA%8F%E5%91%98/"/>
     <id>http://minotaursu.com/2019/05/24/如何成为高效学习的程序员/</id>
     <published>2019-05-24T09:01:16.000Z</published>
-    <updated>2019-05-24T09:20:10.035Z</updated>
+    <updated>2019-05-24T09:20:11.111Z</updated>
     <content type="html"><![CDATA[<h1 id="为什么需要学习">为什么需要学习</h1><h3 id="学习的重要性">学习的重要性</h3><p>在当前这个时代信息的传播效率大幅提升，知识的获取成本大幅降低，互联网在改变着世界的同时，行业本身也在快速的发生变化，不断的有新的工具，框架，语言，解决方案产生，甚至架构思路和模式都会和几年前不同，行业发展得太快，纯靠经验积累行不通，变化的速度远大于经验积累的速度。快速的找到所需要的知识并能高效学习，对于程序员越来越重要，是最核心的能力之一。</p>
 <h3 id="第一动因">第一动因</h3><p>虽然学习非常重要，但是学习并不一定能带来成功，并且很难看到直接看到短期收益，但是学习对人成长的长期影响远大于短期影响，因此学习的首要目的一定是内在的，相比于获得外部的认可更应该关注自我成长，这样才能持续学习持续成长。</p>
 <h1 id="如何高效学习">如何高效学习</h1><p>关于如何做到高效学习，我认为有以下几点。</p>
@@ -406,30 +452,6 @@
       <category term="java" scheme="http://minotaursu.com/tags/java/"/>
     
       <category term="性能" scheme="http://minotaursu.com/tags/%E6%80%A7%E8%83%BD/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[jackson使用setDateFormat后反序列化错误]]></title>
-    <link href="http://minotaursu.com/2017/12/22/jackson%E4%BD%BF%E7%94%A8setDateFormat%E5%90%8E%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%94%99%E8%AF%AF/"/>
-    <id>http://minotaursu.com/2017/12/22/jackson使用setDateFormat后反序列化错误/</id>
-    <published>2017-12-22T04:08:57.000Z</published>
-    <updated>2019-05-17T10:02:36.753Z</updated>
-    <content type="html"><![CDATA[<p><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/jackson.png" alt=""></p>
-<p>最近marketing-activity系统在接入降级服务，出现启动时可以正确获取到降级配置，系统运行一段时间后修改降级策略不生效的问题，之前订单系统，用户系统和其他系统的接入都没问题出现这个问题，肯定是触发了某种特定的case。营销的同学联系我进行排查，排查日志发现是降级服务反序列化Date类型异常，接收到的数据格式是yyyy-MM-dd HH:mm:ss，并不在jackson支持的反序列化格式之内。降级服务的sdk也是使用的jackson进行序列化的，为什么会出现jackson序列化后的数据却不能使用jackson反序列化。<br>接着查看marketing-activity系统的降级服务sdk日志发现一个很诡异的现象，最初发送的序列化后的请求还是时间戳格式的，运行一段时间后就变成了yyyy-MM-dd HH:mm:ss格式，也就是说系统的行为在运行时被改变了。<br><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/sds-log.png" alt=""></p>
-<p>那么到底是什么可以改变系统运行时的序列化逻辑呢？可能出现的主要原因有2种。一种是字节码技术，也就是btrace，greys这些。另一种就是调用jackson本身的api改变了一些属性。显然第二种的可能性更大一些，果然在jsonUitl里发现了蛛丝马迹，toObject允许设置特定的时间格式进行反序列化，调用setDateFormat会导致后续全部的Date类型的序列化都会是yyyy-MM-dd HH:mm:ss格式，自然不能默认设置的jackson反序列化。<br><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/jsonutil.png" alt=""></p>
-<p>至此降级服务改变策略后不生效的根本原因就得到了解答，那么如果某个对象就是要使用yyyy-MM-dd HH:mm:ss 进行序列化和反序列化怎么办，建议使用@JsonFormat 单独对属性进行注释。<br>最后谈谈fastjson和jackson，貌似jackson的各种坑遇到过很多，而fastjson的坑很少，那么为什么jackson还是要比fastjson更流行，真的只是国外的月亮更圆，空气更甜？这个主要是json框架的设计理念偏重点不同，fastjson偏重的是简单和快速，内部实现有很多的hack和magic code。而jackson偏重的是标准和强大，格式支持json，xml，有很多的属性可以设置非常的灵活，也有很多的接口可以自定义进行扩展，导致学习成本比较高，需要详细看过jackson文档才能上手。</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/jackson.png" alt=""></p>
-<p>最近marketing-activity]]>
-    </summary>
-    
-      <category term="jackson" scheme="http://minotaursu.com/tags/jackson/"/>
-    
-      <category term="java" scheme="http://minotaursu.com/tags/java/"/>
-    
-      <category term="语言陷阱" scheme="http://minotaursu.com/tags/%E8%AF%AD%E8%A8%80%E9%99%B7%E9%98%B1/"/>
     
   </entry>
   

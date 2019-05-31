@@ -82,11 +82,11 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        33
+        34
         <span>posts</span>
       </div>
       <div class="article-info-block">
-        47
+        49
         <span>tags</span>
       </div>
     </div>
@@ -115,6 +115,78 @@
 
       
       <section id="main">
+      <article id="post-浅谈Lambda架构和Kappa架构" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/05/31/浅谈Lambda架构和Kappa架构/">浅谈Lambda架构和Kappa架构</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2019/05/31/浅谈Lambda架构和Kappa架构/">
+      <time datetime="2019-05-31T13:17:38.000Z" itemprop="datePublished">2019-05-31</time>
+    </a>
+  </div>
+
+
+          
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <h1 id="数据系统的本质">数据系统的本质</h1><p>query = function(all data)，对于数据系统的本质Marz提出了一个简单的公式。在大部分情况，在数据集上执行查询函数立即就能获得结果，但是当数据量到达一定量级时，function则需要变的更加复杂。针对OLTP场景的解决方案通常是shard（pre-sharding和auto-sharding ），针对OLAP场景的解决方案通常则是lambda架构和kappa架构。</p>
+<h1 id="Lambda架构">Lambda架构</h1><p>Lambda架构是一个融合了批处理和近实时计算的大数据处理架构，由Storm的作者Nathan Marz提出，其设计目的在于提供一个能满足大数据系统关键特性的架构，包括高容错、低延迟、可扩展等。其整合离线计算与实时计算，融合不可变性、读写分离和复杂性隔离等原则，可集成Hadoop, Kafka, Spark，Storm等各类大数据组件。目前成为了业界大部分公司的数据处理架构的标配解决方案。<br>一个典型的lambda架构如下：<br><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/lambda.png" alt=""><br>lambda架构分为三层: Batch, speed and serving。</p>
+<h3 id="Batch_Layer">Batch Layer</h3><p>Batch Layer的功能是存储数据集，并且在数据集上运行数据处理函数，例如hadoop和MapReduce。</p>
+<h3 id="Speed_Layer">Speed Layer</h3><p>Batch Layer可以很好的处理离线数据，但有很多场景数据不断实时生成，并且需要实时查询处理。Speed Layer的功能是处理批处理周期之间的增量实时数据。提供近实时的数据处理和业务快速响应。</p>
+<h3 id="Serving_Layer">Serving Layer</h3><p>Serving Layer用于响应用户的查询请求，合并Batch View和Realtime View中的结果数据集到最终的数据集。</p>
+<p>这种架构主要面向的场景是逻辑比较复杂同时又希望延迟比较低的异步处理程序，比如搜索引擎、推荐引擎等。<br>系统从一个流中读取被我们定义为不可变的数据，分别灌入实时系统如Storm和批处理系统如Hadoop，然后各自输出自己的结果，这些结果会在查询端进行合并。当然，这种系统也可有很多变种，比如上图中的Kafka也可替换成其他的分布式队列，Storm也可以替换成其他的流式计算引擎。</p>
+<h3 id="Lambda架构的不足">Lambda架构的不足</h3><p>虽然Lambda架构具有诸多优点，以其成熟稳定的架构成为多数公司的大数据处理架构标配，但是也有一些不足：</p>
+<ul>
+<li>开发周期长：针对需求的变化既需要做批处理开发也需要做流式计算开发，重复的开发工作使开发周期更长。</li>
+<li>结果不一致：由于批处理和实时计算走的是两个计算框架和计算程序，不同开发人员对业务的理解也可能会不一致，算出的结果往往不同。</li>
+<li>存储成本大：由于批处理程序往往会产生很多中间表，造成数据膨胀，加大了存储成本。</li>
+</ul>
+<h1 id="kappa架构">kappa架构</h1><p>Kappa 架构是LinkedIn的Jay Kreps结合实际经验和个人体会，针对Lambda架构进行深度剖析，提出使用统一的流式计算架构来应对全量历史数据和增量实时数据。Kappa架构的核心思想，包括以下三点：</p>
+<ul>
+<li>用Kafka或者类似MQ队列系统收集各种各样的数据，你需要几天的数据量就保存几天。</li>
+<li>当需要全量重新计算时，重新起一个流计算实例，从头开始读取数据进行处理，并输出到一个新的结果存储中。</li>
+<li>当新的实例做完后，停止老的流计算实例，并把老的一些结果删除。<br>一个典型的kappa架构如下：<br><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/kappa.png" alt=""></li>
+</ul>
+<h3 id="Kappa架构的不足">Kappa架构的不足</h3><p>Kappa架构的优点在于将实时和离线代码统一起来，方便维护而且统一了计算框架和数据口径。但是也有相应的不足：</p>
+<ul>
+<li>吞吐能力成为海量数据处理的瓶颈。面对海量的历史数据，流式计算的吞吐能力和并发能力往往力不从心，无法满足即时性要求。</li>
+<li>更高的服务器成本。相比于批处理，流式计算有着更高的计算成本和存储成本。</li>
+</ul>
+<h1 id="如何选择">如何选择</h1><p>从长远看人力成本一定会远大于机器成本，系统的吞吐量可以随着硬件能力的提升和架构设计优化而改善。在大部分领域kappa架构可能是更适合的选择。</p>
+<p>参考:<br><a href="http://www.databasetube.com/database/big-data-lambda-architecture/" target="_blank" rel="external">Big Data Lambda Architecture</a><br><a href="https://www.oreilly.com/ideas/questioning-the-lambda-architecture" target="_blank" rel="external">questioning the lambda architecture</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://minotaursu.com/2019/05/31/浅谈Lambda架构和Kappa架构/" data-id="cjwc45m7o000sk1c41zmgop4k" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/大数据/">大数据</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/存储/">存储</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/架构/">架构</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/系统设计/">系统设计</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
       <article id="post-如何成为高效学习的程序员" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -177,7 +249,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2019/05/24/如何成为高效学习的程序员/" data-id="cjw1v16ii001t98fyv43rvics" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2019/05/24/如何成为高效学习的程序员/" data-id="cjwc45m8b0020k1c4255jxphu" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/学习/">学习</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/职业规划/">职业规划</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/软技能/">软技能</a></li></ul>
@@ -269,7 +341,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2019/05/16/我对未来技术趋势的一些看法/" data-id="cjw1v16id001j98fywkrhiwid" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2019/05/16/我对未来技术趋势的一些看法/" data-id="cjwc45m85001qk1c4av0x72dd" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/架构/">架构</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/职业规划/">职业规划</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/软件开发/">软件开发</a></li></ul>
@@ -282,58 +354,8 @@
 
 
     
-      <article id="post-java保留小数点后2位格式化问题" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/04/29/java保留小数点后2位格式化问题/">java保留小数点后2位格式化问题</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2019/04/29/java保留小数点后2位格式化问题/">
-      <time datetime="2019-04-29T06:07:43.000Z" itemprop="datePublished">2019-04-29</time>
-    </a>
-  </div>
-
-
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <p>最近在做应用的jdk7升级8和核心类库升级的工作。发现一个把Double格式化成String的函数并不是每次都按照4舍5入进行格式化，例如1.325的运行结果是1.32，而12.345的运行结果则是12.35。这个问题是因为在二进制中并没有一个值能准确的表示这个十进制的小数值，只是非常接近这个十进制数值。</p>
-<p><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/java-bug.png" alt=""></p>
-<p>如果希望所见即所得的获取格式化结果，可以使用BigDecimal.toPlainString或者String.format代替DecimalFormat 进行浮点数格式化。<br>相同的情况也存在于new BigDecimal和BigDecimal.valueof中，使用new BigDecimal(double val)会得到更精准的值，但是BigDecimal.valueof才是所见即所得。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2019/04/29/java保留小数点后2位格式化问题/" data-id="cjw1v16ju003n98fy4mwb0mx1" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/jdk8/">jdk8</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/语言陷阱/">语言陷阱</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/软件开发/">软件开发</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
       <nav id="page-nav">
-        <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+        <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
       </nav>
     </section>
       
@@ -344,6 +366,24 @@
     <h3 class="widget-title">recents</h3>
     <div class="widget">
       <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2019/05/31/浅谈Lambda架构和Kappa架构/" class="thumbnail">
+  
+    <span style="background-image:url(http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/lambda.png
+)" alt="浅谈Lambda架构和Kappa架构" class="thumbnail-image"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"></p>
+              <p class="item-title"><a href="/2019/05/31/浅谈Lambda架构和Kappa架构/" class="title">浅谈Lambda架构和Kappa架构</a></p>
+              <p class="item-date"><time datetime="2019-05-31T13:17:38.000Z" itemprop="datePublished">2019-05-31</time></p>
+            </div>
+          </li>
         
           <li>
             
@@ -417,23 +457,6 @@
             </div>
           </li>
         
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2019/02/18/我的类库选择/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"></p>
-              <p class="item-title"><a href="/2019/02/18/我的类库选择/" class="title">我的类库选择</a></p>
-              <p class="item-date"><time datetime="2019-02-18T08:14:43.000Z" itemprop="datePublished">2019-02-18</time></p>
-            </div>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -443,7 +466,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">tag cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/ACID/" style="font-size: 10px;">ACID</a> <a href="/tags/AOP/" style="font-size: 11.43px;">AOP</a> <a href="/tags/CAP/" style="font-size: 10px;">CAP</a> <a href="/tags/annotation/" style="font-size: 10px;">annotation</a> <a href="/tags/archsummit/" style="font-size: 10px;">archsummit</a> <a href="/tags/gc/" style="font-size: 11.43px;">gc</a> <a href="/tags/git/" style="font-size: 11.43px;">git</a> <a href="/tags/go/" style="font-size: 10px;">go</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/jackson/" style="font-size: 10px;">jackson</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/jdk8/" style="font-size: 10px;">jdk8</a> <a href="/tags/netty/" style="font-size: 11.43px;">netty</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/quartz/" style="font-size: 10px;">quartz</a> <a href="/tags/reactor/" style="font-size: 10px;">reactor</a> <a href="/tags/spring/" style="font-size: 11.43px;">spring</a> <a href="/tags/tips/" style="font-size: 10px;">tips</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/云计算/" style="font-size: 10px;">云计算</a> <a href="/tags/分布式/" style="font-size: 12.86px;">分布式</a> <a href="/tags/学习/" style="font-size: 10px;">学习</a> <a href="/tags/工作/" style="font-size: 18.57px;">工作</a> <a href="/tags/工具/" style="font-size: 11.43px;">工具</a> <a href="/tags/并发/" style="font-size: 12.86px;">并发</a> <a href="/tags/性能/" style="font-size: 15.71px;">性能</a> <a href="/tags/总结/" style="font-size: 12.86px;">总结</a> <a href="/tags/架构/" style="font-size: 12.86px;">架构</a> <a href="/tags/消息队列/" style="font-size: 10px;">消息队列</a> <a href="/tags/滴滴/" style="font-size: 11.43px;">滴滴</a> <a href="/tags/稳定性/" style="font-size: 11.43px;">稳定性</a> <a href="/tags/类冲突/" style="font-size: 10px;">类冲突</a> <a href="/tags/系统设计/" style="font-size: 15.71px;">系统设计</a> <a href="/tags/缓存/" style="font-size: 11.43px;">缓存</a> <a href="/tags/职业规划/" style="font-size: 14.29px;">职业规划</a> <a href="/tags/语言/" style="font-size: 10px;">语言</a> <a href="/tags/语言陷阱/" style="font-size: 11.43px;">语言陷阱</a> <a href="/tags/调度/" style="font-size: 10px;">调度</a> <a href="/tags/软件开发/" style="font-size: 17.14px;">软件开发</a> <a href="/tags/软技能/" style="font-size: 10px;">软技能</a> <a href="/tags/部署/" style="font-size: 10px;">部署</a> <a href="/tags/锁/" style="font-size: 10px;">锁</a> <a href="/tags/阿里/" style="font-size: 14.29px;">阿里</a> <a href="/tags/高可用/" style="font-size: 11.43px;">高可用</a> <a href="/tags/高并发/" style="font-size: 11.43px;">高并发</a>
+      <a href="/tags/ACID/" style="font-size: 10px;">ACID</a> <a href="/tags/AOP/" style="font-size: 11.25px;">AOP</a> <a href="/tags/CAP/" style="font-size: 10px;">CAP</a> <a href="/tags/annotation/" style="font-size: 10px;">annotation</a> <a href="/tags/archsummit/" style="font-size: 10px;">archsummit</a> <a href="/tags/gc/" style="font-size: 11.25px;">gc</a> <a href="/tags/git/" style="font-size: 11.25px;">git</a> <a href="/tags/go/" style="font-size: 10px;">go</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/jackson/" style="font-size: 10px;">jackson</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/jdk8/" style="font-size: 10px;">jdk8</a> <a href="/tags/netty/" style="font-size: 11.25px;">netty</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/quartz/" style="font-size: 10px;">quartz</a> <a href="/tags/reactor/" style="font-size: 10px;">reactor</a> <a href="/tags/spring/" style="font-size: 11.25px;">spring</a> <a href="/tags/tips/" style="font-size: 10px;">tips</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/云计算/" style="font-size: 10px;">云计算</a> <a href="/tags/分布式/" style="font-size: 12.5px;">分布式</a> <a href="/tags/大数据/" style="font-size: 10px;">大数据</a> <a href="/tags/存储/" style="font-size: 10px;">存储</a> <a href="/tags/学习/" style="font-size: 10px;">学习</a> <a href="/tags/工作/" style="font-size: 18.75px;">工作</a> <a href="/tags/工具/" style="font-size: 11.25px;">工具</a> <a href="/tags/并发/" style="font-size: 12.5px;">并发</a> <a href="/tags/性能/" style="font-size: 15px;">性能</a> <a href="/tags/总结/" style="font-size: 12.5px;">总结</a> <a href="/tags/架构/" style="font-size: 13.75px;">架构</a> <a href="/tags/消息队列/" style="font-size: 10px;">消息队列</a> <a href="/tags/滴滴/" style="font-size: 11.25px;">滴滴</a> <a href="/tags/稳定性/" style="font-size: 11.25px;">稳定性</a> <a href="/tags/类冲突/" style="font-size: 10px;">类冲突</a> <a href="/tags/系统设计/" style="font-size: 16.25px;">系统设计</a> <a href="/tags/缓存/" style="font-size: 11.25px;">缓存</a> <a href="/tags/职业规划/" style="font-size: 13.75px;">职业规划</a> <a href="/tags/语言/" style="font-size: 10px;">语言</a> <a href="/tags/语言陷阱/" style="font-size: 11.25px;">语言陷阱</a> <a href="/tags/调度/" style="font-size: 10px;">调度</a> <a href="/tags/软件开发/" style="font-size: 17.5px;">软件开发</a> <a href="/tags/软技能/" style="font-size: 10px;">软技能</a> <a href="/tags/部署/" style="font-size: 10px;">部署</a> <a href="/tags/锁/" style="font-size: 10px;">锁</a> <a href="/tags/阿里/" style="font-size: 13.75px;">阿里</a> <a href="/tags/高可用/" style="font-size: 11.25px;">高可用</a> <a href="/tags/高并发/" style="font-size: 11.25px;">高并发</a>
     </div>
   </div>
 
