@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://minotaursu.com/"/>
-  <updated>2019-05-31T13:23:50.181Z</updated>
+  <updated>2019-06-08T01:49:04.321Z</updated>
   <id>http://minotaursu.com/</id>
   
   <author>
@@ -15,104 +15,11 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title><![CDATA[浅谈Lambda架构和Kappa架构]]></title>
-    <link href="http://minotaursu.com/2019/05/31/%E6%B5%85%E8%B0%88Lambda%E6%9E%B6%E6%9E%84%E5%92%8CKappa%E6%9E%B6%E6%9E%84/"/>
-    <id>http://minotaursu.com/2019/05/31/浅谈Lambda架构和Kappa架构/</id>
-    <published>2019-05-31T13:17:38.000Z</published>
-    <updated>2019-05-31T13:23:50.181Z</updated>
-    <content type="html"><![CDATA[<h1 id="数据系统的本质">数据系统的本质</h1><p>query = function(all data)，对于数据系统的本质Marz提出了一个简单的公式。在大部分情况，在数据集上执行查询函数立即就能获得结果，但是当数据量到达一定量级时，function则需要变的更加复杂。针对OLTP场景的解决方案通常是shard（pre-sharding和auto-sharding ），针对OLAP场景的解决方案通常则是lambda架构和kappa架构。</p>
-<h1 id="Lambda架构">Lambda架构</h1><p>Lambda架构是一个融合了批处理和近实时计算的大数据处理架构，由Storm的作者Nathan Marz提出，其设计目的在于提供一个能满足大数据系统关键特性的架构，包括高容错、低延迟、可扩展等。其整合离线计算与实时计算，融合不可变性、读写分离和复杂性隔离等原则，可集成Hadoop, Kafka, Spark，Storm等各类大数据组件。目前成为了业界大部分公司的数据处理架构的标配解决方案。<br>一个典型的lambda架构如下：<br><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/lambda.png" alt=""><br>lambda架构分为三层: Batch, speed and serving。</p>
-<h3 id="Batch_Layer">Batch Layer</h3><p>Batch Layer的功能是存储数据集，并且在数据集上运行数据处理函数，例如hadoop和MapReduce。</p>
-<h3 id="Speed_Layer">Speed Layer</h3><p>Batch Layer可以很好的处理离线数据，但有很多场景数据不断实时生成，并且需要实时查询处理。Speed Layer的功能是处理批处理周期之间的增量实时数据。提供近实时的数据处理和业务快速响应。</p>
-<h3 id="Serving_Layer">Serving Layer</h3><p>Serving Layer用于响应用户的查询请求，合并Batch View和Realtime View中的结果数据集到最终的数据集。</p>
-<p>这种架构主要面向的场景是逻辑比较复杂同时又希望延迟比较低的异步处理程序，比如搜索引擎、推荐引擎等。<br>系统从一个流中读取被我们定义为不可变的数据，分别灌入实时系统如Storm和批处理系统如Hadoop，然后各自输出自己的结果，这些结果会在查询端进行合并。当然，这种系统也可有很多变种，比如上图中的Kafka也可替换成其他的分布式队列，Storm也可以替换成其他的流式计算引擎。</p>
-<h3 id="Lambda架构的不足">Lambda架构的不足</h3><p>虽然Lambda架构具有诸多优点，以其成熟稳定的架构成为多数公司的大数据处理架构标配，但是也有一些不足：</p>
-<ul>
-<li>开发周期长：针对需求的变化既需要做批处理开发也需要做流式计算开发，重复的开发工作使开发周期更长。</li>
-<li>结果不一致：由于批处理和实时计算走的是两个计算框架和计算程序，不同开发人员对业务的理解也可能会不一致，算出的结果往往不同。</li>
-<li>存储成本大：由于批处理程序往往会产生很多中间表，造成数据膨胀，加大了存储成本。</li>
-</ul>
-<h1 id="kappa架构">kappa架构</h1><p>Kappa 架构是LinkedIn的Jay Kreps结合实际经验和个人体会，针对Lambda架构进行深度剖析，提出使用统一的流式计算架构来应对全量历史数据和增量实时数据。Kappa架构的核心思想，包括以下三点：</p>
-<ul>
-<li>用Kafka或者类似MQ队列系统收集各种各样的数据，你需要几天的数据量就保存几天。</li>
-<li>当需要全量重新计算时，重新起一个流计算实例，从头开始读取数据进行处理，并输出到一个新的结果存储中。</li>
-<li>当新的实例做完后，停止老的流计算实例，并把老的一些结果删除。<br>一个典型的kappa架构如下：<br><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/kappa.png" alt=""></li>
-</ul>
-<h3 id="Kappa架构的不足">Kappa架构的不足</h3><p>Kappa架构的优点在于将实时和离线代码统一起来，方便维护而且统一了计算框架和数据口径。但是也有相应的不足：</p>
-<ul>
-<li>吞吐能力成为海量数据处理的瓶颈。面对海量的历史数据，流式计算的吞吐能力和并发能力往往力不从心，无法满足即时性要求。</li>
-<li>更高的服务器成本。相比于批处理，流式计算有着更高的计算成本和存储成本。</li>
-</ul>
-<h1 id="如何选择">如何选择</h1><p>从长远看人力成本一定会远大于机器成本，系统的吞吐量可以随着硬件能力的提升和架构设计优化而改善。在大部分领域kappa架构可能是更适合的选择。</p>
-<p>参考:<br><a href="http://www.databasetube.com/database/big-data-lambda-architecture/" target="_blank" rel="external">Big Data Lambda Architecture</a><br><a href="https://www.oreilly.com/ideas/questioning-the-lambda-architecture" target="_blank" rel="external">questioning the lambda architecture</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<h1 id="数据系统的本质">数据系统的本质</h1><p>query = function(all data)，对于数据系统的本质Marz提出了一个简单的公式。在大部分情况，在数据集上执行查询函数立即就能获得结果，但是当数据量到达一定量级时，function则需要变的更加复]]>
-    </summary>
-    
-      <category term="大数据" scheme="http://minotaursu.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
-    
-      <category term="存储" scheme="http://minotaursu.com/tags/%E5%AD%98%E5%82%A8/"/>
-    
-      <category term="架构" scheme="http://minotaursu.com/tags/%E6%9E%B6%E6%9E%84/"/>
-    
-      <category term="系统设计" scheme="http://minotaursu.com/tags/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[如何成为高效学习的程序员]]></title>
-    <link href="http://minotaursu.com/2019/05/24/%E5%A6%82%E4%BD%95%E6%88%90%E4%B8%BA%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%9A%84%E7%A8%8B%E5%BA%8F%E5%91%98/"/>
-    <id>http://minotaursu.com/2019/05/24/如何成为高效学习的程序员/</id>
-    <published>2019-05-24T09:01:16.000Z</published>
-    <updated>2019-05-24T09:20:11.111Z</updated>
-    <content type="html"><![CDATA[<h1 id="为什么需要学习">为什么需要学习</h1><h3 id="学习的重要性">学习的重要性</h3><p>在当前这个时代信息的传播效率大幅提升，知识的获取成本大幅降低，互联网在改变着世界的同时，行业本身也在快速的发生变化，不断的有新的工具，框架，语言，解决方案产生，甚至架构思路和模式都会和几年前不同，行业发展得太快，纯靠经验积累行不通，变化的速度远大于经验积累的速度。快速的找到所需要的知识并能高效学习，对于程序员越来越重要，是最核心的能力之一。</p>
-<h3 id="第一动因">第一动因</h3><p>虽然学习非常重要，但是学习并不一定能带来成功，并且很难看到直接看到短期收益，但是学习对人成长的长期影响远大于短期影响，因此学习的首要目的一定是内在的，相比于获得外部的认可更应该关注自我成长，这样才能持续学习持续成长。</p>
-<h1 id="如何高效学习">如何高效学习</h1><p>关于如何做到高效学习，我认为有以下几点。</p>
-<h3 id="走出舒适区">走出舒适区</h3><p>高效学习的第一步就是走出舒适区，有成长的意愿和成长的行动便是学习的第一步，对于舒适区内的事情我们习惯于通过经验和潜意识解决，往往很难有成长。就像哥伦布发现新大陆一样，只有离开旧大陆勇敢的杨帆起航才可能发现宝藏，当然这个过程并不是毫无风险的，我们要避免进入充满暗礁的恐慌区。</p>
-<p><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/goway.jpg" alt=""></p>
-<h3 id="目标与反馈">目标与反馈</h3><p>在离开舒适区之后，目标和反馈就是我们航行旅途中的星空和罗盘。我们最好设立2种目标，一种是远大的愿景，保证我们向着彼岸航行，不被短期的诱惑改变航向，一种则是阶梯式的短期目标，保证我们扎实的逐步前行，不被看起来遥不可及的彼岸所击倒。反馈就像手中的罗盘能帮助我们及时的调整航向，校正行动与目标之间的偏离，同时即时反馈也是建立兴趣的关键，可以帮助我们提升成就感。</p>
-<h3 id="千层饼式的学习方式">千层饼式的学习方式</h3><p>对于一项新技术的学习存在2种学习方式。</p>
-<ul>
-<li>top-down<br>实践后理论的在使用中学习方式，这种方式的好处是学的快，有成就感，坏处是基础不牢，理论差。</li>
-<li>bottom-up<br>先理论后实践的结构化学习方式，这种方式的好处是基础扎实，未来创造力强，坏处是学的慢，容易忘记。<br>我个人更喜欢千层饼式的学习方式，将top-down和bottom-up相结合，先有一个感性认知，然后再夯实基础进行理性的总结。针对具体的领域在决定是花更多的时间基础还是在实践。</li>
-</ul>
-<h3 id="保持专注">保持专注</h3><p>专注程度是决定学习质量和效率的关键，儿童能够快速会学一个技能正是因为更能心无旁骛的学习，更容易进入心流状态。专注力的培养涉及到多个方面，需要在日常的工作生活中提升，例如找到一个爱好并沉浸其中就是一个比较好的培养专注力的方式。同时情绪是影响专注度的最重要的原因之一，焦虑，混乱，恐惧是专注度最大的敌人。被deadline驱动，但不被deadline困扰。</p>
-<h3 id="高质量心理表征">高质量心理表征</h3><p>《刻意练习》中提到能否建立高质量心理表征是刻意练习最重要的检验成果之一。能否建立高质量心理表征是一个人能否挥洒自如，举一反三的关键，只有一个人建立了高质量心理表征才是真正的高手，如果做不到这点，可能是练习的程度不够也可能是练习方法的问题，缺少深层次的思考与熟练度。</p>
-<h3 id="观摩高手">观摩高手</h3><p>观摩高手是突破自身瓶颈的最佳方式，在学习的路上往往会遇到瓶颈，并且这个瓶颈和极限还有很远的距离，这个时候就需要一些外力的帮助，最好得到一位已经突破瓶颈的大师指导。和青铜打上一百场，也不如在王者的指点下打一场。</p>
-<h3 id="时间管理">时间管理</h3><p>更好的时间管理可以帮助我们有更多次更高效的学习。对于时间管理比较好用的工具有四象限和番茄时钟。时间四象限对工作有着指导意义，尽量把时间投入到重要不紧急的第二象限，减少一，三象限的时间投入，尽量不做第四象限的事情。番茄工作法则将任务细分到每个原子的番茄时钟，让做事更有效率。</p>
-<p><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/timemetric.png" alt=""></p>
-<h3 id="精力管理">精力管理</h3><p>精力管理帮我们更好的面对来自生理上的基础挑战。</p>
-<ul>
-<li>体能<br>体能是最基础也最应该训练的部分。体能决定精力的基础。</li>
-<li>情感<br>情感是精力中爆发力最强的部分，负面的情感有害并且影响巨大。情感决定精力的质量。</li>
-<li>思维<br>思维是精力中最有创造力的部分，在放松中思考会带来更多的灵感。思维决定精力的效率。</li>
-<li>意志<br>意志通向最深处的价值取向和自我，是最强大的动机来源。意志决定精力的强度。</li>
-</ul>
-<h1 id="程序员应该学习什么">程序员应该学习什么</h1><p>一个优秀的程序员应该不断的提升3个方面的能力，专业技能，软技能，学习能力。这里主要关注专业技能部分的提升。</p>
-<h3 id="工具要熟练">工具要熟练</h3><p>工欲善其事必先利其器，工具使用的熟练程度是高手与菜鸟之间最肉眼可见的差距。工具使用的熟练程度直接决定做事的效率。推荐的工具有intellij idea，pycharm，vim。</p>
-<h3 id="看书&amp;看文档&amp;看视频">看书&amp;看文档&amp;看视频</h3><p>看书是最容易构建完整的知识体系的学习方式，看书学习应该成为打基础时的第一选择。书籍的主要问题在于时效性，并且书籍往往都是二手知识，对于最新的技术看官方文档就是最佳的学习方式，例如spring家族，elastic系列。在看书和看文档之外看视频也是一个比较好的学习方式，生成的视频能带来最直观最感性的认识，容易形成深层次的长期记忆，并且也能通过观察高手的实际操作学到一些技巧。</p>
-<h3 id="github&amp;twitter&amp;微博">github&amp;twitter&amp;微博</h3><p>在这些最及时更新的社区上我们可以通过follow一些技术大牛了解最新的行业动态和未来趋势。</p>
-<h3 id="写demo写test看源码">写demo写test看源码</h3><p>写demo是深层次学习一个技术的最好的方式，例如实现一个rpc的demo可以帮助我们全面了解rpc最核心的技术和遇到问题的解决方案。写test则是学习如何使用一个技术的最好方式，只有能写出好的test的程序员才是一个合格的CRUD boy。看源码则是提高代码品味和code review技巧的最佳学习方式，不过看源码学习的投入成本很大，并且对于不熟悉的领域很难找到切入点。</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<h1 id="为什么需要学习">为什么需要学习</h1><h3 id="学习的重要性">学习的重要性</h3><p>在当前这个时代信息的传播效率大幅提升，知识的获取成本大幅降低，互联网在改变着世界的同时，行业本身也在快速的发生变化，不断的有新的工具，框架，语言，解决方案产生，甚]]>
-    </summary>
-    
-      <category term="学习" scheme="http://minotaursu.com/tags/%E5%AD%A6%E4%B9%A0/"/>
-    
-      <category term="职业规划" scheme="http://minotaursu.com/tags/%E8%81%8C%E4%B8%9A%E8%A7%84%E5%88%92/"/>
-    
-      <category term="软技能" scheme="http://minotaursu.com/tags/%E8%BD%AF%E6%8A%80%E8%83%BD/"/>
-    
-  </entry>
-  
-  <entry>
     <title><![CDATA[我对未来技术趋势的一些看法]]></title>
-    <link href="http://minotaursu.com/2019/05/16/%E6%88%91%E5%AF%B9%E6%9C%AA%E6%9D%A5%E6%8A%80%E6%9C%AF%E8%B6%8B%E5%8A%BF%E7%9A%84%E4%B8%80%E4%BA%9B%E7%9C%8B%E6%B3%95/"/>
-    <id>http://minotaursu.com/2019/05/16/我对未来技术趋势的一些看法/</id>
-    <published>2019-05-16T09:40:27.000Z</published>
-    <updated>2019-05-20T03:24:03.685Z</updated>
+    <link href="http://minotaursu.com/2019/07/16/%E6%88%91%E5%AF%B9%E6%9C%AA%E6%9D%A5%E6%8A%80%E6%9C%AF%E8%B6%8B%E5%8A%BF%E7%9A%84%E4%B8%80%E4%BA%9B%E7%9C%8B%E6%B3%95/"/>
+    <id>http://minotaursu.com/2019/07/16/我对未来技术趋势的一些看法/</id>
+    <published>2019-07-16T09:40:27.000Z</published>
+    <updated>2019-06-08T01:49:04.321Z</updated>
     <content type="html"><![CDATA[<p><img src="https://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/skycity.jpg" alt=""><br>预测未来的技术发展方向是件有趣又有意义的事情，正确的判断技术发展方向对于技术选型，业务发展和职业规划都起着至关重要的作用。日常的需求沟通，项目管理，设计编码，运维部署工作能带给我们满足感和安全感，但是在脚踩大地之外偶尔也需要仰望一下星空，看看未来是什么样子，这里就神棍一把，说一下我对未来技术发展趋势的一些看法。</p>
 <h1 id="困难与挑战">困难与挑战</h1><p>在预测未来之前，首先分析一下程序员的日常工作中遇到哪些困难与挑战。</p>
 <h3 id="需求和设计">需求和设计</h3><p>在需求沟通阶段，程序员需要准确的获取PRD上的需求信息，并对业务的价值和发展有一定的预判。根据以上的信息进行技术选型，数据建模，设计抽象。在这个过程中主要的挑战有：</p>
@@ -172,35 +79,58 @@
   </entry>
   
   <entry>
-    <title><![CDATA[java保留小数点后2位格式化问题]]></title>
-    <link href="http://minotaursu.com/2019/04/29/java%E4%BF%9D%E7%95%99%E5%B0%8F%E6%95%B0%E7%82%B9%E5%90%8E2%E4%BD%8D%E6%A0%BC%E5%BC%8F%E5%8C%96%E9%97%AE%E9%A2%98/"/>
-    <id>http://minotaursu.com/2019/04/29/java保留小数点后2位格式化问题/</id>
-    <published>2019-04-29T06:07:43.000Z</published>
-    <updated>2019-05-20T03:17:42.263Z</updated>
-    <content type="html"><![CDATA[<p>最近在做应用的jdk7升级8和核心类库升级的工作。发现一个把Double格式化成String的函数并不是每次都按照4舍5入进行格式化，例如1.325的运行结果是1.32，而12.345的运行结果则是12.35。这个问题是因为在二进制中并没有一个值能准确的表示这个十进制的小数值，只是非常接近这个十进制数值。</p>
-<p><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/java-bug.png" alt=""></p>
-<p>如果希望所见即所得的获取格式化结果，可以使用BigDecimal.toPlainString或者String.format代替DecimalFormat 进行浮点数格式化。<br>相同的情况也存在于new BigDecimal和BigDecimal.valueof中，使用new BigDecimal(double val)会得到更精准的值，但是BigDecimal.valueof才是所见即所得。</p>
+    <title><![CDATA[如何成为高效学习的程序员]]></title>
+    <link href="http://minotaursu.com/2019/06/24/%E5%A6%82%E4%BD%95%E6%88%90%E4%B8%BA%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%9A%84%E7%A8%8B%E5%BA%8F%E5%91%98/"/>
+    <id>http://minotaursu.com/2019/06/24/如何成为高效学习的程序员/</id>
+    <published>2019-06-24T09:01:16.000Z</published>
+    <updated>2019-06-08T01:48:49.616Z</updated>
+    <content type="html"><![CDATA[<h1 id="为什么需要学习">为什么需要学习</h1><h3 id="学习的重要性">学习的重要性</h3><p>在当前这个时代信息的传播效率大幅提升，知识的获取成本大幅降低，互联网在改变着世界的同时，行业本身也在快速的发生变化，不断的有新的工具，框架，语言，解决方案产生，甚至架构思路和模式都会和几年前不同，行业发展得太快，纯靠经验积累行不通，变化的速度远大于经验积累的速度。快速的找到所需要的知识并能高效学习，对于程序员越来越重要，是最核心的能力之一。</p>
+<h3 id="第一动因">第一动因</h3><p>虽然学习非常重要，但是学习并不一定能带来成功，并且很难看到直接看到短期收益，但是学习对人成长的长期影响远大于短期影响，因此学习的首要目的一定是内在的，相比于获得外部的认可更应该关注自我成长，这样才能持续学习持续成长。</p>
+<h1 id="如何高效学习">如何高效学习</h1><p>关于如何做到高效学习，我认为有以下几点。</p>
+<h3 id="走出舒适区">走出舒适区</h3><p>高效学习的第一步就是走出舒适区，有成长的意愿和成长的行动便是学习的第一步，对于舒适区内的事情我们习惯于通过经验和潜意识解决，往往很难有成长。就像哥伦布发现新大陆一样，只有离开旧大陆勇敢的杨帆起航才可能发现宝藏，当然这个过程并不是毫无风险的，我们要避免进入充满暗礁的恐慌区。</p>
+<p><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/goway.jpg" alt=""></p>
+<h3 id="目标与反馈">目标与反馈</h3><p>在离开舒适区之后，目标和反馈就是我们航行旅途中的星空和罗盘。我们最好设立2种目标，一种是远大的愿景，保证我们向着彼岸航行，不被短期的诱惑改变航向，一种则是阶梯式的短期目标，保证我们扎实的逐步前行，不被看起来遥不可及的彼岸所击倒。反馈就像手中的罗盘能帮助我们及时的调整航向，校正行动与目标之间的偏离，同时即时反馈也是建立兴趣的关键，可以帮助我们提升成就感。</p>
+<h3 id="千层饼式的学习方式">千层饼式的学习方式</h3><p>对于一项新技术的学习存在2种学习方式。</p>
+<ul>
+<li>top-down<br>实践后理论的在使用中学习方式，这种方式的好处是学的快，有成就感，坏处是基础不牢，理论差。</li>
+<li>bottom-up<br>先理论后实践的结构化学习方式，这种方式的好处是基础扎实，未来创造力强，坏处是学的慢，容易忘记。<br>我个人更喜欢千层饼式的学习方式，将top-down和bottom-up相结合，先有一个感性认知，然后再夯实基础进行理性的总结。针对具体的领域在决定是花更多的时间基础还是在实践。</li>
+</ul>
+<h3 id="保持专注">保持专注</h3><p>专注程度是决定学习质量和效率的关键，儿童能够快速会学一个技能正是因为更能心无旁骛的学习，更容易进入心流状态。专注力的培养涉及到多个方面，需要在日常的工作生活中提升，例如找到一个爱好并沉浸其中就是一个比较好的培养专注力的方式。同时情绪是影响专注度的最重要的原因之一，焦虑，混乱，恐惧是专注度最大的敌人。被deadline驱动，但不被deadline困扰。</p>
+<h3 id="高质量心理表征">高质量心理表征</h3><p>《刻意练习》中提到能否建立高质量心理表征是刻意练习最重要的检验成果之一。能否建立高质量心理表征是一个人能否挥洒自如，举一反三的关键，只有一个人建立了高质量心理表征才是真正的高手，如果做不到这点，可能是练习的程度不够也可能是练习方法的问题，缺少深层次的思考与熟练度。</p>
+<h3 id="观摩高手">观摩高手</h3><p>观摩高手是突破自身瓶颈的最佳方式，在学习的路上往往会遇到瓶颈，并且这个瓶颈和极限还有很远的距离，这个时候就需要一些外力的帮助，最好得到一位已经突破瓶颈的大师指导。和青铜打上一百场，也不如在王者的指点下打一场。</p>
+<h3 id="时间管理">时间管理</h3><p>更好的时间管理可以帮助我们有更多次更高效的学习。对于时间管理比较好用的工具有四象限和番茄时钟。时间四象限对工作有着指导意义，尽量把时间投入到重要不紧急的第二象限，减少一，三象限的时间投入，尽量不做第四象限的事情。番茄工作法则将任务细分到每个原子的番茄时钟，让做事更有效率。</p>
+<p><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/timemetric.png" alt=""></p>
+<h3 id="精力管理">精力管理</h3><p>精力管理帮我们更好的面对来自生理上的基础挑战。</p>
+<ul>
+<li>体能<br>体能是最基础也最应该训练的部分。体能决定精力的基础。</li>
+<li>情感<br>情感是精力中爆发力最强的部分，负面的情感有害并且影响巨大。情感决定精力的质量。</li>
+<li>思维<br>思维是精力中最有创造力的部分，在放松中思考会带来更多的灵感。思维决定精力的效率。</li>
+<li>意志<br>意志通向最深处的价值取向和自我，是最强大的动机来源。意志决定精力的强度。</li>
+</ul>
+<h1 id="程序员应该学习什么">程序员应该学习什么</h1><p>一个优秀的程序员应该不断的提升3个方面的能力，专业技能，软技能，学习能力。这里主要关注专业技能部分的提升。</p>
+<h3 id="工具要熟练">工具要熟练</h3><p>工欲善其事必先利其器，工具使用的熟练程度是高手与菜鸟之间最肉眼可见的差距。工具使用的熟练程度直接决定做事的效率。推荐的工具有intellij idea，pycharm，vim。</p>
+<h3 id="看书&amp;看文档&amp;看视频">看书&amp;看文档&amp;看视频</h3><p>看书是最容易构建完整的知识体系的学习方式，看书学习应该成为打基础时的第一选择。书籍的主要问题在于时效性，并且书籍往往都是二手知识，对于最新的技术看官方文档就是最佳的学习方式，例如spring家族，elastic系列。在看书和看文档之外看视频也是一个比较好的学习方式，生成的视频能带来最直观最感性的认识，容易形成深层次的长期记忆，并且也能通过观察高手的实际操作学到一些技巧。</p>
+<h3 id="github&amp;twitter&amp;微博">github&amp;twitter&amp;微博</h3><p>在这些最及时更新的社区上我们可以通过follow一些技术大牛了解最新的行业动态和未来趋势。</p>
+<h3 id="写demo写test看源码">写demo写test看源码</h3><p>写demo是深层次学习一个技术的最好的方式，例如实现一个rpc的demo可以帮助我们全面了解rpc最核心的技术和遇到问题的解决方案。写test则是学习如何使用一个技术的最好方式，只有能写出好的test的程序员才是一个合格的CRUD boy。看源码则是提高代码品味和code review技巧的最佳学习方式，不过看源码学习的投入成本很大，并且对于不熟悉的领域很难找到切入点。</p>
 ]]></content>
     <summary type="html">
-    <![CDATA[<p>最近在做应用的jdk7升级8和核心类库升级的工作。发现一个把Double格式化成String的函数并不是每次都按照4舍5入进行格式化，例如1.325的运行结果是1.32，而12.345的运行结果则是12.35。这个问题是因为在二进制中并没有一个值能准确的表示这个十进制的小数]]>
+    <![CDATA[<h1 id="为什么需要学习">为什么需要学习</h1><h3 id="学习的重要性">学习的重要性</h3><p>在当前这个时代信息的传播效率大幅提升，知识的获取成本大幅降低，互联网在改变着世界的同时，行业本身也在快速的发生变化，不断的有新的工具，框架，语言，解决方案产生，甚]]>
     </summary>
     
-      <category term="java" scheme="http://minotaursu.com/tags/java/"/>
+      <category term="学习" scheme="http://minotaursu.com/tags/%E5%AD%A6%E4%B9%A0/"/>
     
-      <category term="jdk8" scheme="http://minotaursu.com/tags/jdk8/"/>
+      <category term="职业规划" scheme="http://minotaursu.com/tags/%E8%81%8C%E4%B8%9A%E8%A7%84%E5%88%92/"/>
     
-      <category term="语言陷阱" scheme="http://minotaursu.com/tags/%E8%AF%AD%E8%A8%80%E9%99%B7%E9%98%B1/"/>
-    
-      <category term="软件开发" scheme="http://minotaursu.com/tags/%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91/"/>
+      <category term="软技能" scheme="http://minotaursu.com/tags/%E8%BD%AF%E6%8A%80%E8%83%BD/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[再谈稳定性工作]]></title>
-    <link href="http://minotaursu.com/2019/04/11/%E5%86%8D%E8%B0%88%E7%A8%B3%E5%AE%9A%E6%80%A7/"/>
-    <id>http://minotaursu.com/2019/04/11/再谈稳定性/</id>
-    <published>2019-04-11T08:33:17.000Z</published>
-    <updated>2019-04-11T09:06:09.488Z</updated>
+    <link href="http://minotaursu.com/2019/06/11/%E5%86%8D%E8%B0%88%E7%A8%B3%E5%AE%9A%E6%80%A7/"/>
+    <id>http://minotaursu.com/2019/06/11/再谈稳定性/</id>
+    <published>2019-06-11T08:33:17.000Z</published>
+    <updated>2019-06-08T01:46:58.395Z</updated>
     <content type="html"><![CDATA[<p>之前也写过一篇稳定性工作的总结-<a href="http://minotaursu.com/2018/03/12/%E5%A6%82%E4%BD%95%E4%BF%9D%E9%9A%9C%E9%AB%98%E5%B9%B6%E5%8F%91%E7%B3%BB%E7%BB%9F%E7%9A%84%E7%A8%B3%E5%AE%9A%E6%80%A7%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/">如何保障高并发系统的稳定性与高可用</a>，但更多的是从系统开发者的角度说明如何保障单一系统的稳定性，做好自己负责系统的稳定性建设更多的是依赖知识和经验，是个技术活。负责了一整年的业务线稳定性建设之后，对于如何保障几十个系统的稳定性，协同几十人做好稳定性相关工作有了更多的思考和实践，又有了些新的体会，更需要科学的工程管理，涉及到多个方面。</p>
 <h2 id="方向">方向</h2><ol>
 <li>高可用<br>高可用要求系统有比较高的风险防范应对能力，把因软件/硬件/人为造成的故障对业务的影响降低到最小程度。系统能够对外提供有效服务的时间大于99.9%，99.99%，甚至是99.999%。 </li>
@@ -246,6 +176,110 @@
       <category term="高可用" scheme="http://minotaursu.com/tags/%E9%AB%98%E5%8F%AF%E7%94%A8/"/>
     
       <category term="高并发" scheme="http://minotaursu.com/tags/%E9%AB%98%E5%B9%B6%E5%8F%91/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[浅谈Lambda架构和Kappa架构]]></title>
+    <link href="http://minotaursu.com/2019/05/31/%E6%B5%85%E8%B0%88Lambda%E6%9E%B6%E6%9E%84%E5%92%8CKappa%E6%9E%B6%E6%9E%84/"/>
+    <id>http://minotaursu.com/2019/05/31/浅谈Lambda架构和Kappa架构/</id>
+    <published>2019-05-31T13:17:38.000Z</published>
+    <updated>2019-05-31T13:23:50.669Z</updated>
+    <content type="html"><![CDATA[<h1 id="数据系统的本质">数据系统的本质</h1><p>query = function(all data)，对于数据系统的本质Marz提出了一个简单的公式。在大部分情况，在数据集上执行查询函数立即就能获得结果，但是当数据量到达一定量级时，function则需要变的更加复杂。针对OLTP场景的解决方案通常是shard（pre-sharding和auto-sharding ），针对OLAP场景的解决方案通常则是lambda架构和kappa架构。</p>
+<h1 id="Lambda架构">Lambda架构</h1><p>Lambda架构是一个融合了批处理和近实时计算的大数据处理架构，由Storm的作者Nathan Marz提出，其设计目的在于提供一个能满足大数据系统关键特性的架构，包括高容错、低延迟、可扩展等。其整合离线计算与实时计算，融合不可变性、读写分离和复杂性隔离等原则，可集成Hadoop, Kafka, Spark，Storm等各类大数据组件。目前成为了业界大部分公司的数据处理架构的标配解决方案。<br>一个典型的lambda架构如下：<br><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/lambda.png" alt=""><br>lambda架构分为三层: Batch, speed and serving。</p>
+<h3 id="Batch_Layer">Batch Layer</h3><p>Batch Layer的功能是存储数据集，并且在数据集上运行数据处理函数，例如hadoop和MapReduce。</p>
+<h3 id="Speed_Layer">Speed Layer</h3><p>Batch Layer可以很好的处理离线数据，但有很多场景数据不断实时生成，并且需要实时查询处理。Speed Layer的功能是处理批处理周期之间的增量实时数据。提供近实时的数据处理和业务快速响应。</p>
+<h3 id="Serving_Layer">Serving Layer</h3><p>Serving Layer用于响应用户的查询请求，合并Batch View和Realtime View中的结果数据集到最终的数据集。</p>
+<p>这种架构主要面向的场景是逻辑比较复杂同时又希望延迟比较低的异步处理程序，比如搜索引擎、推荐引擎等。<br>系统从一个流中读取被我们定义为不可变的数据，分别灌入实时系统如Storm和批处理系统如Hadoop，然后各自输出自己的结果，这些结果会在查询端进行合并。当然，这种系统也可有很多变种，比如上图中的Kafka也可替换成其他的分布式队列，Storm也可以替换成其他的流式计算引擎。</p>
+<h3 id="Lambda架构的不足">Lambda架构的不足</h3><p>虽然Lambda架构具有诸多优点，以其成熟稳定的架构成为多数公司的大数据处理架构标配，但是也有一些不足：</p>
+<ul>
+<li>开发周期长：针对需求的变化既需要做批处理开发也需要做流式计算开发，重复的开发工作使开发周期更长。</li>
+<li>结果不一致：由于批处理和实时计算走的是两个计算框架和计算程序，不同开发人员对业务的理解也可能会不一致，算出的结果往往不同。</li>
+<li>存储成本大：由于批处理程序往往会产生很多中间表，造成数据膨胀，加大了存储成本。</li>
+</ul>
+<h1 id="kappa架构">kappa架构</h1><p>Kappa 架构是LinkedIn的Jay Kreps结合实际经验和个人体会，针对Lambda架构进行深度剖析，提出使用统一的流式计算架构来应对全量历史数据和增量实时数据。Kappa架构的核心思想，包括以下三点：</p>
+<ul>
+<li>用Kafka或者类似MQ队列系统收集各种各样的数据，你需要几天的数据量就保存几天。</li>
+<li>当需要全量重新计算时，重新起一个流计算实例，从头开始读取数据进行处理，并输出到一个新的结果存储中。</li>
+<li>当新的实例做完后，停止老的流计算实例，并把老的一些结果删除。<br>一个典型的kappa架构如下：<br><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/kappa.png" alt=""></li>
+</ul>
+<h3 id="Kappa架构的不足">Kappa架构的不足</h3><p>Kappa架构的优点在于将实时和离线代码统一起来，方便维护而且统一了计算框架和数据口径。但是也有相应的不足：</p>
+<ul>
+<li>吞吐能力成为海量数据处理的瓶颈。面对海量的历史数据，流式计算的吞吐能力和并发能力往往力不从心，无法满足即时性要求。</li>
+<li>更高的服务器成本。相比于批处理，流式计算有着更高的计算成本和存储成本。</li>
+</ul>
+<h1 id="如何选择">如何选择</h1><p>从长远看人力成本一定会远大于机器成本，系统的吞吐量可以随着硬件能力的提升和架构设计优化而改善。在大部分领域kappa架构可能是更适合的选择。</p>
+<p>参考:<br><a href="http://www.databasetube.com/database/big-data-lambda-architecture/" target="_blank" rel="external">Big Data Lambda Architecture</a><br><a href="https://www.oreilly.com/ideas/questioning-the-lambda-architecture" target="_blank" rel="external">questioning the lambda architecture</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h1 id="数据系统的本质">数据系统的本质</h1><p>query = function(all data)，对于数据系统的本质Marz提出了一个简单的公式。在大部分情况，在数据集上执行查询函数立即就能获得结果，但是当数据量到达一定量级时，function则需要变的更加复]]>
+    </summary>
+    
+      <category term="大数据" scheme="http://minotaursu.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+    
+      <category term="存储" scheme="http://minotaursu.com/tags/%E5%AD%98%E5%82%A8/"/>
+    
+      <category term="架构" scheme="http://minotaursu.com/tags/%E6%9E%B6%E6%9E%84/"/>
+    
+      <category term="系统设计" scheme="http://minotaursu.com/tags/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[数据存储系统的选择]]></title>
+    <link href="http://minotaursu.com/2019/05/08/%E6%95%B0%E6%8D%AE%E5%AD%98%E5%82%A8%E7%B3%BB%E7%BB%9F%E7%9A%84%E9%80%89%E6%8B%A9/"/>
+    <id>http://minotaursu.com/2019/05/08/数据存储系统的选择/</id>
+    <published>2019-05-08T01:39:02.000Z</published>
+    <updated>2019-06-08T01:40:11.089Z</updated>
+    <content type="html"><![CDATA[<p>数据库作为应用系统中最重要的基础设施，承载着通过数据访问接口<br>存储和查询用户信息的功能，当今的互联网业务场景越来越丰富和复杂，并且数据库作为有状态服务扩展成本高昂，选择适合业务场景的数据变的十分重要。本文分别对比一些常用的数据库（包括mysql，redis，mongodb，hbase，elasticsearch，influxdb，rocksdb），通过简要分析其中的原理确定每种数据库适合场景和优缺点。</p>
+<h2 id="mysql">mysql</h2><p>mysql作为典型的关系型数据库在互联网和传统软件行业都有着广泛的应用。mysql的优点是有着最完备的单机功能（增删改查，事务，关联）和最丰富的社区生态。缺点则是在高并发场景下单机性能一般，不支持auto-sharding需要额外的proxy，schema模型不能便捷的增加字段。适合场景有复杂事务，低性能需求数据关联，一般性业务等</p>
+<h2 id="redis">redis</h2><p>redis作为key-value存储有着良好的性能，并且redis相比memcache有着更丰富的数据结构，在非持久化场景中可以作为高性能缓存使用，在持久化场景中可以作为关系型数据库的补充。对于需要集群使用的场景codis是一个不错的选择。合适场景有高性能缓存，少量数据持久化存储。</p>
+<h2 id="mongodb">mongodb</h2><p>mongodb是一个高性能的文档型数据库，以BSON的格式保存数据，优点是schema-free模式非常适合增加字段，并且自带auto-sharding的集群分片功能在数据扩容方面有着明显的优势，也有着geohash等丰富功能。缺点则是事务方面较弱，并且不支持关联查询。适合的场景有物联网，视频，地理位置，社交等。</p>
+<h2 id="hbase">hbase</h2><p>hbase是基于LSM（Log-StructuredMergeTree）的思想，LSM树和B+树相比，LSM树牺牲了部分读性能，用来大幅提高写性能。hbase适合写多读少的场景，并且hbase没有二级索引，只支持单rowkey，rowkey的range，全表扫描3种方式。适合的场景有搜索引擎和推荐系统底层的数据存储，监控日志存储。</p>
+<h2 id="elasticsearch">elasticsearch</h2><p>elasticsearch是基于Lucene构建的搜索引擎，除了作为全文搜索之外也可以作为nosql数据使用。适合的场景有搜索引擎，数据可视化，日志检索系统，后台客服系统。</p>
+<h2 id="influxdb">influxdb</h2><p>influxDB是目前最流行的时序数据库，存储引擎称为TSM，基本架构类似于LSM。数据按照key组织，influxDB中key由维度集合加上某一个列值名构成，所有属于该维度集合加列值的时间序列数值组成的一个集合就挂在该key下。适合的场景有物联网，监控。</p>
+<h2 id="rocksdb">rocksdb</h2><p>rocksdb并非一个完整的数据库系统，而是基于LevelDB开发的一种嵌入式Key-value存储系统，该数据库能够充分利用闪存的性能，大大提升应用服务器的速度。引入了 LSM 树，就是为了解决 B+ 树随机写性能低的问题，它把随机写以跳跃表的形式保留在内存中（memtable），积累到足够的大小就不再改写它了，并将其写入到磁盘（L0 SST file），这样就只有顺序写了。合适的场景是多种数据库的存储引擎。</p>
+<h2 id="sharding策略">sharding策略</h2><p>分布式数据库一般有两种Sharding策略：Range Sharding和Hash Sharding。</p>
+<h4 id="range">range</h4><p>range假设key有序，好处是临近的key经常在一起，比如共同前缀的key,可以很好的支持scan操作，hbase的region就是range策略。缺点是对压力较大的顺序写不太友好，比如日志类型的写入，一般日志的key都是和时间相关的，时间是单调递增的，因此写入的热点永远在最后一个region。</p>
+<h4 id="round-hash">round-hash</h4><p>把数据mod后直接映射到真实节点上面，这造成节点个数和数据的紧密关联、后期缺乏灵活扩展。</p>
+<h4 id="consistent-hash">consistent-hash</h4><p>多增加一层虚拟映射层，数据与虚拟节点映射、虚拟节点与真实节点再映射，减少扩容和宕机情况下数据迁移的影响。</p>
+<h4 id="hash-slot">hash-slot</h4><p>采用固定节点数量，来避免取模的不灵活性。采用可配置映射节点，来避免一致性哈希的部分影响。</p>
+<h2 id="数据同步">数据同步</h2><p>数据同步保证同一个数据分片的多个副本之间的数据一致性，一般的数据同步算法有异步，半同步（ISR的机制），全同步，paxos，raft，gossip。异步复制有最佳的性能，最可能的数据丢失/不一致问题，半同步复制提高了数据的安全性，同时它也造成了一定程度的延迟，这个延迟最少是一个TCP/IP往返的时间，全同步有着最好的数据一致性和最差的性能。paxos利用过半选举的机制，保证了集群数据副本的一致性，raft是paxos的简化版本，更易于理解的工程实现，ggossip利用去中心化的协议进行数据同步，好处是无任何单点故障，坏处是同步时间过长。</p>
+<p>参考：<br><a href="https://segmentfault.com/a/1190000004474543" target="_blank" rel="external">2PC到3PC到Paxos到Raft到ISR</a><br><a href="https://segmentfault.com/a/1190000014503967" target="_blank" rel="external">分布式一致性机制整理</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>数据库作为应用系统中最重要的基础设施，承载着通过数据访问接口<br>存储和查询用户信息的功能，当今的互联网业务场景越来越丰富和复杂，并且数据库作为有状态服务扩展成本高昂，选择适合业务场景的数据变的十分重要。本文分别对比一些常用的数据库（包括mysql，redis，mongo]]>
+    </summary>
+    
+      <category term="分布式" scheme="http://minotaursu.com/tags/%E5%88%86%E5%B8%83%E5%BC%8F/"/>
+    
+      <category term="大数据" scheme="http://minotaursu.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+    
+      <category term="存储" scheme="http://minotaursu.com/tags/%E5%AD%98%E5%82%A8/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[java保留小数点后2位格式化问题]]></title>
+    <link href="http://minotaursu.com/2019/04/29/java%E4%BF%9D%E7%95%99%E5%B0%8F%E6%95%B0%E7%82%B9%E5%90%8E2%E4%BD%8D%E6%A0%BC%E5%BC%8F%E5%8C%96%E9%97%AE%E9%A2%98/"/>
+    <id>http://minotaursu.com/2019/04/29/java保留小数点后2位格式化问题/</id>
+    <published>2019-04-29T06:07:43.000Z</published>
+    <updated>2019-05-20T03:17:42.263Z</updated>
+    <content type="html"><![CDATA[<p>最近在做应用的jdk7升级8和核心类库升级的工作。发现一个把Double格式化成String的函数并不是每次都按照4舍5入进行格式化，例如1.325的运行结果是1.32，而12.345的运行结果则是12.35。这个问题是因为在二进制中并没有一个值能准确的表示这个十进制的小数值，只是非常接近这个十进制数值。</p>
+<p><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/java-bug.png" alt=""></p>
+<p>如果希望所见即所得的获取格式化结果，可以使用BigDecimal.toPlainString或者String.format代替DecimalFormat 进行浮点数格式化。<br>相同的情况也存在于new BigDecimal和BigDecimal.valueof中，使用new BigDecimal(double val)会得到更精准的值，但是BigDecimal.valueof才是所见即所得。</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>最近在做应用的jdk7升级8和核心类库升级的工作。发现一个把Double格式化成String的函数并不是每次都按照4舍5入进行格式化，例如1.325的运行结果是1.32，而12.345的运行结果则是12.35。这个问题是因为在二进制中并没有一个值能准确的表示这个十进制的小数]]>
+    </summary>
+    
+      <category term="java" scheme="http://minotaursu.com/tags/java/"/>
+    
+      <category term="jdk8" scheme="http://minotaursu.com/tags/jdk8/"/>
+    
+      <category term="语言陷阱" scheme="http://minotaursu.com/tags/%E8%AF%AD%E8%A8%80%E9%99%B7%E9%98%B1/"/>
+    
+      <category term="软件开发" scheme="http://minotaursu.com/tags/%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91/"/>
     
   </entry>
   
@@ -430,28 +464,6 @@
       <category term="滴滴" scheme="http://minotaursu.com/tags/%E6%BB%B4%E6%BB%B4/"/>
     
       <category term="阿里" scheme="http://minotaursu.com/tags/%E9%98%BF%E9%87%8C/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[一次GC耗时超长的问题排查]]></title>
-    <link href="http://minotaursu.com/2018/02/22/%E4%B8%80%E6%AC%A1GC%E8%80%97%E6%97%B6%E8%B6%85%E9%95%BF%E7%9A%84%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/"/>
-    <id>http://minotaursu.com/2018/02/22/一次GC耗时超长的问题排查/</id>
-    <published>2018-02-22T03:57:06.000Z</published>
-    <updated>2019-02-01T09:02:25.335Z</updated>
-    <content type="html"><![CDATA[<p><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/gc.png" alt=""></p>
-<p>2017年10月某日突然收到FullGC耗时超长的报警，排查发现应用存在周期性FULLGC耗时超长的的情况，每次FULLGC时间长达5s以上，甚至出现过10s以上的FULLGC，导致FULLGC时应用的响应全部超时。最初是怀疑系统有大量的对象没有释放导致FULLGC时间过长，第一时间dump了应用的内存，并没有发现内存泄露的情况。后面查看GC日志发现Rescan阶段weak refs processing的超时都超长，GC日志里大量可见[weak refs processing, 9.7398650 secs]，排查的方向就逐渐转向了weak refs processing 为什么会花费如此长的时间，大家在一起针对代码分析了很久，从jackson的使用，到本地缓存的使用，到NIO的影响，每个人都提出了自己的见解，但是又没有强有力的证据验证自己的结果，按照这个思路排查了一晚上也没有结果。<br>后面分析发现耗时超长的FULLGC只出现在特定的某一台服务器上，该应用的FULLGC耗时在其他服务器上都表现正常，排查发现出现GC耗时过长的服务器还部署着大数据的某个高IO类型的应用，排查的思路又转向了服务器的IO和cpu，但是并没有发现io和cpu的异常情况，排查似乎陷入了困境。<br><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/easygc.png" alt=""><br>过了几天之后找到了一个可视化的GC分析工具<a href="http://gceasy.io/" target="_blank" rel="external">gceasy.io</a> ，分析后发现一个之前一直忽略的现象，GC真实的耗时是远大于用户耗时和系统耗时的，[Times: user=2.56 sys=0.07, real=9.82 secs]。我们知道JVM本身作为一个进程也是由linux系统进行内存分配，而linux的内存空间由两部分构成，物理内存和swap空间，假如GC时有一部分内容被交换到swap，遍历到这部分的时候就需要将其交换回内存，极端情况下甚至会把整个堆分区轮流往SWAP写一遍，而磁盘交换的速度是远慢于物理内存的，如果GC和swap同时发生会导致超长时间的卡顿，通过sar -W -f 命令分析发现swap时间完全吻合发生耗时超长的GC时间，基本可以断定是系统的物理内存不够用导致系统发生swap，最终导致耗时超长的GC发生，关闭linux的swap后引用的GC时间恢复到500ms以下。<br>虽然gc耗时超长的问题得到了解决，但是仔细思考一下就会发现问题的解决完全依赖程序员的推理过程和知识储备，那么是不是可以有更简单更快速的问题排查定位手段，我认为答案是可以的，那就是更加智能化的监控，将业务指标，应用指标，系统指标打通关联，在FULLGC超时报警的时候通知告知业务开发系统发生了swap，并且能展示对订单量和GMV等指标的影响。好的基础设施就像强大的武器，虽然依赖好的枪法用手枪也能杀死敌人，但是手里有把AKM或M16还是更容易吃鸡。</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/gc.png" alt=""></p>
-<p>2017年10月某日突然收到FullGC耗时超长的]]>
-    </summary>
-    
-      <category term="gc" scheme="http://minotaursu.com/tags/gc/"/>
-    
-      <category term="java" scheme="http://minotaursu.com/tags/java/"/>
-    
-      <category term="性能" scheme="http://minotaursu.com/tags/%E6%80%A7%E8%83%BD/"/>
     
   </entry>
   

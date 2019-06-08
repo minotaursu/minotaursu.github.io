@@ -82,7 +82,7 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        34
+        35
         <span>posts</span>
       </div>
       <div class="article-info-block">
@@ -115,153 +115,6 @@
 
       
       <section id="main">
-      <article id="post-浅谈Lambda架构和Kappa架构" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/05/31/浅谈Lambda架构和Kappa架构/">浅谈Lambda架构和Kappa架构</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2019/05/31/浅谈Lambda架构和Kappa架构/">
-      <time datetime="2019-05-31T13:17:38.000Z" itemprop="datePublished">2019-05-31</time>
-    </a>
-  </div>
-
-
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <h1 id="数据系统的本质">数据系统的本质</h1><p>query = function(all data)，对于数据系统的本质Marz提出了一个简单的公式。在大部分情况，在数据集上执行查询函数立即就能获得结果，但是当数据量到达一定量级时，function则需要变的更加复杂。针对OLTP场景的解决方案通常是shard（pre-sharding和auto-sharding ），针对OLAP场景的解决方案通常则是lambda架构和kappa架构。</p>
-<h1 id="Lambda架构">Lambda架构</h1><p>Lambda架构是一个融合了批处理和近实时计算的大数据处理架构，由Storm的作者Nathan Marz提出，其设计目的在于提供一个能满足大数据系统关键特性的架构，包括高容错、低延迟、可扩展等。其整合离线计算与实时计算，融合不可变性、读写分离和复杂性隔离等原则，可集成Hadoop, Kafka, Spark，Storm等各类大数据组件。目前成为了业界大部分公司的数据处理架构的标配解决方案。<br>一个典型的lambda架构如下：<br><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/lambda.png" alt=""><br>lambda架构分为三层: Batch, speed and serving。</p>
-<h3 id="Batch_Layer">Batch Layer</h3><p>Batch Layer的功能是存储数据集，并且在数据集上运行数据处理函数，例如hadoop和MapReduce。</p>
-<h3 id="Speed_Layer">Speed Layer</h3><p>Batch Layer可以很好的处理离线数据，但有很多场景数据不断实时生成，并且需要实时查询处理。Speed Layer的功能是处理批处理周期之间的增量实时数据。提供近实时的数据处理和业务快速响应。</p>
-<h3 id="Serving_Layer">Serving Layer</h3><p>Serving Layer用于响应用户的查询请求，合并Batch View和Realtime View中的结果数据集到最终的数据集。</p>
-<p>这种架构主要面向的场景是逻辑比较复杂同时又希望延迟比较低的异步处理程序，比如搜索引擎、推荐引擎等。<br>系统从一个流中读取被我们定义为不可变的数据，分别灌入实时系统如Storm和批处理系统如Hadoop，然后各自输出自己的结果，这些结果会在查询端进行合并。当然，这种系统也可有很多变种，比如上图中的Kafka也可替换成其他的分布式队列，Storm也可以替换成其他的流式计算引擎。</p>
-<h3 id="Lambda架构的不足">Lambda架构的不足</h3><p>虽然Lambda架构具有诸多优点，以其成熟稳定的架构成为多数公司的大数据处理架构标配，但是也有一些不足：</p>
-<ul>
-<li>开发周期长：针对需求的变化既需要做批处理开发也需要做流式计算开发，重复的开发工作使开发周期更长。</li>
-<li>结果不一致：由于批处理和实时计算走的是两个计算框架和计算程序，不同开发人员对业务的理解也可能会不一致，算出的结果往往不同。</li>
-<li>存储成本大：由于批处理程序往往会产生很多中间表，造成数据膨胀，加大了存储成本。</li>
-</ul>
-<h1 id="kappa架构">kappa架构</h1><p>Kappa 架构是LinkedIn的Jay Kreps结合实际经验和个人体会，针对Lambda架构进行深度剖析，提出使用统一的流式计算架构来应对全量历史数据和增量实时数据。Kappa架构的核心思想，包括以下三点：</p>
-<ul>
-<li>用Kafka或者类似MQ队列系统收集各种各样的数据，你需要几天的数据量就保存几天。</li>
-<li>当需要全量重新计算时，重新起一个流计算实例，从头开始读取数据进行处理，并输出到一个新的结果存储中。</li>
-<li>当新的实例做完后，停止老的流计算实例，并把老的一些结果删除。<br>一个典型的kappa架构如下：<br><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/kappa.png" alt=""></li>
-</ul>
-<h3 id="Kappa架构的不足">Kappa架构的不足</h3><p>Kappa架构的优点在于将实时和离线代码统一起来，方便维护而且统一了计算框架和数据口径。但是也有相应的不足：</p>
-<ul>
-<li>吞吐能力成为海量数据处理的瓶颈。面对海量的历史数据，流式计算的吞吐能力和并发能力往往力不从心，无法满足即时性要求。</li>
-<li>更高的服务器成本。相比于批处理，流式计算有着更高的计算成本和存储成本。</li>
-</ul>
-<h1 id="如何选择">如何选择</h1><p>从长远看人力成本一定会远大于机器成本，系统的吞吐量可以随着硬件能力的提升和架构设计优化而改善。在大部分领域kappa架构可能是更适合的选择。</p>
-<p>参考:<br><a href="http://www.databasetube.com/database/big-data-lambda-architecture/" target="_blank" rel="external">Big Data Lambda Architecture</a><br><a href="https://www.oreilly.com/ideas/questioning-the-lambda-architecture" target="_blank" rel="external">questioning the lambda architecture</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2019/05/31/浅谈Lambda架构和Kappa架构/" data-id="cjwc45m7o000sk1c41zmgop4k" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/大数据/">大数据</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/存储/">存储</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/架构/">架构</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/系统设计/">系统设计</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-如何成为高效学习的程序员" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/05/24/如何成为高效学习的程序员/">如何成为高效学习的程序员</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2019/05/24/如何成为高效学习的程序员/">
-      <time datetime="2019-05-24T09:01:16.000Z" itemprop="datePublished">2019-05-24</time>
-    </a>
-  </div>
-
-
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <h1 id="为什么需要学习">为什么需要学习</h1><h3 id="学习的重要性">学习的重要性</h3><p>在当前这个时代信息的传播效率大幅提升，知识的获取成本大幅降低，互联网在改变着世界的同时，行业本身也在快速的发生变化，不断的有新的工具，框架，语言，解决方案产生，甚至架构思路和模式都会和几年前不同，行业发展得太快，纯靠经验积累行不通，变化的速度远大于经验积累的速度。快速的找到所需要的知识并能高效学习，对于程序员越来越重要，是最核心的能力之一。</p>
-<h3 id="第一动因">第一动因</h3><p>虽然学习非常重要，但是学习并不一定能带来成功，并且很难看到直接看到短期收益，但是学习对人成长的长期影响远大于短期影响，因此学习的首要目的一定是内在的，相比于获得外部的认可更应该关注自我成长，这样才能持续学习持续成长。</p>
-<h1 id="如何高效学习">如何高效学习</h1><p>关于如何做到高效学习，我认为有以下几点。</p>
-<h3 id="走出舒适区">走出舒适区</h3><p>高效学习的第一步就是走出舒适区，有成长的意愿和成长的行动便是学习的第一步，对于舒适区内的事情我们习惯于通过经验和潜意识解决，往往很难有成长。就像哥伦布发现新大陆一样，只有离开旧大陆勇敢的杨帆起航才可能发现宝藏，当然这个过程并不是毫无风险的，我们要避免进入充满暗礁的恐慌区。</p>
-<p><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/goway.jpg" alt=""></p>
-<h3 id="目标与反馈">目标与反馈</h3><p>在离开舒适区之后，目标和反馈就是我们航行旅途中的星空和罗盘。我们最好设立2种目标，一种是远大的愿景，保证我们向着彼岸航行，不被短期的诱惑改变航向，一种则是阶梯式的短期目标，保证我们扎实的逐步前行，不被看起来遥不可及的彼岸所击倒。反馈就像手中的罗盘能帮助我们及时的调整航向，校正行动与目标之间的偏离，同时即时反馈也是建立兴趣的关键，可以帮助我们提升成就感。</p>
-<h3 id="千层饼式的学习方式">千层饼式的学习方式</h3><p>对于一项新技术的学习存在2种学习方式。</p>
-<ul>
-<li>top-down<br>实践后理论的在使用中学习方式，这种方式的好处是学的快，有成就感，坏处是基础不牢，理论差。</li>
-<li>bottom-up<br>先理论后实践的结构化学习方式，这种方式的好处是基础扎实，未来创造力强，坏处是学的慢，容易忘记。<br>我个人更喜欢千层饼式的学习方式，将top-down和bottom-up相结合，先有一个感性认知，然后再夯实基础进行理性的总结。针对具体的领域在决定是花更多的时间基础还是在实践。</li>
-</ul>
-<h3 id="保持专注">保持专注</h3><p>专注程度是决定学习质量和效率的关键，儿童能够快速会学一个技能正是因为更能心无旁骛的学习，更容易进入心流状态。专注力的培养涉及到多个方面，需要在日常的工作生活中提升，例如找到一个爱好并沉浸其中就是一个比较好的培养专注力的方式。同时情绪是影响专注度的最重要的原因之一，焦虑，混乱，恐惧是专注度最大的敌人。被deadline驱动，但不被deadline困扰。</p>
-<h3 id="高质量心理表征">高质量心理表征</h3><p>《刻意练习》中提到能否建立高质量心理表征是刻意练习最重要的检验成果之一。能否建立高质量心理表征是一个人能否挥洒自如，举一反三的关键，只有一个人建立了高质量心理表征才是真正的高手，如果做不到这点，可能是练习的程度不够也可能是练习方法的问题，缺少深层次的思考与熟练度。</p>
-<h3 id="观摩高手">观摩高手</h3><p>观摩高手是突破自身瓶颈的最佳方式，在学习的路上往往会遇到瓶颈，并且这个瓶颈和极限还有很远的距离，这个时候就需要一些外力的帮助，最好得到一位已经突破瓶颈的大师指导。和青铜打上一百场，也不如在王者的指点下打一场。</p>
-<h3 id="时间管理">时间管理</h3><p>更好的时间管理可以帮助我们有更多次更高效的学习。对于时间管理比较好用的工具有四象限和番茄时钟。时间四象限对工作有着指导意义，尽量把时间投入到重要不紧急的第二象限，减少一，三象限的时间投入，尽量不做第四象限的事情。番茄工作法则将任务细分到每个原子的番茄时钟，让做事更有效率。</p>
-<p><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/timemetric.png" alt=""></p>
-<h3 id="精力管理">精力管理</h3><p>精力管理帮我们更好的面对来自生理上的基础挑战。</p>
-<ul>
-<li>体能<br>体能是最基础也最应该训练的部分。体能决定精力的基础。</li>
-<li>情感<br>情感是精力中爆发力最强的部分，负面的情感有害并且影响巨大。情感决定精力的质量。</li>
-<li>思维<br>思维是精力中最有创造力的部分，在放松中思考会带来更多的灵感。思维决定精力的效率。</li>
-<li>意志<br>意志通向最深处的价值取向和自我，是最强大的动机来源。意志决定精力的强度。</li>
-</ul>
-<h1 id="程序员应该学习什么">程序员应该学习什么</h1><p>一个优秀的程序员应该不断的提升3个方面的能力，专业技能，软技能，学习能力。这里主要关注专业技能部分的提升。</p>
-<h3 id="工具要熟练">工具要熟练</h3><p>工欲善其事必先利其器，工具使用的熟练程度是高手与菜鸟之间最肉眼可见的差距。工具使用的熟练程度直接决定做事的效率。推荐的工具有intellij idea，pycharm，vim。</p>
-<h3 id="看书&amp;看文档&amp;看视频">看书&amp;看文档&amp;看视频</h3><p>看书是最容易构建完整的知识体系的学习方式，看书学习应该成为打基础时的第一选择。书籍的主要问题在于时效性，并且书籍往往都是二手知识，对于最新的技术看官方文档就是最佳的学习方式，例如spring家族，elastic系列。在看书和看文档之外看视频也是一个比较好的学习方式，生成的视频能带来最直观最感性的认识，容易形成深层次的长期记忆，并且也能通过观察高手的实际操作学到一些技巧。</p>
-<h3 id="github&amp;twitter&amp;微博">github&amp;twitter&amp;微博</h3><p>在这些最及时更新的社区上我们可以通过follow一些技术大牛了解最新的行业动态和未来趋势。</p>
-<h3 id="写demo写test看源码">写demo写test看源码</h3><p>写demo是深层次学习一个技术的最好的方式，例如实现一个rpc的demo可以帮助我们全面了解rpc最核心的技术和遇到问题的解决方案。写test则是学习如何使用一个技术的最好方式，只有能写出好的test的程序员才是一个合格的CRUD boy。看源码则是提高代码品味和code review技巧的最佳学习方式，不过看源码学习的投入成本很大，并且对于不熟悉的领域很难找到切入点。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2019/05/24/如何成为高效学习的程序员/" data-id="cjwc45m8b0020k1c4255jxphu" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/学习/">学习</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/职业规划/">职业规划</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/软技能/">软技能</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
       <article id="post-我对未来技术趋势的一些看法" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -271,7 +124,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/05/16/我对未来技术趋势的一些看法/">我对未来技术趋势的一些看法</a>
+      <a class="article-title" href="/2019/07/16/我对未来技术趋势的一些看法/">我对未来技术趋势的一些看法</a>
     </h1>
   
 
@@ -279,8 +132,8 @@
           
   <div class="article-date">
     <i class="fa fa-calendar"></i>
-    <a href="/2019/05/16/我对未来技术趋势的一些看法/">
-      <time datetime="2019-05-16T09:40:27.000Z" itemprop="datePublished">2019-05-16</time>
+    <a href="/2019/07/16/我对未来技术趋势的一些看法/">
+      <time datetime="2019-07-16T09:40:27.000Z" itemprop="datePublished">2019-07-16</time>
     </a>
   </div>
 
@@ -341,10 +194,163 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2019/05/16/我对未来技术趋势的一些看法/" data-id="cjwc45m85001qk1c4av0x72dd" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2019/07/16/我对未来技术趋势的一些看法/" data-id="cjwmus9f6001u7lc4htm4p7pj" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/架构/">架构</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/职业规划/">职业规划</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/软件开发/">软件开发</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
+      <article id="post-如何成为高效学习的程序员" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/06/24/如何成为高效学习的程序员/">如何成为高效学习的程序员</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2019/06/24/如何成为高效学习的程序员/">
+      <time datetime="2019-06-24T09:01:16.000Z" itemprop="datePublished">2019-06-24</time>
+    </a>
+  </div>
+
+
+          
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <h1 id="为什么需要学习">为什么需要学习</h1><h3 id="学习的重要性">学习的重要性</h3><p>在当前这个时代信息的传播效率大幅提升，知识的获取成本大幅降低，互联网在改变着世界的同时，行业本身也在快速的发生变化，不断的有新的工具，框架，语言，解决方案产生，甚至架构思路和模式都会和几年前不同，行业发展得太快，纯靠经验积累行不通，变化的速度远大于经验积累的速度。快速的找到所需要的知识并能高效学习，对于程序员越来越重要，是最核心的能力之一。</p>
+<h3 id="第一动因">第一动因</h3><p>虽然学习非常重要，但是学习并不一定能带来成功，并且很难看到直接看到短期收益，但是学习对人成长的长期影响远大于短期影响，因此学习的首要目的一定是内在的，相比于获得外部的认可更应该关注自我成长，这样才能持续学习持续成长。</p>
+<h1 id="如何高效学习">如何高效学习</h1><p>关于如何做到高效学习，我认为有以下几点。</p>
+<h3 id="走出舒适区">走出舒适区</h3><p>高效学习的第一步就是走出舒适区，有成长的意愿和成长的行动便是学习的第一步，对于舒适区内的事情我们习惯于通过经验和潜意识解决，往往很难有成长。就像哥伦布发现新大陆一样，只有离开旧大陆勇敢的杨帆起航才可能发现宝藏，当然这个过程并不是毫无风险的，我们要避免进入充满暗礁的恐慌区。</p>
+<p><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/goway.jpg" alt=""></p>
+<h3 id="目标与反馈">目标与反馈</h3><p>在离开舒适区之后，目标和反馈就是我们航行旅途中的星空和罗盘。我们最好设立2种目标，一种是远大的愿景，保证我们向着彼岸航行，不被短期的诱惑改变航向，一种则是阶梯式的短期目标，保证我们扎实的逐步前行，不被看起来遥不可及的彼岸所击倒。反馈就像手中的罗盘能帮助我们及时的调整航向，校正行动与目标之间的偏离，同时即时反馈也是建立兴趣的关键，可以帮助我们提升成就感。</p>
+<h3 id="千层饼式的学习方式">千层饼式的学习方式</h3><p>对于一项新技术的学习存在2种学习方式。</p>
+<ul>
+<li>top-down<br>实践后理论的在使用中学习方式，这种方式的好处是学的快，有成就感，坏处是基础不牢，理论差。</li>
+<li>bottom-up<br>先理论后实践的结构化学习方式，这种方式的好处是基础扎实，未来创造力强，坏处是学的慢，容易忘记。<br>我个人更喜欢千层饼式的学习方式，将top-down和bottom-up相结合，先有一个感性认知，然后再夯实基础进行理性的总结。针对具体的领域在决定是花更多的时间基础还是在实践。</li>
+</ul>
+<h3 id="保持专注">保持专注</h3><p>专注程度是决定学习质量和效率的关键，儿童能够快速会学一个技能正是因为更能心无旁骛的学习，更容易进入心流状态。专注力的培养涉及到多个方面，需要在日常的工作生活中提升，例如找到一个爱好并沉浸其中就是一个比较好的培养专注力的方式。同时情绪是影响专注度的最重要的原因之一，焦虑，混乱，恐惧是专注度最大的敌人。被deadline驱动，但不被deadline困扰。</p>
+<h3 id="高质量心理表征">高质量心理表征</h3><p>《刻意练习》中提到能否建立高质量心理表征是刻意练习最重要的检验成果之一。能否建立高质量心理表征是一个人能否挥洒自如，举一反三的关键，只有一个人建立了高质量心理表征才是真正的高手，如果做不到这点，可能是练习的程度不够也可能是练习方法的问题，缺少深层次的思考与熟练度。</p>
+<h3 id="观摩高手">观摩高手</h3><p>观摩高手是突破自身瓶颈的最佳方式，在学习的路上往往会遇到瓶颈，并且这个瓶颈和极限还有很远的距离，这个时候就需要一些外力的帮助，最好得到一位已经突破瓶颈的大师指导。和青铜打上一百场，也不如在王者的指点下打一场。</p>
+<h3 id="时间管理">时间管理</h3><p>更好的时间管理可以帮助我们有更多次更高效的学习。对于时间管理比较好用的工具有四象限和番茄时钟。时间四象限对工作有着指导意义，尽量把时间投入到重要不紧急的第二象限，减少一，三象限的时间投入，尽量不做第四象限的事情。番茄工作法则将任务细分到每个原子的番茄时钟，让做事更有效率。</p>
+<p><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/timemetric.png" alt=""></p>
+<h3 id="精力管理">精力管理</h3><p>精力管理帮我们更好的面对来自生理上的基础挑战。</p>
+<ul>
+<li>体能<br>体能是最基础也最应该训练的部分。体能决定精力的基础。</li>
+<li>情感<br>情感是精力中爆发力最强的部分，负面的情感有害并且影响巨大。情感决定精力的质量。</li>
+<li>思维<br>思维是精力中最有创造力的部分，在放松中思考会带来更多的灵感。思维决定精力的效率。</li>
+<li>意志<br>意志通向最深处的价值取向和自我，是最强大的动机来源。意志决定精力的强度。</li>
+</ul>
+<h1 id="程序员应该学习什么">程序员应该学习什么</h1><p>一个优秀的程序员应该不断的提升3个方面的能力，专业技能，软技能，学习能力。这里主要关注专业技能部分的提升。</p>
+<h3 id="工具要熟练">工具要熟练</h3><p>工欲善其事必先利其器，工具使用的熟练程度是高手与菜鸟之间最肉眼可见的差距。工具使用的熟练程度直接决定做事的效率。推荐的工具有intellij idea，pycharm，vim。</p>
+<h3 id="看书&amp;看文档&amp;看视频">看书&amp;看文档&amp;看视频</h3><p>看书是最容易构建完整的知识体系的学习方式，看书学习应该成为打基础时的第一选择。书籍的主要问题在于时效性，并且书籍往往都是二手知识，对于最新的技术看官方文档就是最佳的学习方式，例如spring家族，elastic系列。在看书和看文档之外看视频也是一个比较好的学习方式，生成的视频能带来最直观最感性的认识，容易形成深层次的长期记忆，并且也能通过观察高手的实际操作学到一些技巧。</p>
+<h3 id="github&amp;twitter&amp;微博">github&amp;twitter&amp;微博</h3><p>在这些最及时更新的社区上我们可以通过follow一些技术大牛了解最新的行业动态和未来趋势。</p>
+<h3 id="写demo写test看源码">写demo写test看源码</h3><p>写demo是深层次学习一个技术的最好的方式，例如实现一个rpc的demo可以帮助我们全面了解rpc最核心的技术和遇到问题的解决方案。写test则是学习如何使用一个技术的最好方式，只有能写出好的test的程序员才是一个合格的CRUD boy。看源码则是提高代码品味和code review技巧的最佳学习方式，不过看源码学习的投入成本很大，并且对于不熟悉的领域很难找到切入点。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://minotaursu.com/2019/06/24/如何成为高效学习的程序员/" data-id="cjwmus9fc00247lc44jfscykr" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/学习/">学习</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/职业规划/">职业规划</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/软技能/">软技能</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
+      <article id="post-再谈稳定性" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/06/11/再谈稳定性/">再谈稳定性工作</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2019/06/11/再谈稳定性/">
+      <time datetime="2019-06-11T08:33:17.000Z" itemprop="datePublished">2019-06-11</time>
+    </a>
+  </div>
+
+
+          
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <p>之前也写过一篇稳定性工作的总结-<a href="http://minotaursu.com/2018/03/12/%E5%A6%82%E4%BD%95%E4%BF%9D%E9%9A%9C%E9%AB%98%E5%B9%B6%E5%8F%91%E7%B3%BB%E7%BB%9F%E7%9A%84%E7%A8%B3%E5%AE%9A%E6%80%A7%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/">如何保障高并发系统的稳定性与高可用</a>，但更多的是从系统开发者的角度说明如何保障单一系统的稳定性，做好自己负责系统的稳定性建设更多的是依赖知识和经验，是个技术活。负责了一整年的业务线稳定性建设之后，对于如何保障几十个系统的稳定性，协同几十人做好稳定性相关工作有了更多的思考和实践，又有了些新的体会，更需要科学的工程管理，涉及到多个方面。</p>
+<h2 id="方向">方向</h2><ol>
+<li>高可用<br>高可用要求系统有比较高的风险防范应对能力，把因软件/硬件/人为造成的故障对业务的影响降低到最小程度。系统能够对外提供有效服务的时间大于99.9%，99.99%，甚至是99.999%。 </li>
+<li>零资损<br>高可用强调的是对外稳定服务，零资损强调的是内部资金安全。减少软件/硬件/人为的因素导致的资金损失风险。特别是计费，交易，营销这些和钱相关的系统。</li>
+</ol>
+<p><img src="https://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/direction.png" alt=""></p>
+<h2 id="维度">维度</h2><ol>
+<li>流程规范<br>一个行之有效的流程对系统稳定性有着至关重要的作用。把流程规范的建立作为稳定性建设的开始是一个比较好的选择，不需要付出非常巨大的成本，但对稳定性的提升有着很大的帮助。好的流程规范应该覆盖项目整个生命周期（需求评审，项目管理，项目开发，code review，测试用例评审，上线流程，故障通报，故障复盘）尽可能的帮助开发避免风险点。</li>
+<li>基础设施<br>基础设施建设是稳定性建设的核心方向。科技是第一生产力，工具可以带来能力和效率的大幅提升。只有具备完备而且强大的工具才有可能保障复杂系统的高可用，试想如果没有监控报警就连最基础的故障感知都无法做到，缺少运维工具的辅助想要做到故障的快速恢复更是天方夜谭。</li>
+<li>稳定性意识<br>稳定性意识的提升是最基础也是最难的工作。很多人眼里只有业务功能，很少关心稳定性工作，需要在日常文化中强调稳定性的重要性，通过例会，巡检，定期演练的方式提升大家的稳定性意识。</li>
+</ol>
+<p><img src="https://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/metrics.png" alt=""></p>
+<h2 id="阶段">阶段</h2><ol>
+<li>事前<br>事前重在风险的发现和预防，做好容量规划，服务治理，系统优化，慢查优化，提升系统鲁棒性。</li>
+<li>事中<br>事中重在最快止损，最快定位。止损是第一优先级的事情，需要提前准备好故障预案。定位则依赖完备的工具和对系统业务的熟悉。</li>
+<li>事后<br>事后重在修复故障影响，复盘和改进。一个故障的发生一定是要做到闭环的，必然存在可改进项，同时也要做到对事不对人。</li>
+</ol>
+<p><img src="https://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/stage.png" alt=""></p>
+<h2 id="架构">架构</h2><ol>
+<li>网络层<br>网络层是系统架构中不确定性最高的部分。用户通过网络访问系统服务，网络的延迟和成功率直接影响着用户的体验，很可能由于运营商的设备升级和道路施工导致网络不可用，并且机房断电，火灾，地震..这些极端因素都会导致业务瘫痪，如果业务期望达到即使在此类灾难性故障的情况下，业务也不受影响，或者在几分钟内就能够很快恢复，那么就需要设计异地多活架构。根据地理位置上的距离来划分，异地多活架构可以分为同城异区、跨城异地、跨国异地。多活架构的最大难点就是地理位置导致的数据同步延迟和业务上强一致的矛盾。</li>
+<li>应用层<br>应用层是系统架构中复杂度最高变化最频繁的部分。一个使用微服务架构的业务线涉及到几十个系统，几百个服务，几千个接口，系统间存在大量的交互，如何做好服务治理，保障应用层的稳定性是一个重大的挑战。</li>
+<li>存储层<br>存储层是系统架构中最需要被保护的部分。存储层即强大又脆弱，缓存是系统高性能的核心，使系统能够承载高并发的流量带来的压力，同时缓存的穿透，雪崩也往往会导致大故障。mysql则是更加的脆弱，一个无索引的慢查，几个大事务都可能导致数据库的瘫痪。</li>
+<li>中间件<br>中间件作为系统架构中的数据通道和流量通道，是稳定性发力的支点。可以通过在中间件中集成服务治理，限流，降级等策略使尽可能多的应用系统收益，中间件的一小步的优化往往会带来系统稳定性的一大步提升。</li>
+</ol>
+<p><img src="https://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/layerx.png" alt=""></p>
+<h2 id="架构原则">架构原则</h2><ol>
+<li>冗余<br>冗余是高可用架构的核心原则。好的架构需要做到对流量冗余，资源冗余，硬件冗余，也是异地多活，集群部署，容量规划的核心思想。</li>
+<li>隔离<br>隔离是高可用架构的另一个核心原则。除了冗余之外也需要做好故障隔离，资源隔离，前后台隔离，在线离线隔离，防止故障在线程，进程，应用，领域之间的传播，小的风险演变成大的事故。</li>
+</ol>
+<h2 id="全局工作概览">全局工作概览</h2><p>最后是一张全局工作概览图，有些已经做的比较成熟，有些还需要继续完善。</p>
+<p><img src="https://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/availability.png" alt=""></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://minotaursu.com/2019/06/11/再谈稳定性/" data-id="cjwmus9fu002r7lc4osss4arp" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/工作/">工作</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/性能/">性能</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/稳定性/">稳定性</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/高可用/">高可用</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/高并发/">高并发</a></li></ul>
 
     </footer>
   </div>
@@ -370,6 +376,60 @@
           <li>
             
             <div class="item-thumbnail">
+              <a href="/2019/07/16/我对未来技术趋势的一些看法/" class="thumbnail">
+  
+    <span style="background-image:url(https://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/skycity.jpg
+)" alt="我对未来技术趋势的一些看法" class="thumbnail-image"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"></p>
+              <p class="item-title"><a href="/2019/07/16/我对未来技术趋势的一些看法/" class="title">我对未来技术趋势的一些看法</a></p>
+              <p class="item-date"><time datetime="2019-07-16T09:40:27.000Z" itemprop="datePublished">2019-07-16</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2019/06/24/如何成为高效学习的程序员/" class="thumbnail">
+  
+    <span style="background-image:url(http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/goway.jpg
+)" alt="如何成为高效学习的程序员" class="thumbnail-image"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"></p>
+              <p class="item-title"><a href="/2019/06/24/如何成为高效学习的程序员/" class="title">如何成为高效学习的程序员</a></p>
+              <p class="item-date"><time datetime="2019-06-24T09:01:16.000Z" itemprop="datePublished">2019-06-24</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2019/06/11/再谈稳定性/" class="thumbnail">
+  
+    <span style="background-image:url(https://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/direction.png
+)" alt="再谈稳定性工作" class="thumbnail-image"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"></p>
+              <p class="item-title"><a href="/2019/06/11/再谈稳定性/" class="title">再谈稳定性工作</a></p>
+              <p class="item-date"><time datetime="2019-06-11T08:33:17.000Z" itemprop="datePublished">2019-06-11</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
               <a href="/2019/05/31/浅谈Lambda架构和Kappa架构/" class="thumbnail">
   
     <span style="background-image:url(http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/lambda.png
@@ -388,72 +448,17 @@
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2019/05/24/如何成为高效学习的程序员/" class="thumbnail">
+              <a href="/2019/05/08/数据存储系统的选择/" class="thumbnail">
   
-    <span style="background-image:url(http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/goway.jpg
-)" alt="如何成为高效学习的程序员" class="thumbnail-image"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"></p>
-              <p class="item-title"><a href="/2019/05/24/如何成为高效学习的程序员/" class="title">如何成为高效学习的程序员</a></p>
-              <p class="item-date"><time datetime="2019-05-24T09:01:16.000Z" itemprop="datePublished">2019-05-24</time></p>
-            </div>
-          </li>
-        
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2019/05/16/我对未来技术趋势的一些看法/" class="thumbnail">
-  
-    <span style="background-image:url(https://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/skycity.jpg
-)" alt="我对未来技术趋势的一些看法" class="thumbnail-image"></span>
+    <span class="thumbnail-image thumbnail-none"></span>
   
 </a>
             </div>
             
             <div class="item-inner">
               <p class="item-category"></p>
-              <p class="item-title"><a href="/2019/05/16/我对未来技术趋势的一些看法/" class="title">我对未来技术趋势的一些看法</a></p>
-              <p class="item-date"><time datetime="2019-05-16T09:40:27.000Z" itemprop="datePublished">2019-05-16</time></p>
-            </div>
-          </li>
-        
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2019/04/29/java保留小数点后2位格式化问题/" class="thumbnail">
-  
-    <span style="background-image:url(http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/java-bug.png
-)" alt="java保留小数点后2位格式化问题" class="thumbnail-image"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"></p>
-              <p class="item-title"><a href="/2019/04/29/java保留小数点后2位格式化问题/" class="title">java保留小数点后2位格式化问题</a></p>
-              <p class="item-date"><time datetime="2019-04-29T06:07:43.000Z" itemprop="datePublished">2019-04-29</time></p>
-            </div>
-          </li>
-        
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2019/04/11/再谈稳定性/" class="thumbnail">
-  
-    <span style="background-image:url(https://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/direction.png
-)" alt="再谈稳定性工作" class="thumbnail-image"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"></p>
-              <p class="item-title"><a href="/2019/04/11/再谈稳定性/" class="title">再谈稳定性工作</a></p>
-              <p class="item-date"><time datetime="2019-04-11T08:33:17.000Z" itemprop="datePublished">2019-04-11</time></p>
+              <p class="item-title"><a href="/2019/05/08/数据存储系统的选择/" class="title">数据存储系统的选择</a></p>
+              <p class="item-date"><time datetime="2019-05-08T01:39:02.000Z" itemprop="datePublished">2019-05-8</time></p>
             </div>
           </li>
         
@@ -466,7 +471,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">tag cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/ACID/" style="font-size: 10px;">ACID</a> <a href="/tags/AOP/" style="font-size: 11.25px;">AOP</a> <a href="/tags/CAP/" style="font-size: 10px;">CAP</a> <a href="/tags/annotation/" style="font-size: 10px;">annotation</a> <a href="/tags/archsummit/" style="font-size: 10px;">archsummit</a> <a href="/tags/gc/" style="font-size: 11.25px;">gc</a> <a href="/tags/git/" style="font-size: 11.25px;">git</a> <a href="/tags/go/" style="font-size: 10px;">go</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/jackson/" style="font-size: 10px;">jackson</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/jdk8/" style="font-size: 10px;">jdk8</a> <a href="/tags/netty/" style="font-size: 11.25px;">netty</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/quartz/" style="font-size: 10px;">quartz</a> <a href="/tags/reactor/" style="font-size: 10px;">reactor</a> <a href="/tags/spring/" style="font-size: 11.25px;">spring</a> <a href="/tags/tips/" style="font-size: 10px;">tips</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/云计算/" style="font-size: 10px;">云计算</a> <a href="/tags/分布式/" style="font-size: 12.5px;">分布式</a> <a href="/tags/大数据/" style="font-size: 10px;">大数据</a> <a href="/tags/存储/" style="font-size: 10px;">存储</a> <a href="/tags/学习/" style="font-size: 10px;">学习</a> <a href="/tags/工作/" style="font-size: 18.75px;">工作</a> <a href="/tags/工具/" style="font-size: 11.25px;">工具</a> <a href="/tags/并发/" style="font-size: 12.5px;">并发</a> <a href="/tags/性能/" style="font-size: 15px;">性能</a> <a href="/tags/总结/" style="font-size: 12.5px;">总结</a> <a href="/tags/架构/" style="font-size: 13.75px;">架构</a> <a href="/tags/消息队列/" style="font-size: 10px;">消息队列</a> <a href="/tags/滴滴/" style="font-size: 11.25px;">滴滴</a> <a href="/tags/稳定性/" style="font-size: 11.25px;">稳定性</a> <a href="/tags/类冲突/" style="font-size: 10px;">类冲突</a> <a href="/tags/系统设计/" style="font-size: 16.25px;">系统设计</a> <a href="/tags/缓存/" style="font-size: 11.25px;">缓存</a> <a href="/tags/职业规划/" style="font-size: 13.75px;">职业规划</a> <a href="/tags/语言/" style="font-size: 10px;">语言</a> <a href="/tags/语言陷阱/" style="font-size: 11.25px;">语言陷阱</a> <a href="/tags/调度/" style="font-size: 10px;">调度</a> <a href="/tags/软件开发/" style="font-size: 17.5px;">软件开发</a> <a href="/tags/软技能/" style="font-size: 10px;">软技能</a> <a href="/tags/部署/" style="font-size: 10px;">部署</a> <a href="/tags/锁/" style="font-size: 10px;">锁</a> <a href="/tags/阿里/" style="font-size: 13.75px;">阿里</a> <a href="/tags/高可用/" style="font-size: 11.25px;">高可用</a> <a href="/tags/高并发/" style="font-size: 11.25px;">高并发</a>
+      <a href="/tags/ACID/" style="font-size: 10px;">ACID</a> <a href="/tags/AOP/" style="font-size: 11.25px;">AOP</a> <a href="/tags/CAP/" style="font-size: 10px;">CAP</a> <a href="/tags/annotation/" style="font-size: 10px;">annotation</a> <a href="/tags/archsummit/" style="font-size: 10px;">archsummit</a> <a href="/tags/gc/" style="font-size: 11.25px;">gc</a> <a href="/tags/git/" style="font-size: 11.25px;">git</a> <a href="/tags/go/" style="font-size: 10px;">go</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/jackson/" style="font-size: 10px;">jackson</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/jdk8/" style="font-size: 10px;">jdk8</a> <a href="/tags/netty/" style="font-size: 11.25px;">netty</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/quartz/" style="font-size: 10px;">quartz</a> <a href="/tags/reactor/" style="font-size: 10px;">reactor</a> <a href="/tags/spring/" style="font-size: 11.25px;">spring</a> <a href="/tags/tips/" style="font-size: 10px;">tips</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/云计算/" style="font-size: 10px;">云计算</a> <a href="/tags/分布式/" style="font-size: 13.75px;">分布式</a> <a href="/tags/大数据/" style="font-size: 11.25px;">大数据</a> <a href="/tags/存储/" style="font-size: 11.25px;">存储</a> <a href="/tags/学习/" style="font-size: 10px;">学习</a> <a href="/tags/工作/" style="font-size: 18.75px;">工作</a> <a href="/tags/工具/" style="font-size: 11.25px;">工具</a> <a href="/tags/并发/" style="font-size: 12.5px;">并发</a> <a href="/tags/性能/" style="font-size: 15px;">性能</a> <a href="/tags/总结/" style="font-size: 12.5px;">总结</a> <a href="/tags/架构/" style="font-size: 13.75px;">架构</a> <a href="/tags/消息队列/" style="font-size: 10px;">消息队列</a> <a href="/tags/滴滴/" style="font-size: 11.25px;">滴滴</a> <a href="/tags/稳定性/" style="font-size: 11.25px;">稳定性</a> <a href="/tags/类冲突/" style="font-size: 10px;">类冲突</a> <a href="/tags/系统设计/" style="font-size: 16.25px;">系统设计</a> <a href="/tags/缓存/" style="font-size: 11.25px;">缓存</a> <a href="/tags/职业规划/" style="font-size: 13.75px;">职业规划</a> <a href="/tags/语言/" style="font-size: 10px;">语言</a> <a href="/tags/语言陷阱/" style="font-size: 11.25px;">语言陷阱</a> <a href="/tags/调度/" style="font-size: 10px;">调度</a> <a href="/tags/软件开发/" style="font-size: 17.5px;">软件开发</a> <a href="/tags/软技能/" style="font-size: 10px;">软技能</a> <a href="/tags/部署/" style="font-size: 10px;">部署</a> <a href="/tags/锁/" style="font-size: 10px;">锁</a> <a href="/tags/阿里/" style="font-size: 13.75px;">阿里</a> <a href="/tags/高可用/" style="font-size: 11.25px;">高可用</a> <a href="/tags/高并发/" style="font-size: 11.25px;">高并发</a>
     </div>
   </div>
 

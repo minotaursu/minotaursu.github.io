@@ -82,7 +82,7 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        34
+        35
         <span>posts</span>
       </div>
       <div class="article-info-block">
@@ -115,6 +115,65 @@
 
       
       <section id="main">
+      <article id="post-我设计的12306" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/04/13/我设计的12306/">我设计的12306</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2015/04/13/我设计的12306/">
+      <time datetime="2015-04-13T14:49:30.000Z" itemprop="datePublished">2015-04-13</time>
+    </a>
+  </div>
+
+
+          
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <p>feed系统和火车票售卖系统是2个高访问高并发情况下具体很大挑战的系统。<br>在低访问，低并发的情况下feed系统会变的非常简单，数据模型和业务功能都比较容易设计和实现，主要的挑战就剩如何面对层出不穷的敏感词和花样百出的广告语。相比之下，火车票售卖系统在低并发时也很有趣，假设我是12306的架构师，我会如何设计12306那。</p>
+<h2 id="数据模型">数据模型</h2><p>先将系统进行拆分，独立成用户，车票，下单3个系统，每个系统内部封闭成多个服务，运行在独立的集群上面。这里只对车票系统进行数据模型设计。</p>
+<p>先上ER图 <img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/tickets.jpg" alt="数据模型"></p>
+<p>数据分成动静2部分，车次，站点，座位的数据都是静态的基本不会变，可以通过运营系统提前进行录入生成；车票则根据以上三张表每天动态生成，每条车票记录一个车次上的一个座位号，初始化的始发站，终点站为该车次的始发站和终点站，数据在下单时进行更新。确定了数据模型后进行数据库的垂直和水平拆分，首先按照车次进行分库，将不同的车次hash到几个数据库中，减少每个数据库的负载；然后车票表按天拆分，提前生成3个月的车票表，每张车票表只存储当天发车的车票。</p>
+<h2 id="用例">用例</h2><ul>
+<li>case1：查询<br>假设有一列从北京到深圳的火车D911，途经共20站。用户查询北京到杭州的列车，从cache中取出符合用户查询条件的车次（车次类型，始发站，终点站，始发时间，到站时间），按照车次从cache中取出北京和杭州的站点id和站序，北京站序为0，杭州站序为11。车票表中用<br>‘始发站序&lt;=0 and 终点站序&gt;=11 and 车次=D911 group by 座位类型’<br>的查询条件即可得到每种座位的剩余票数，可以将查询的结果做一个10s的缓存，如果前端展示的不是具体的剩余票量，而是有无票，可以使用一个更长时间的缓存，缓存的失效由服务端控制。</li>
+<li>case2：车票分拆<br>假设有一列从北京到深圳的火车D911，用户购买了一张从北京到杭州的车票，按照规则优先级随机取出一张车票，车票数据为 北京-深圳，始发站序0，终点站序20，将该车票状态置为无效，插入一张数据为杭州-深圳，始发站序11，终点站序20的车票，向下单系统发起请求，写入一张北京-杭州的订单。</li>
+<li>case3：车票合并<br>假设有一列从北京到深圳的火车D911，用户预订了北京-杭州的车票，从下单系统收到该订单失败或者超时或者退票的消息，取出其中和车票相关的信息，车次D911，北京-杭州，始发站序0，终点站序11，和车票表中该车次该座位的数据进行关联，合并数据，重新生成一条北京-深圳的车票。</li>
+</ul>
+<h2 id="队列·流控·异步·无锁实现">队列·流控·异步·无锁实现</h2><p>系统的抗压能力和是吞吐量成正比的，这也就是为什么静态页面可以支持超高的QPS，查询的性能优化也比较容易，事务处理的性能提升最困难，系统处理时会保持tcp链接，占用系统资源，最终导致系统的崩溃，响应时间越快，资源的占用时间越短，吞吐能力也就越强，系统的可用性也就越高。<br>在某宝某猫做话费充值系统的思路完全可以用来做火车售票系统，将下单请求持久化，系统间通过消息解耦，通过多线程队列异步处理请求。具体的实现可以在收到下单购票请求后持久化，返回给用户一个排队中的提示(1-x分钟处理完成)，按照车次放到不同的队列中进行排队(期间可以做过滤/去重/合并处理），系统从队列中取数据进行处理。最终一致性就可以满足业务需求的地方，服务尽量减少事务和锁的使用，提高并发处理能力。</p>
+<h2 id="降级">降级</h2><p>为啥要把降级单独拉出来说，我觉得本质上讲降级并不是由于架构设计上的充分考虑带来的可用性和伸缩性的提高，而是牺牲一部分的用户体验换来的系统的可用性，是对峰值事件的应对策略。基本实现就是在系统埋好各种开关，可以由人工控制也可以由系统触发，保证最基本的核心功能可用，其他的非核心功能和部分用户体验可以暂时舍弃。</p>
+<p>数据模型和业务功能就是这样，不论实现的多扭曲基本上大家都可以做出来，功能实现之后无bug是一个挑战，能够满足未来变化是一个挑战，在某个量级之后依然可用又是一个挑战。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://minotaursu.com/2015/04/13/我设计的12306/" data-id="cjwmus9f1001m7lc4pkgjzmqg" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/分布式/">分布式</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/系统设计/">系统设计</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/软件开发/">软件开发</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
       <article id="post-缓存的使用" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -164,7 +223,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2015/01/09/缓存的使用/" data-id="cjwc45m7g000ek1c4wetphe7h" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2015/01/09/缓存的使用/" data-id="cjwmus9e8000e7lc4o1dyjwdw" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/并发/">并发</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/缓存/">缓存</a></li></ul>
@@ -224,69 +283,10 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2014/12/30/2014年终总结/" data-id="cjwc45ma0005ak1c4uw1sl0kv" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2014/12/30/2014年终总结/" data-id="cjwmus9hf005e7lc4vzzkbt45" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/工作/">工作</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/总结/">总结</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/阿里/">阿里</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-jar包冲突与inode" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2014/12/24/jar包冲突与inode/">jar包冲突与inode</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2014/12/24/jar包冲突与inode/">
-      <time datetime="2014-12-24T06:20:40.000Z" itemprop="datePublished">2014-12-24</time>
-    </a>
-  </div>
-
-
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <h2 id="包冲突">包冲突</h2><p>几乎上点规模的java系统就会遇到jar冲突，不负责任的讲排除依赖成了每次发布上线前必做的工作。虽然问题的本质都是jar冲突，但是表现上却有很多不同，从NoSuchMethodError,ClassNotFoundException到field找不到,作用域错误；并且触发冲突条件也不相同，最好并且最常见的是在应用启动时抛出异常，比较恶心的是运行时是某些特殊的边界条件下抛出异常特别。<br>在某些领域，某些境界提出问题，发现问题比解决问题具有更高的价值，但应用开发显然不属于这种高端领域，对于一般的jar冲突我的做法如下。</p>
-<ol>
-<li>查看log中的异常堆栈信息，在idea中CTRL+N，一般会发现多个类。</li>
-<li>如果1搞不定，可以加入jvm参数-verbose:class，log里会打印出类的加载信息。</li>
-<li>确定jar包名，执行mvn dependency:tree&gt;tree.log。</li>
-<li>如果是lib中的包冲突就排除相应的jar。</li>
-<li>如果不能exclusion，声明一个路径最短，最靠前的dependency。告诉maven，畜生！用这个版本的jar。</li>
-<li>如果是容器||中间件的包和应用lib包冲突，就升级容器||中间件。</li>
-</ol>
-<h2 id="inode">inode</h2><p>在jar冲突中有一种情况就是日常是没问题的，生产环境存在冲突，甚至是生产环境中一部分机器存在冲突，这个是因为tomcat等容器的classLoader加载顺序是不排序的，依赖于底层文件系统的顺序，具体到*nix中就是inode的顺序，每个inode中保存了文件系统的一个文件对象的元信息存储，简单的将就是文件在扇区中的索引值。</p>
-<p>可以使用 ls -li 和 stat查看inode，鉴于安全等原因以免引起不必要的麻烦，就不截图了。</p>
-<h2 id="finally">finally</h2><p>实际上大部分的jar都是向后兼容的，如果maven能够按照最高版本依赖（其实也是有问题的），而不是最短路径依赖，相信这个问题会好很多。实际开发中，可以使用maven的依赖冲突检测插件进行事先排除；也可以在部署的lib中查找下进行事后处理；有些发布系统会提前告知本次发布相比与上次新增了那些jar，删除了那些jar，这是一个比较好的策略，毕竟更简单的方法具有更好的执行性。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2014/12/24/jar包冲突与inode/" data-id="cjwc45m9g0046k1c4ahchhofg" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/类冲突/">类冲突</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/部署/">部署</a></li></ul>
 
     </footer>
   </div>
@@ -312,6 +312,60 @@
           <li>
             
             <div class="item-thumbnail">
+              <a href="/2019/07/16/我对未来技术趋势的一些看法/" class="thumbnail">
+  
+    <span style="background-image:url(https://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/skycity.jpg
+)" alt="我对未来技术趋势的一些看法" class="thumbnail-image"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"></p>
+              <p class="item-title"><a href="/2019/07/16/我对未来技术趋势的一些看法/" class="title">我对未来技术趋势的一些看法</a></p>
+              <p class="item-date"><time datetime="2019-07-16T09:40:27.000Z" itemprop="datePublished">2019-07-16</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2019/06/24/如何成为高效学习的程序员/" class="thumbnail">
+  
+    <span style="background-image:url(http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/goway.jpg
+)" alt="如何成为高效学习的程序员" class="thumbnail-image"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"></p>
+              <p class="item-title"><a href="/2019/06/24/如何成为高效学习的程序员/" class="title">如何成为高效学习的程序员</a></p>
+              <p class="item-date"><time datetime="2019-06-24T09:01:16.000Z" itemprop="datePublished">2019-06-24</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2019/06/11/再谈稳定性/" class="thumbnail">
+  
+    <span style="background-image:url(https://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/direction.png
+)" alt="再谈稳定性工作" class="thumbnail-image"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"></p>
+              <p class="item-title"><a href="/2019/06/11/再谈稳定性/" class="title">再谈稳定性工作</a></p>
+              <p class="item-date"><time datetime="2019-06-11T08:33:17.000Z" itemprop="datePublished">2019-06-11</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
               <a href="/2019/05/31/浅谈Lambda架构和Kappa架构/" class="thumbnail">
   
     <span style="background-image:url(http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/lambda.png
@@ -330,72 +384,17 @@
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2019/05/24/如何成为高效学习的程序员/" class="thumbnail">
+              <a href="/2019/05/08/数据存储系统的选择/" class="thumbnail">
   
-    <span style="background-image:url(http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/goway.jpg
-)" alt="如何成为高效学习的程序员" class="thumbnail-image"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"></p>
-              <p class="item-title"><a href="/2019/05/24/如何成为高效学习的程序员/" class="title">如何成为高效学习的程序员</a></p>
-              <p class="item-date"><time datetime="2019-05-24T09:01:16.000Z" itemprop="datePublished">2019-05-24</time></p>
-            </div>
-          </li>
-        
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2019/05/16/我对未来技术趋势的一些看法/" class="thumbnail">
-  
-    <span style="background-image:url(https://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/skycity.jpg
-)" alt="我对未来技术趋势的一些看法" class="thumbnail-image"></span>
+    <span class="thumbnail-image thumbnail-none"></span>
   
 </a>
             </div>
             
             <div class="item-inner">
               <p class="item-category"></p>
-              <p class="item-title"><a href="/2019/05/16/我对未来技术趋势的一些看法/" class="title">我对未来技术趋势的一些看法</a></p>
-              <p class="item-date"><time datetime="2019-05-16T09:40:27.000Z" itemprop="datePublished">2019-05-16</time></p>
-            </div>
-          </li>
-        
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2019/04/29/java保留小数点后2位格式化问题/" class="thumbnail">
-  
-    <span style="background-image:url(http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/java-bug.png
-)" alt="java保留小数点后2位格式化问题" class="thumbnail-image"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"></p>
-              <p class="item-title"><a href="/2019/04/29/java保留小数点后2位格式化问题/" class="title">java保留小数点后2位格式化问题</a></p>
-              <p class="item-date"><time datetime="2019-04-29T06:07:43.000Z" itemprop="datePublished">2019-04-29</time></p>
-            </div>
-          </li>
-        
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2019/04/11/再谈稳定性/" class="thumbnail">
-  
-    <span style="background-image:url(https://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/direction.png
-)" alt="再谈稳定性工作" class="thumbnail-image"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"></p>
-              <p class="item-title"><a href="/2019/04/11/再谈稳定性/" class="title">再谈稳定性工作</a></p>
-              <p class="item-date"><time datetime="2019-04-11T08:33:17.000Z" itemprop="datePublished">2019-04-11</time></p>
+              <p class="item-title"><a href="/2019/05/08/数据存储系统的选择/" class="title">数据存储系统的选择</a></p>
+              <p class="item-date"><time datetime="2019-05-08T01:39:02.000Z" itemprop="datePublished">2019-05-8</time></p>
             </div>
           </li>
         
@@ -408,7 +407,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">tag cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/ACID/" style="font-size: 10px;">ACID</a> <a href="/tags/AOP/" style="font-size: 11.25px;">AOP</a> <a href="/tags/CAP/" style="font-size: 10px;">CAP</a> <a href="/tags/annotation/" style="font-size: 10px;">annotation</a> <a href="/tags/archsummit/" style="font-size: 10px;">archsummit</a> <a href="/tags/gc/" style="font-size: 11.25px;">gc</a> <a href="/tags/git/" style="font-size: 11.25px;">git</a> <a href="/tags/go/" style="font-size: 10px;">go</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/jackson/" style="font-size: 10px;">jackson</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/jdk8/" style="font-size: 10px;">jdk8</a> <a href="/tags/netty/" style="font-size: 11.25px;">netty</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/quartz/" style="font-size: 10px;">quartz</a> <a href="/tags/reactor/" style="font-size: 10px;">reactor</a> <a href="/tags/spring/" style="font-size: 11.25px;">spring</a> <a href="/tags/tips/" style="font-size: 10px;">tips</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/云计算/" style="font-size: 10px;">云计算</a> <a href="/tags/分布式/" style="font-size: 12.5px;">分布式</a> <a href="/tags/大数据/" style="font-size: 10px;">大数据</a> <a href="/tags/存储/" style="font-size: 10px;">存储</a> <a href="/tags/学习/" style="font-size: 10px;">学习</a> <a href="/tags/工作/" style="font-size: 18.75px;">工作</a> <a href="/tags/工具/" style="font-size: 11.25px;">工具</a> <a href="/tags/并发/" style="font-size: 12.5px;">并发</a> <a href="/tags/性能/" style="font-size: 15px;">性能</a> <a href="/tags/总结/" style="font-size: 12.5px;">总结</a> <a href="/tags/架构/" style="font-size: 13.75px;">架构</a> <a href="/tags/消息队列/" style="font-size: 10px;">消息队列</a> <a href="/tags/滴滴/" style="font-size: 11.25px;">滴滴</a> <a href="/tags/稳定性/" style="font-size: 11.25px;">稳定性</a> <a href="/tags/类冲突/" style="font-size: 10px;">类冲突</a> <a href="/tags/系统设计/" style="font-size: 16.25px;">系统设计</a> <a href="/tags/缓存/" style="font-size: 11.25px;">缓存</a> <a href="/tags/职业规划/" style="font-size: 13.75px;">职业规划</a> <a href="/tags/语言/" style="font-size: 10px;">语言</a> <a href="/tags/语言陷阱/" style="font-size: 11.25px;">语言陷阱</a> <a href="/tags/调度/" style="font-size: 10px;">调度</a> <a href="/tags/软件开发/" style="font-size: 17.5px;">软件开发</a> <a href="/tags/软技能/" style="font-size: 10px;">软技能</a> <a href="/tags/部署/" style="font-size: 10px;">部署</a> <a href="/tags/锁/" style="font-size: 10px;">锁</a> <a href="/tags/阿里/" style="font-size: 13.75px;">阿里</a> <a href="/tags/高可用/" style="font-size: 11.25px;">高可用</a> <a href="/tags/高并发/" style="font-size: 11.25px;">高并发</a>
+      <a href="/tags/ACID/" style="font-size: 10px;">ACID</a> <a href="/tags/AOP/" style="font-size: 11.25px;">AOP</a> <a href="/tags/CAP/" style="font-size: 10px;">CAP</a> <a href="/tags/annotation/" style="font-size: 10px;">annotation</a> <a href="/tags/archsummit/" style="font-size: 10px;">archsummit</a> <a href="/tags/gc/" style="font-size: 11.25px;">gc</a> <a href="/tags/git/" style="font-size: 11.25px;">git</a> <a href="/tags/go/" style="font-size: 10px;">go</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/jackson/" style="font-size: 10px;">jackson</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/jdk8/" style="font-size: 10px;">jdk8</a> <a href="/tags/netty/" style="font-size: 11.25px;">netty</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/quartz/" style="font-size: 10px;">quartz</a> <a href="/tags/reactor/" style="font-size: 10px;">reactor</a> <a href="/tags/spring/" style="font-size: 11.25px;">spring</a> <a href="/tags/tips/" style="font-size: 10px;">tips</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/云计算/" style="font-size: 10px;">云计算</a> <a href="/tags/分布式/" style="font-size: 13.75px;">分布式</a> <a href="/tags/大数据/" style="font-size: 11.25px;">大数据</a> <a href="/tags/存储/" style="font-size: 11.25px;">存储</a> <a href="/tags/学习/" style="font-size: 10px;">学习</a> <a href="/tags/工作/" style="font-size: 18.75px;">工作</a> <a href="/tags/工具/" style="font-size: 11.25px;">工具</a> <a href="/tags/并发/" style="font-size: 12.5px;">并发</a> <a href="/tags/性能/" style="font-size: 15px;">性能</a> <a href="/tags/总结/" style="font-size: 12.5px;">总结</a> <a href="/tags/架构/" style="font-size: 13.75px;">架构</a> <a href="/tags/消息队列/" style="font-size: 10px;">消息队列</a> <a href="/tags/滴滴/" style="font-size: 11.25px;">滴滴</a> <a href="/tags/稳定性/" style="font-size: 11.25px;">稳定性</a> <a href="/tags/类冲突/" style="font-size: 10px;">类冲突</a> <a href="/tags/系统设计/" style="font-size: 16.25px;">系统设计</a> <a href="/tags/缓存/" style="font-size: 11.25px;">缓存</a> <a href="/tags/职业规划/" style="font-size: 13.75px;">职业规划</a> <a href="/tags/语言/" style="font-size: 10px;">语言</a> <a href="/tags/语言陷阱/" style="font-size: 11.25px;">语言陷阱</a> <a href="/tags/调度/" style="font-size: 10px;">调度</a> <a href="/tags/软件开发/" style="font-size: 17.5px;">软件开发</a> <a href="/tags/软技能/" style="font-size: 10px;">软技能</a> <a href="/tags/部署/" style="font-size: 10px;">部署</a> <a href="/tags/锁/" style="font-size: 10px;">锁</a> <a href="/tags/阿里/" style="font-size: 13.75px;">阿里</a> <a href="/tags/高可用/" style="font-size: 11.25px;">高可用</a> <a href="/tags/高并发/" style="font-size: 11.25px;">高并发</a>
     </div>
   </div>
 

@@ -82,7 +82,7 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        34
+        35
         <span>posts</span>
       </div>
       <div class="article-info-block">
@@ -115,6 +115,64 @@
 
       
       <section id="main">
+      <article id="post-netty详解之reactor模型" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/09/23/netty详解之reactor模型/">netty详解之reactor模型</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2016/09/23/netty详解之reactor模型/">
+      <time datetime="2016-09-23T09:41:41.000Z" itemprop="datePublished">2016-09-23</time>
+    </a>
+  </div>
+
+
+          
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <p>假设在办理各种证件时分为填表，审核，制作3个过程，每个过程用时10分钟，这样一个工作人员需要30分钟办理一个证件。那么有没有办法提供效率，减少等待时间呢。可以让一个专门的工作人员，每个顾客到来时就负责让顾客填表，在顾客填好表后交给其他工作人员审核。这样其他功能人员的工作效率就从30分钟提高到了20分钟。</p>
+<h2 id="Reactor模式">Reactor模式</h2><p>Reactor模式就是这样一种机制，利用事件驱动减少工作线程的等待时间。Reactor模式是处理并发I/O比较常见的一种模式，用于同步I/O，中心思想是将所有要处理的I/O事件注册到一个中心I/O多路复用器上，同时主线程阻塞在多路复用器上；一旦有I/O事件<strong>准备就绪</strong>(区别在于多路复用器是边沿触发还是水平触发)，多路复用器返回并将相应I/O事件分发到对应的处理器中。</p>
+<h2 id="单线程模型">单线程模型</h2><p>这是最简单的单Reactor单线程模型。Reactor线程是个多面手，负责多路分离套接字，Accept新连接，并分派请求到处理器链中。该模型适用于处理器链中业务处理组件能快速完成的场景。不过这种单线程模型不能充分利用多核资源，所以实际使用的不多。 </p>
+<p><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/reactor3.png" alt=""></p>
+<h2 id="多线程模型（单Reactor）">多线程模型（单Reactor）</h2><p>相比上一种模型，该模型在事件处理器（Handler）链部分采用了多线程（线程池），也是后端程序常用的模型。 </p>
+<p><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/reactor4.png" alt=""></p>
+<h2 id="多线程模型（多Reactor）">多线程模型（多Reactor）</h2><p>这个模型比起第二种模型，它是将Reactor分成两部分，mainReactor负责监听并accept新连接，然后将建立的socket通过多路复用器（Acceptor）分派给subReactor。subReactor负责多路分离已连接的socket，读写网络数据；业务处理功能，其交给worker线程池完成。通常，subReactor个数上可与CPU个数等同。</p>
+<p><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/reactor5.png" alt="">  </p>
+<h2 id="服务端通信时序">服务端通信时序</h2><p><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/reactor1.png" alt="服务端通信序列图"></p>
+<h2 id="客户端通信时序">客户端通信时序</h2><p><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/reactor2.png" alt="客户端通信序列图"></p>
+<p>Netty的IO线程NioEventLoop由于聚合了多路复用器Selector，可以同时并发处理成百上千个客户端Channel，由于读写操作都是非阻塞的，这就可以充分提升IO线程的运行效率，避免由于频繁IO阻塞导致的线程挂起。这从根本上解决了传统同步阻塞IO一连接一线程模型，架构的性能、弹性伸缩能力和可靠性都得到了极大的提升。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://minotaursu.com/2016/09/23/netty详解之reactor模型/" data-id="cjwmus9gc003j7lc4oyzk8eae" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/io/">io</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/netty/">netty</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/reactor/">reactor</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
       <article id="post-netty详解之io模型" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -169,7 +227,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2016/09/23/netty详解之io模型/" data-id="cjwc45m96003mk1c4usg9tksd" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2016/09/23/netty详解之io模型/" data-id="cjwmus9gg003q7lc40w36cr2y" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/netty/">netty</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nio/">nio</a></li></ul>
@@ -239,80 +297,10 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2016/05/25/构建可靠的系统/" data-id="cjwc45m7u000zk1c45zuwk94r" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2016/05/25/构建可靠的系统/" data-id="cjwmus9er000z7lc45ty29p83" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/工作/">工作</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/系统设计/">系统设计</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/软件开发/">软件开发</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-使用AOP实现缓存注解" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/01/27/使用AOP实现缓存注解/">使用AOP实现缓存注解</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2016/01/27/使用AOP实现缓存注解/">
-      <time datetime="2016-01-27T03:47:04.000Z" itemprop="datePublished">2016-01-27</time>
-    </a>
-  </div>
-
-
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <h2 id="为何重造轮子">为何重造轮子</h2><p>半年前写了一个注解驱动的缓存，最近提交到了<a href="https://github.com/minotaursu/cacheAnnotation" target="_blank" rel="external">github</a>。缓存大量的被使用在应用中的多个地方，简单的使用方式就是代码先查询缓存中是否存在数据，如果不存在或者缓存过期再查询数据库，并将查询的结果缓存一段时间，缓存key通常是入参的对象或者入参对象的某些属性，有些时候还需要按照某种条件判断是否缓存。可以看到这种功能性代码和具体的业务代码混合在一起的实现方式有很大的代码冗余，即不便于维护也不灵活。使用切面的方式可以很好的抽取功能相似代码冗余的缓存代码，将缓存代码和业务代码隔离开，这样既做到了对业务的无侵入又可以灵活更换具体缓存组件。<br>其实从spring3之后spring就提供了@Cacheable注解，但是用起来不爽的地方还是太多，例如缓存时间是由cache本身设置的而非在每个@Cacheable注解中指定，这个粒度有点太大了；没有缓存key的前缀设置，不同方法很容易出现key冲突。</p>
-<h2 id="怎样重造轮子">怎样重造轮子</h2><p>鉴于spring3提供的cache注解不太能满足需求，最后决定自己写一个。目标是构造一个简单好用而不是大而全的缓存注解，整个过程陆陆续续花了3天时间，第一天确定技术方案，构建对象和对象间的关系; 第二天写具体的实现和debug; 第三天写demo和test。<br>确定技术方案的时候看了spring3的cache注解实现和在阿里时使用过的2个cache注解实现。最大是不同点是创建代理类的方式和动态生成cacheKey的实现。<br>不同的创建代理类的方式：  </p>
-<ul>
-<li>使用MethodInterceptor+xml配置，最经典的使用方式。缺点是同一个类的方法相互调用时不会被aop拦截，需要使用AopContext.currentProxy()获取代理类。  </li>
-<li>使用@AspectJ注解，可以有效的减少xml配置，缺点和MethodInterceptor相同。  </li>
-<li>基于SmartInstantiationAwareBeanPostProcessor+cglib创建代理类。 </li>
-</ul>
-<p>不同的生成cacheKey的方式：  </p>
-<ul>
-<li>使用SPEL  </li>
-<li>使用OGNL  </li>
-<li>使用正则表达式  </li>
-</ul>
-<p>最后选择了@AspectJ+SPEL的实现方式。<br>虽然具体的实现方式各自不同，类的调用结构和内部功能都是基本相同的。  </p>
-<ul>
-<li>cacheManager负责cache的管理，包含cache实现的list。  </li>
-<li>cache是具体的缓存实现，可以是redis，ehcache，memcache。  </li>
-<li>keyParser负责动态生成cacheKey。  </li>
-<li>interceptor负责注解的拦截。  </li>
-<li>@Cacheable，@CacheEvict等是具体的缓存注解。  </li>
-</ul>
-<p>按照上述的功能划分实现相关类后，花了一天的时间来写demo和test，全部的test跑通后就可以使用了。后面增加了一个CacheOperation转换具体的注解，统一对CacheOperation进行处理，代码简化了不少。</p>
-<h2 id="实际遇到的问题">实际遇到的问题</h2><p>实际使用中主要遇到了2个问题，一个是interceptor中catch了所有的Exception并打印错误日志，实际上我们会在应用中定义BizException，当发生预期内的错误时会抛出BizException，而BizException是不需要被拦截打印错误日志的。另一个是问题是并发读写问题，在cache中没有缓存的时候，ThreadA从DB获取数据，ThreadB修改了数据库的数据，ThreadB删除缓存，ThreadA然后put修改之前的数据。原本以为按照业务特点发生并发读写的概率不高，结果发现接口轮询+事务导致频繁发生不一致的情况。缓存失效策略一直是缓存使用中的难题，甚至是计算机科学中两大难题之一。处理数据库并发最常见的2个解决思路是乐观锁和串行化，但是并不适用于解决缓存和数据库的不一致，google了一下也没有找到特别好的解决方案。考虑到应用并没有超高的QPS，短时间的缓存穿透不会造成系统的崩溃，最后通过增加一个redis的缓存删除标识进行解决，这个删除标识会存活5s，在这5s中不会执行put缓存操作从而避免了缓存和数据库的不一致。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2016/01/27/使用AOP实现缓存注解/" data-id="cjwc45m8p0030k1c465x453jl" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/AOP/">AOP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/annotation/">annotation</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/spring/">spring</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/缓存/">缓存</a></li></ul>
 
     </footer>
   </div>
@@ -338,6 +326,60 @@
           <li>
             
             <div class="item-thumbnail">
+              <a href="/2019/07/16/我对未来技术趋势的一些看法/" class="thumbnail">
+  
+    <span style="background-image:url(https://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/skycity.jpg
+)" alt="我对未来技术趋势的一些看法" class="thumbnail-image"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"></p>
+              <p class="item-title"><a href="/2019/07/16/我对未来技术趋势的一些看法/" class="title">我对未来技术趋势的一些看法</a></p>
+              <p class="item-date"><time datetime="2019-07-16T09:40:27.000Z" itemprop="datePublished">2019-07-16</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2019/06/24/如何成为高效学习的程序员/" class="thumbnail">
+  
+    <span style="background-image:url(http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/goway.jpg
+)" alt="如何成为高效学习的程序员" class="thumbnail-image"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"></p>
+              <p class="item-title"><a href="/2019/06/24/如何成为高效学习的程序员/" class="title">如何成为高效学习的程序员</a></p>
+              <p class="item-date"><time datetime="2019-06-24T09:01:16.000Z" itemprop="datePublished">2019-06-24</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2019/06/11/再谈稳定性/" class="thumbnail">
+  
+    <span style="background-image:url(https://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/direction.png
+)" alt="再谈稳定性工作" class="thumbnail-image"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"></p>
+              <p class="item-title"><a href="/2019/06/11/再谈稳定性/" class="title">再谈稳定性工作</a></p>
+              <p class="item-date"><time datetime="2019-06-11T08:33:17.000Z" itemprop="datePublished">2019-06-11</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
               <a href="/2019/05/31/浅谈Lambda架构和Kappa架构/" class="thumbnail">
   
     <span style="background-image:url(http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/lambda.png
@@ -356,72 +398,17 @@
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2019/05/24/如何成为高效学习的程序员/" class="thumbnail">
+              <a href="/2019/05/08/数据存储系统的选择/" class="thumbnail">
   
-    <span style="background-image:url(http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/goway.jpg
-)" alt="如何成为高效学习的程序员" class="thumbnail-image"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"></p>
-              <p class="item-title"><a href="/2019/05/24/如何成为高效学习的程序员/" class="title">如何成为高效学习的程序员</a></p>
-              <p class="item-date"><time datetime="2019-05-24T09:01:16.000Z" itemprop="datePublished">2019-05-24</time></p>
-            </div>
-          </li>
-        
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2019/05/16/我对未来技术趋势的一些看法/" class="thumbnail">
-  
-    <span style="background-image:url(https://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/skycity.jpg
-)" alt="我对未来技术趋势的一些看法" class="thumbnail-image"></span>
+    <span class="thumbnail-image thumbnail-none"></span>
   
 </a>
             </div>
             
             <div class="item-inner">
               <p class="item-category"></p>
-              <p class="item-title"><a href="/2019/05/16/我对未来技术趋势的一些看法/" class="title">我对未来技术趋势的一些看法</a></p>
-              <p class="item-date"><time datetime="2019-05-16T09:40:27.000Z" itemprop="datePublished">2019-05-16</time></p>
-            </div>
-          </li>
-        
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2019/04/29/java保留小数点后2位格式化问题/" class="thumbnail">
-  
-    <span style="background-image:url(http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/java-bug.png
-)" alt="java保留小数点后2位格式化问题" class="thumbnail-image"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"></p>
-              <p class="item-title"><a href="/2019/04/29/java保留小数点后2位格式化问题/" class="title">java保留小数点后2位格式化问题</a></p>
-              <p class="item-date"><time datetime="2019-04-29T06:07:43.000Z" itemprop="datePublished">2019-04-29</time></p>
-            </div>
-          </li>
-        
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2019/04/11/再谈稳定性/" class="thumbnail">
-  
-    <span style="background-image:url(https://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/direction.png
-)" alt="再谈稳定性工作" class="thumbnail-image"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"></p>
-              <p class="item-title"><a href="/2019/04/11/再谈稳定性/" class="title">再谈稳定性工作</a></p>
-              <p class="item-date"><time datetime="2019-04-11T08:33:17.000Z" itemprop="datePublished">2019-04-11</time></p>
+              <p class="item-title"><a href="/2019/05/08/数据存储系统的选择/" class="title">数据存储系统的选择</a></p>
+              <p class="item-date"><time datetime="2019-05-08T01:39:02.000Z" itemprop="datePublished">2019-05-8</time></p>
             </div>
           </li>
         
@@ -434,7 +421,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">tag cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/ACID/" style="font-size: 10px;">ACID</a> <a href="/tags/AOP/" style="font-size: 11.25px;">AOP</a> <a href="/tags/CAP/" style="font-size: 10px;">CAP</a> <a href="/tags/annotation/" style="font-size: 10px;">annotation</a> <a href="/tags/archsummit/" style="font-size: 10px;">archsummit</a> <a href="/tags/gc/" style="font-size: 11.25px;">gc</a> <a href="/tags/git/" style="font-size: 11.25px;">git</a> <a href="/tags/go/" style="font-size: 10px;">go</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/jackson/" style="font-size: 10px;">jackson</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/jdk8/" style="font-size: 10px;">jdk8</a> <a href="/tags/netty/" style="font-size: 11.25px;">netty</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/quartz/" style="font-size: 10px;">quartz</a> <a href="/tags/reactor/" style="font-size: 10px;">reactor</a> <a href="/tags/spring/" style="font-size: 11.25px;">spring</a> <a href="/tags/tips/" style="font-size: 10px;">tips</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/云计算/" style="font-size: 10px;">云计算</a> <a href="/tags/分布式/" style="font-size: 12.5px;">分布式</a> <a href="/tags/大数据/" style="font-size: 10px;">大数据</a> <a href="/tags/存储/" style="font-size: 10px;">存储</a> <a href="/tags/学习/" style="font-size: 10px;">学习</a> <a href="/tags/工作/" style="font-size: 18.75px;">工作</a> <a href="/tags/工具/" style="font-size: 11.25px;">工具</a> <a href="/tags/并发/" style="font-size: 12.5px;">并发</a> <a href="/tags/性能/" style="font-size: 15px;">性能</a> <a href="/tags/总结/" style="font-size: 12.5px;">总结</a> <a href="/tags/架构/" style="font-size: 13.75px;">架构</a> <a href="/tags/消息队列/" style="font-size: 10px;">消息队列</a> <a href="/tags/滴滴/" style="font-size: 11.25px;">滴滴</a> <a href="/tags/稳定性/" style="font-size: 11.25px;">稳定性</a> <a href="/tags/类冲突/" style="font-size: 10px;">类冲突</a> <a href="/tags/系统设计/" style="font-size: 16.25px;">系统设计</a> <a href="/tags/缓存/" style="font-size: 11.25px;">缓存</a> <a href="/tags/职业规划/" style="font-size: 13.75px;">职业规划</a> <a href="/tags/语言/" style="font-size: 10px;">语言</a> <a href="/tags/语言陷阱/" style="font-size: 11.25px;">语言陷阱</a> <a href="/tags/调度/" style="font-size: 10px;">调度</a> <a href="/tags/软件开发/" style="font-size: 17.5px;">软件开发</a> <a href="/tags/软技能/" style="font-size: 10px;">软技能</a> <a href="/tags/部署/" style="font-size: 10px;">部署</a> <a href="/tags/锁/" style="font-size: 10px;">锁</a> <a href="/tags/阿里/" style="font-size: 13.75px;">阿里</a> <a href="/tags/高可用/" style="font-size: 11.25px;">高可用</a> <a href="/tags/高并发/" style="font-size: 11.25px;">高并发</a>
+      <a href="/tags/ACID/" style="font-size: 10px;">ACID</a> <a href="/tags/AOP/" style="font-size: 11.25px;">AOP</a> <a href="/tags/CAP/" style="font-size: 10px;">CAP</a> <a href="/tags/annotation/" style="font-size: 10px;">annotation</a> <a href="/tags/archsummit/" style="font-size: 10px;">archsummit</a> <a href="/tags/gc/" style="font-size: 11.25px;">gc</a> <a href="/tags/git/" style="font-size: 11.25px;">git</a> <a href="/tags/go/" style="font-size: 10px;">go</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/jackson/" style="font-size: 10px;">jackson</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/jdk8/" style="font-size: 10px;">jdk8</a> <a href="/tags/netty/" style="font-size: 11.25px;">netty</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/quartz/" style="font-size: 10px;">quartz</a> <a href="/tags/reactor/" style="font-size: 10px;">reactor</a> <a href="/tags/spring/" style="font-size: 11.25px;">spring</a> <a href="/tags/tips/" style="font-size: 10px;">tips</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/云计算/" style="font-size: 10px;">云计算</a> <a href="/tags/分布式/" style="font-size: 13.75px;">分布式</a> <a href="/tags/大数据/" style="font-size: 11.25px;">大数据</a> <a href="/tags/存储/" style="font-size: 11.25px;">存储</a> <a href="/tags/学习/" style="font-size: 10px;">学习</a> <a href="/tags/工作/" style="font-size: 18.75px;">工作</a> <a href="/tags/工具/" style="font-size: 11.25px;">工具</a> <a href="/tags/并发/" style="font-size: 12.5px;">并发</a> <a href="/tags/性能/" style="font-size: 15px;">性能</a> <a href="/tags/总结/" style="font-size: 12.5px;">总结</a> <a href="/tags/架构/" style="font-size: 13.75px;">架构</a> <a href="/tags/消息队列/" style="font-size: 10px;">消息队列</a> <a href="/tags/滴滴/" style="font-size: 11.25px;">滴滴</a> <a href="/tags/稳定性/" style="font-size: 11.25px;">稳定性</a> <a href="/tags/类冲突/" style="font-size: 10px;">类冲突</a> <a href="/tags/系统设计/" style="font-size: 16.25px;">系统设计</a> <a href="/tags/缓存/" style="font-size: 11.25px;">缓存</a> <a href="/tags/职业规划/" style="font-size: 13.75px;">职业规划</a> <a href="/tags/语言/" style="font-size: 10px;">语言</a> <a href="/tags/语言陷阱/" style="font-size: 11.25px;">语言陷阱</a> <a href="/tags/调度/" style="font-size: 10px;">调度</a> <a href="/tags/软件开发/" style="font-size: 17.5px;">软件开发</a> <a href="/tags/软技能/" style="font-size: 10px;">软技能</a> <a href="/tags/部署/" style="font-size: 10px;">部署</a> <a href="/tags/锁/" style="font-size: 10px;">锁</a> <a href="/tags/阿里/" style="font-size: 13.75px;">阿里</a> <a href="/tags/高可用/" style="font-size: 11.25px;">高可用</a> <a href="/tags/高并发/" style="font-size: 11.25px;">高并发</a>
     </div>
   </div>
 
