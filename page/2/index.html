@@ -82,11 +82,11 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        36
+        37
         <span>posts</span>
       </div>
       <div class="article-info-block">
-        49
+        50
         <span>tags</span>
       </div>
     </div>
@@ -115,6 +115,84 @@
 
       
       <section id="main">
+      <article id="post-再谈稳定性" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/06/11/再谈稳定性/">再谈稳定性工作</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2019/06/11/再谈稳定性/">
+      <time datetime="2019-06-11T08:33:17.000Z" itemprop="datePublished">2019-06-11</time>
+    </a>
+  </div>
+
+
+          
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <p>之前也写过一篇稳定性工作的总结-<a href="http://minotaursu.com/2018/03/12/%E5%A6%82%E4%BD%95%E4%BF%9D%E9%9A%9C%E9%AB%98%E5%B9%B6%E5%8F%91%E7%B3%BB%E7%BB%9F%E7%9A%84%E7%A8%B3%E5%AE%9A%E6%80%A7%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/">如何保障高并发系统的稳定性与高可用</a>，但更多的是从系统开发者的角度说明如何保障单一系统的稳定性，做好自己负责系统的稳定性建设更多的是依赖知识和经验，是个技术活。负责了一整年的业务线稳定性建设之后，对于如何保障几十个系统的稳定性，协同几十人做好稳定性相关工作有了更多的思考和实践，又有了些新的体会，更需要科学的工程管理，涉及到多个方面。</p>
+<h2 id="方向">方向</h2><ol>
+<li>高可用<br>高可用要求系统有比较高的风险防范应对能力，把因软件/硬件/人为造成的故障对业务的影响降低到最小程度。系统能够对外提供有效服务的时间大于99.9%，99.99%，甚至是99.999%。 </li>
+<li>零资损<br>高可用强调的是对外稳定服务，零资损强调的是内部资金安全。减少软件/硬件/人为的因素导致的资金损失风险。特别是计费，交易，营销这些和钱相关的系统。</li>
+</ol>
+<p><img src="https://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/direction.png" alt=""></p>
+<h2 id="维度">维度</h2><ol>
+<li>流程规范<br>一个行之有效的流程对系统稳定性有着至关重要的作用。把流程规范的建立作为稳定性建设的开始是一个比较好的选择，不需要付出非常巨大的成本，但对稳定性的提升有着很大的帮助。好的流程规范应该覆盖项目整个生命周期（需求评审，项目管理，项目开发，code review，测试用例评审，上线流程，故障通报，故障复盘）尽可能的帮助开发避免风险点。</li>
+<li>基础设施<br>基础设施建设是稳定性建设的核心方向。科技是第一生产力，工具可以带来能力和效率的大幅提升。只有具备完备而且强大的工具才有可能保障复杂系统的高可用，试想如果没有监控报警就连最基础的故障感知都无法做到，缺少运维工具的辅助想要做到故障的快速恢复更是天方夜谭。</li>
+<li>稳定性意识<br>稳定性意识的提升是最基础也是最难的工作。很多人眼里只有业务功能，很少关心稳定性工作，需要在日常文化中强调稳定性的重要性，通过例会，巡检，定期演练的方式提升大家的稳定性意识。</li>
+</ol>
+<p><img src="https://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/metrics.png" alt=""></p>
+<h2 id="阶段">阶段</h2><ol>
+<li>事前<br>事前重在风险的发现和预防，做好容量规划，服务治理，系统优化，慢查优化，提升系统鲁棒性。</li>
+<li>事中<br>事中重在最快止损，最快定位。止损是第一优先级的事情，需要提前准备好故障预案。定位则依赖完备的工具和对系统业务的熟悉。</li>
+<li>事后<br>事后重在修复故障影响，复盘和改进。一个故障的发生一定是要做到闭环的，必然存在可改进项，同时也要做到对事不对人。</li>
+</ol>
+<p><img src="https://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/stage.png" alt=""></p>
+<h2 id="架构">架构</h2><ol>
+<li>网络层<br>网络层是系统架构中不确定性最高的部分。用户通过网络访问系统服务，网络的延迟和成功率直接影响着用户的体验，很可能由于运营商的设备升级和道路施工导致网络不可用，并且机房断电，火灾，地震..这些极端因素都会导致业务瘫痪，如果业务期望达到即使在此类灾难性故障的情况下，业务也不受影响，或者在几分钟内就能够很快恢复，那么就需要设计异地多活架构。根据地理位置上的距离来划分，异地多活架构可以分为同城异区、跨城异地、跨国异地。多活架构的最大难点就是地理位置导致的数据同步延迟和业务上强一致的矛盾。</li>
+<li>应用层<br>应用层是系统架构中复杂度最高变化最频繁的部分。一个使用微服务架构的业务线涉及到几十个系统，几百个服务，几千个接口，系统间存在大量的交互，如何做好服务治理，保障应用层的稳定性是一个重大的挑战。</li>
+<li>存储层<br>存储层是系统架构中最需要被保护的部分。存储层即强大又脆弱，缓存是系统高性能的核心，使系统能够承载高并发的流量带来的压力，同时缓存的穿透，雪崩也往往会导致大故障。mysql则是更加的脆弱，一个无索引的慢查，几个大事务都可能导致数据库的瘫痪。</li>
+<li>中间件<br>中间件作为系统架构中的数据通道和流量通道，是稳定性发力的支点。可以通过在中间件中集成服务治理，限流，降级等策略使尽可能多的应用系统收益，中间件的一小步的优化往往会带来系统稳定性的一大步提升。</li>
+</ol>
+<p><img src="https://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/layerx.png" alt=""></p>
+<h2 id="架构原则">架构原则</h2><ol>
+<li>冗余<br>冗余是高可用架构的核心原则。好的架构需要做到对流量冗余，资源冗余，硬件冗余，也是异地多活，集群部署，容量规划的核心思想。</li>
+<li>隔离<br>隔离是高可用架构的另一个核心原则。除了冗余之外也需要做好故障隔离，资源隔离，前后台隔离，在线离线隔离，防止故障在线程，进程，应用，领域之间的传播，小的风险演变成大的事故。</li>
+</ol>
+<h2 id="全局工作概览">全局工作概览</h2><p>最后是一张全局工作概览图，有些已经做的比较成熟，有些还需要继续完善。</p>
+<p><img src="https://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/availability.png" alt=""></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://minotaursu.com/2019/06/11/再谈稳定性/" data-id="clxltv4xs002xsuv1ijzvnlwn" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/工作/">工作</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/性能/">性能</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/稳定性/">稳定性</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/高可用/">高可用</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/高并发/">高并发</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
       <article id="post-浅谈Lambda架构和Kappa架构" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -174,7 +252,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2019/05/31/浅谈Lambda架构和Kappa架构/" data-id="cjwspxs3g000s2cscwnweje8f" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2019/05/31/浅谈Lambda架构和Kappa架构/" data-id="clxltv4wy000ssuv1it1m0n3b" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/大数据/">大数据</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/存储/">存储</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/架构/">架构</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/系统设计/">系统设计</a></li></ul>
@@ -247,7 +325,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2019/05/12/我职业生涯的几个关键点/" data-id="cjwspxs3r001q2cscqxdkqorz" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2019/05/12/我职业生涯的几个关键点/" data-id="clxltv4xb001qsuv1m211lx84" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/职业规划/">职业规划</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/软技能/">软技能</a></li></ul>
@@ -260,70 +338,8 @@
 
 
     
-      <article id="post-数据存储系统的选择" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/05/08/数据存储系统的选择/">数据存储系统的选择</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2019/05/08/数据存储系统的选择/">
-      <time datetime="2019-05-08T01:39:02.000Z" itemprop="datePublished">2019-05-8</time>
-    </a>
-  </div>
-
-
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <p>数据库作为应用系统中最重要的基础设施，承载着通过数据访问接口<br>存储和查询用户信息的功能，当今的互联网业务场景越来越丰富和复杂，并且数据库作为有状态服务扩展成本高昂，选择适合业务场景的数据变的十分重要。本文分别对比一些常用的数据库（包括mysql，redis，mongodb，hbase，elasticsearch，influxdb，rocksdb），通过简要分析其中的原理确定每种数据库适合场景和优缺点。</p>
-<h2 id="mysql">mysql</h2><p>mysql作为典型的关系型数据库在互联网和传统软件行业都有着广泛的应用。mysql的优点是有着最完备的单机功能（增删改查，事务，关联）和最丰富的社区生态。缺点则是在高并发场景下单机性能一般，不支持auto-sharding需要额外的proxy，schema模型不能便捷的增加字段。适合场景有复杂事务，低性能需求数据关联，一般性业务等</p>
-<h2 id="redis">redis</h2><p>redis作为key-value存储有着良好的性能，并且redis相比memcache有着更丰富的数据结构，在非持久化场景中可以作为高性能缓存使用，在持久化场景中可以作为关系型数据库的补充。对于需要集群使用的场景codis是一个不错的选择。合适场景有高性能缓存，少量数据持久化存储。</p>
-<h2 id="mongodb">mongodb</h2><p>mongodb是一个高性能的文档型数据库，以BSON的格式保存数据，优点是schema-free模式非常适合增加字段，并且自带auto-sharding的集群分片功能在数据扩容方面有着明显的优势，也有着geohash等丰富功能。缺点则是事务方面较弱，并且不支持关联查询。适合的场景有物联网，视频，地理位置，社交等。</p>
-<h2 id="hbase">hbase</h2><p>hbase是基于LSM（Log-StructuredMergeTree）的思想，LSM树和B+树相比，LSM树牺牲了部分读性能，用来大幅提高写性能。hbase适合写多读少的场景，并且hbase没有二级索引，只支持单rowkey，rowkey的range，全表扫描3种方式。适合的场景有搜索引擎和推荐系统底层的数据存储，监控日志存储。</p>
-<h2 id="elasticsearch">elasticsearch</h2><p>elasticsearch是基于Lucene构建的搜索引擎，除了作为全文搜索之外也可以作为nosql数据使用。适合的场景有搜索引擎，数据可视化，日志检索系统，后台客服系统。</p>
-<h2 id="influxdb">influxdb</h2><p>influxDB是目前最流行的时序数据库，存储引擎称为TSM，基本架构类似于LSM。数据按照key组织，influxDB中key由维度集合加上某一个列值名构成，所有属于该维度集合加列值的时间序列数值组成的一个集合就挂在该key下。适合的场景有物联网，监控。</p>
-<h2 id="rocksdb">rocksdb</h2><p>rocksdb并非一个完整的数据库系统，而是基于LevelDB开发的一种嵌入式Key-value存储系统，该数据库能够充分利用闪存的性能，大大提升应用服务器的速度。引入了 LSM 树，就是为了解决 B+ 树随机写性能低的问题，它把随机写以跳跃表的形式保留在内存中（memtable），积累到足够的大小就不再改写它了，并将其写入到磁盘（L0 SST file），这样就只有顺序写了。合适的场景是多种数据库的存储引擎。</p>
-<h2 id="sharding策略">sharding策略</h2><p>分布式数据库一般有两种Sharding策略：Range Sharding和Hash Sharding。</p>
-<h4 id="range">range</h4><p>range假设key有序，好处是临近的key经常在一起，比如共同前缀的key,可以很好的支持scan操作，hbase的region就是range策略。缺点是对压力较大的顺序写不太友好，比如日志类型的写入，一般日志的key都是和时间相关的，时间是单调递增的，因此写入的热点永远在最后一个region。</p>
-<h4 id="round-hash">round-hash</h4><p>把数据mod后直接映射到真实节点上面，这造成节点个数和数据的紧密关联、后期缺乏灵活扩展。</p>
-<h4 id="consistent-hash">consistent-hash</h4><p>多增加一层虚拟映射层，数据与虚拟节点映射、虚拟节点与真实节点再映射，减少扩容和宕机情况下数据迁移的影响。</p>
-<h4 id="hash-slot">hash-slot</h4><p>采用固定节点数量，来避免取模的不灵活性。采用可配置映射节点，来避免一致性哈希的部分影响。</p>
-<h2 id="数据同步">数据同步</h2><p>数据同步保证同一个数据分片的多个副本之间的数据一致性，一般的数据同步算法有异步，半同步（ISR的机制），全同步，paxos，raft，gossip。异步复制有最佳的性能，最可能的数据丢失/不一致问题，半同步复制提高了数据的安全性，同时它也造成了一定程度的延迟，这个延迟最少是一个TCP/IP往返的时间，全同步有着最好的数据一致性和最差的性能。paxos利用过半选举的机制，保证了集群数据副本的一致性，raft是paxos的简化版本，更易于理解的工程实现，ggossip利用去中心化的协议进行数据同步，好处是无任何单点故障，坏处是同步时间过长。</p>
-<p>参考：<br><a href="https://segmentfault.com/a/1190000004474543" target="_blank" rel="external">2PC到3PC到Paxos到Raft到ISR</a><br><a href="https://segmentfault.com/a/1190000014503967" target="_blank" rel="external">分布式一致性机制整理</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2019/05/08/数据存储系统的选择/" data-id="cjwspxs3n001c2cschaxxzva1" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/分布式/">分布式</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/大数据/">大数据</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/存储/">存储</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
       <nav id="page-nav">
-        <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
+        <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
       </nav>
     </section>
       
@@ -334,6 +350,24 @@
     <h3 class="widget-title">recents</h3>
     <div class="widget">
       <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2024/06/19/我对投资的看法/" class="thumbnail">
+  
+    <span style="background-image:url(https://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/invest.jpg
+)" alt="我对投资的看法" class="thumbnail-image"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"></p>
+              <p class="item-title"><a href="/2024/06/19/我对投资的看法/" class="title">我对投资的看法</a></p>
+              <p class="item-date"><time datetime="2024-06-19T12:41:25.000Z" itemprop="datePublished">2024-06-19</time></p>
+            </div>
+          </li>
         
           <li>
             
@@ -407,24 +441,6 @@
             </div>
           </li>
         
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2019/05/12/我职业生涯的几个关键点/" class="thumbnail">
-  
-    <span style="background-image:url(https://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/chance.jpg
-)" alt="我职业生涯的几个关键点" class="thumbnail-image"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"></p>
-              <p class="item-title"><a href="/2019/05/12/我职业生涯的几个关键点/" class="title">我职业生涯的几个关键点</a></p>
-              <p class="item-date"><time datetime="2019-05-12T02:25:55.000Z" itemprop="datePublished">2019-05-12</time></p>
-            </div>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -434,7 +450,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">tag cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/ACID/" style="font-size: 10px;">ACID</a> <a href="/tags/AOP/" style="font-size: 11.25px;">AOP</a> <a href="/tags/CAP/" style="font-size: 10px;">CAP</a> <a href="/tags/annotation/" style="font-size: 10px;">annotation</a> <a href="/tags/archsummit/" style="font-size: 10px;">archsummit</a> <a href="/tags/gc/" style="font-size: 11.25px;">gc</a> <a href="/tags/git/" style="font-size: 11.25px;">git</a> <a href="/tags/go/" style="font-size: 10px;">go</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/jackson/" style="font-size: 10px;">jackson</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/jdk8/" style="font-size: 10px;">jdk8</a> <a href="/tags/netty/" style="font-size: 11.25px;">netty</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/quartz/" style="font-size: 10px;">quartz</a> <a href="/tags/reactor/" style="font-size: 10px;">reactor</a> <a href="/tags/spring/" style="font-size: 11.25px;">spring</a> <a href="/tags/tips/" style="font-size: 10px;">tips</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/云计算/" style="font-size: 10px;">云计算</a> <a href="/tags/分布式/" style="font-size: 13.75px;">分布式</a> <a href="/tags/大数据/" style="font-size: 11.25px;">大数据</a> <a href="/tags/存储/" style="font-size: 11.25px;">存储</a> <a href="/tags/学习/" style="font-size: 10px;">学习</a> <a href="/tags/工作/" style="font-size: 18.75px;">工作</a> <a href="/tags/工具/" style="font-size: 11.25px;">工具</a> <a href="/tags/并发/" style="font-size: 12.5px;">并发</a> <a href="/tags/性能/" style="font-size: 15px;">性能</a> <a href="/tags/总结/" style="font-size: 12.5px;">总结</a> <a href="/tags/架构/" style="font-size: 13.75px;">架构</a> <a href="/tags/消息队列/" style="font-size: 10px;">消息队列</a> <a href="/tags/滴滴/" style="font-size: 11.25px;">滴滴</a> <a href="/tags/稳定性/" style="font-size: 11.25px;">稳定性</a> <a href="/tags/类冲突/" style="font-size: 10px;">类冲突</a> <a href="/tags/系统设计/" style="font-size: 16.25px;">系统设计</a> <a href="/tags/缓存/" style="font-size: 11.25px;">缓存</a> <a href="/tags/职业规划/" style="font-size: 15px;">职业规划</a> <a href="/tags/语言/" style="font-size: 10px;">语言</a> <a href="/tags/语言陷阱/" style="font-size: 11.25px;">语言陷阱</a> <a href="/tags/调度/" style="font-size: 10px;">调度</a> <a href="/tags/软件开发/" style="font-size: 17.5px;">软件开发</a> <a href="/tags/软技能/" style="font-size: 11.25px;">软技能</a> <a href="/tags/部署/" style="font-size: 10px;">部署</a> <a href="/tags/锁/" style="font-size: 10px;">锁</a> <a href="/tags/阿里/" style="font-size: 13.75px;">阿里</a> <a href="/tags/高可用/" style="font-size: 11.25px;">高可用</a> <a href="/tags/高并发/" style="font-size: 11.25px;">高并发</a>
+      <a href="/tags/ACID/" style="font-size: 10px;">ACID</a> <a href="/tags/AOP/" style="font-size: 11.25px;">AOP</a> <a href="/tags/CAP/" style="font-size: 10px;">CAP</a> <a href="/tags/annotation/" style="font-size: 10px;">annotation</a> <a href="/tags/archsummit/" style="font-size: 10px;">archsummit</a> <a href="/tags/gc/" style="font-size: 11.25px;">gc</a> <a href="/tags/git/" style="font-size: 11.25px;">git</a> <a href="/tags/go/" style="font-size: 10px;">go</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/jackson/" style="font-size: 10px;">jackson</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/jdk8/" style="font-size: 10px;">jdk8</a> <a href="/tags/netty/" style="font-size: 11.25px;">netty</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/quartz/" style="font-size: 10px;">quartz</a> <a href="/tags/reactor/" style="font-size: 10px;">reactor</a> <a href="/tags/spring/" style="font-size: 11.25px;">spring</a> <a href="/tags/tips/" style="font-size: 10px;">tips</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/云计算/" style="font-size: 10px;">云计算</a> <a href="/tags/分布式/" style="font-size: 13.75px;">分布式</a> <a href="/tags/大数据/" style="font-size: 11.25px;">大数据</a> <a href="/tags/存储/" style="font-size: 11.25px;">存储</a> <a href="/tags/学习/" style="font-size: 10px;">学习</a> <a href="/tags/工作/" style="font-size: 18.75px;">工作</a> <a href="/tags/工具/" style="font-size: 11.25px;">工具</a> <a href="/tags/并发/" style="font-size: 12.5px;">并发</a> <a href="/tags/性能/" style="font-size: 15px;">性能</a> <a href="/tags/总结/" style="font-size: 12.5px;">总结</a> <a href="/tags/投资/" style="font-size: 10px;">投资</a> <a href="/tags/架构/" style="font-size: 13.75px;">架构</a> <a href="/tags/消息队列/" style="font-size: 10px;">消息队列</a> <a href="/tags/滴滴/" style="font-size: 11.25px;">滴滴</a> <a href="/tags/稳定性/" style="font-size: 11.25px;">稳定性</a> <a href="/tags/类冲突/" style="font-size: 10px;">类冲突</a> <a href="/tags/系统设计/" style="font-size: 16.25px;">系统设计</a> <a href="/tags/缓存/" style="font-size: 11.25px;">缓存</a> <a href="/tags/职业规划/" style="font-size: 15px;">职业规划</a> <a href="/tags/语言/" style="font-size: 10px;">语言</a> <a href="/tags/语言陷阱/" style="font-size: 11.25px;">语言陷阱</a> <a href="/tags/调度/" style="font-size: 10px;">调度</a> <a href="/tags/软件开发/" style="font-size: 17.5px;">软件开发</a> <a href="/tags/软技能/" style="font-size: 11.25px;">软技能</a> <a href="/tags/部署/" style="font-size: 10px;">部署</a> <a href="/tags/锁/" style="font-size: 10px;">锁</a> <a href="/tags/阿里/" style="font-size: 13.75px;">阿里</a> <a href="/tags/高可用/" style="font-size: 11.25px;">高可用</a> <a href="/tags/高并发/" style="font-size: 11.25px;">高并发</a>
     </div>
   </div>
 
@@ -447,7 +463,7 @@
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2019 minotaur<br>
+      &copy; 2024 minotaur<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="https://github.com/minotaursu/hexo-theme-icarus">icarus</a>.
       
 <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1256401841'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s11.cnzz.com/z_stat.php%3Fid%3D1256401841%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>

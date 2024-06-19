@@ -82,11 +82,11 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        36
+        37
         <span>posts</span>
       </div>
       <div class="article-info-block">
-        49
+        50
         <span>tags</span>
       </div>
     </div>
@@ -115,6 +115,73 @@
 
       
       <section id="main">
+      <article id="post-netty详解之io模型" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/09/23/netty详解之io模型/">netty详解之io模型</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2016/09/23/netty详解之io模型/">
+      <time datetime="2016-09-23T08:12:54.000Z" itemprop="datePublished">2016-09-23</time>
+    </a>
+  </div>
+
+
+          
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <p>提起IO模型首先想到的就是同步，异步，阻塞，非阻塞这几个概念。每个概念的含义，解释，概念间的区别这些都是好理解，这里深入*nix系统讲一下IO模型。  </p>
+<p>在*nix中将IO模型分为5类。  </p>
+<ol>
+<li>Blocking I/O   </li>
+<li>Nonblocking I/O  </li>
+<li>I/O Multiplexing (select and poll)  </li>
+<li>Signal Driven I/O (SIGIO)  </li>
+<li>Asynchronous I/O (the POSIX aio_functions)  </li>
+</ol>
+<h2 id="阻塞_I/O（blocking_IO）">阻塞 I/O（blocking IO）</h2><p><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/bio.png" alt=""></p>
+<p>如图所示，系统调用recvfrom，内核kernel等待数据数据准备完成，在数据准备完成后将数据从内核态拷贝到用户态，recvfrom直到整个过程结束后才完成，在整个过程中经历2次阻塞。</p>
+<h2 id="非阻塞_I/O（nonblocking_IO）">非阻塞 I/O（nonblocking IO）</h2><p><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/nio.png" alt=""></p>
+<p>如图所示，系统调用recvfrom，内核kernel在数据没有准备完成时直接返回，系统会不断轮询，在kernel准备完成数据后将数据从内核态拷贝到用户态，在等待数据完成的过程中并不阻塞。</p>
+<h2 id="I/O_多路复用（_IO_multiplexing）">I/O 多路复用（ IO multiplexing）</h2><p><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/mio.png" alt=""></p>
+<p>如图所示，IO multiplexing 使用select，poll，epoll等实现单个kernel的进程/线程处理多个IO请求，IO复用将等待数据准备和将数据拷贝给应用这两个阶段分开处理，让一个线程（而且是内核级别的线程）来处理所有的等待，一旦有相应的IO事件发生就通知继续完成IO操作，虽然仍然有阻塞和等待，但是等待总是发生在一个线程，这时使用多线程可以保证其他线程一旦唤醒就是处理数据。</p>
+<h2 id="信号驱动_I/O_(Signal_Driven_I/O)">信号驱动 I/O (Signal Driven I/O)</h2><p><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/sio.png" alt=""></p>
+<p>如图所示，系统调用recvfrom试图读取数据，并且直接返回，不管是否有数据可读，内核线程读完数据，给发信号通知应用线程，应用线程收到信息，等待内核线程将数据拷贝给应用线程。</p>
+<h2 id="异步_I/O（asynchronous_IO）">异步 I/O（asynchronous IO）</h2><p><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/aio.png" alt=""></p>
+<p>如图所示，系统调用aio_read，内核kernel直接返回，系统不需要阻塞，继续做其他事情。kernel则进行等待数据准备完成，并将数据拷贝到用户态后，发送signal信号通知系统已经完成。</p>
+<h2 id="各个IO模型的对比">各个IO模型的对比</h2><p><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/dio.png" alt=""></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://minotaursu.com/2016/09/23/netty详解之io模型/" data-id="clxltv4yb003wsuv13qzlf43i" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/netty/">netty</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nio/">nio</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
       <article id="post-构建可靠的系统" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -172,7 +239,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2016/05/25/构建可靠的系统/" data-id="cjwspxs3j000z2cscf5f43j32" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2016/05/25/构建可靠的系统/" data-id="clxltv4x2000zsuv1r3m1nj96" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/工作/">工作</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/系统设计/">系统设计</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/软件开发/">软件开发</a></li></ul>
@@ -242,7 +309,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2016/01/27/使用AOP实现缓存注解/" data-id="cjwspxs4h00372cscjykdhpee" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2016/01/27/使用AOP实现缓存注解/" data-id="clxltv4y2003asuv1z5whtjfe" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/AOP/">AOP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/annotation/">annotation</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/spring/">spring</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/缓存/">缓存</a></li></ul>
@@ -255,70 +322,8 @@
 
 
     
-      <article id="post-小明的魔法调度框架之旅" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/12/12/小明的魔法调度框架之旅/">小明的魔法调度框架之旅</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2015/12/12/小明的魔法调度框架之旅/">
-      <time datetime="2015-12-12T04:01:24.000Z" itemprop="datePublished">2015-12-12</time>
-    </a>
-  </div>
-
-
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <p><em>据说每个程序员上辈子都是法力高深的魔法师</em></p>
-<h2 id="crontab">crontab</h2><p>话说小明11年从新手村毕业，拿着一把等级为灰色的木剑就开始了打怪升级之路。小明发现怪并不好打，怪物都是在凌晨4点才出现的，好在小明在新手村的时候学会了一个叫crontab的静态魔法，该魔法虽然等级低但是不需要吟唱时间，小明将crontab附魔在自己的木剑上，木剑就可以每天凌晨4点定时去打怪了。</p>
-<h2 id="quartz">quartz</h2><p>虽然crontab这个静态魔法很NB，无奈小明的装备换的太频繁，每次更新装备都需要重新将crontab附魔到武器上才行；这个时候小明已经学会了一个叫quartz的中级魔法，相对不需要吟唱的crontab，quartz需要按照Job，JobDetail，Tigger，Scheduler的顺序进行吟唱才行，虽然过程是<br>复杂了一些，但是好处是显而易见的，魔法再也不需要和装备进行绑定，Scheduler是一个完全独立结界，Scheduler可以容纳多个JobDetail和Tigger,内部的固有魔法线程池可以并行调度多个任务。</p>
-<h2 id="quartz集群">quartz集群</h2><p>在使用了quartz这个中级魔法之后，小明轻松了很长一段时间，再也不必为换装备导致魔法失效而苦恼。在成为了一个合格的中级魔法师之后，学会了无限剑制这种BT魔法之后，小明决定向着中级副本进发，为了应付副本危险的环境，小明利用无限剑制将每个装备都附上了quartz这个魔法，现在问题来了，如果所有的quartz都发动，会产生魔法混乱现象，导致反噬；小明打开了《哈利波特》上面说需要使用魔法石进行魔法加持，例如红魔石mysql，绿魔石redis，蓝魔石zookeeper，只要魔石具有原子性锁操作机制就可以了，在红魔石mysql和quartz配合下，顺序的杀掉了怪物。</p>
-<h2 id="ttd/tbschedule">ttd/tbschedule</h2><p>在中级副本打怪升级一段时间后，小明购买了高级魔法ttd和tbschedule，相对于静态魔法crontab和中级魔法quartz，高级魔法的功能真是-碉堡了。</p>
-<ul>
-<li>支持剑系武器java，弓系武器shell等多种武器；</li>
-<li>支持对吟唱依赖，上一个魔法吟唱成功后才会出现下一个魔法；</li>
-<li>支持大规模魔法分拆，合并</li>
-<li>有着路由规则指定这种高级魔法；</li>
-<li>由蓝宝石zookeeper进行加持和魔法心跳检测，保证不会出现魔法阵的混乱；</li>
-<li>通过魔物netty进行大规模魔法阵的触发；</li>
-<li>通过魔法镜面可以看到魔法执行的效果，当遇到大boss导致魔法失效时还有魔法消息监控功能；</li>
-</ul>
-<h2 id="future">future</h2><p>在小明使用了购买的高级魔法TTD后，小明再也没有见过洛杉鸡凌晨4点的天空（其实是从来好么）。小明听说在山的那边海的那边有一群蓝精灵，他们快速又瞬移，他们筑墙又监禁，他们喽啰无敌生活在那绿色的大森林，他们亵渎溶火漩涡又结群……<br>不过小明并不惧怕，因为芝士就是力量。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2015/12/12/小明的魔法调度框架之旅/" data-id="cjwspxs3y00222csczxgm64yf" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/quartz/">quartz</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/调度/">调度</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
       <nav id="page-nav">
-        <a class="extend prev" rel="prev" href="/page/7/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><a class="page-number" href="/page/10/">10</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><a class="extend next" rel="next" href="/page/9/">Next &raquo;</a>
+        <a class="extend prev" rel="prev" href="/page/7/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><a class="page-number" href="/page/10/">10</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" href="/page/9/">Next &raquo;</a>
       </nav>
     </section>
       
@@ -329,6 +334,24 @@
     <h3 class="widget-title">recents</h3>
     <div class="widget">
       <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2024/06/19/我对投资的看法/" class="thumbnail">
+  
+    <span style="background-image:url(https://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/invest.jpg
+)" alt="我对投资的看法" class="thumbnail-image"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"></p>
+              <p class="item-title"><a href="/2024/06/19/我对投资的看法/" class="title">我对投资的看法</a></p>
+              <p class="item-date"><time datetime="2024-06-19T12:41:25.000Z" itemprop="datePublished">2024-06-19</time></p>
+            </div>
+          </li>
         
           <li>
             
@@ -402,24 +425,6 @@
             </div>
           </li>
         
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2019/05/12/我职业生涯的几个关键点/" class="thumbnail">
-  
-    <span style="background-image:url(https://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/chance.jpg
-)" alt="我职业生涯的几个关键点" class="thumbnail-image"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"></p>
-              <p class="item-title"><a href="/2019/05/12/我职业生涯的几个关键点/" class="title">我职业生涯的几个关键点</a></p>
-              <p class="item-date"><time datetime="2019-05-12T02:25:55.000Z" itemprop="datePublished">2019-05-12</time></p>
-            </div>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -429,7 +434,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">tag cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/ACID/" style="font-size: 10px;">ACID</a> <a href="/tags/AOP/" style="font-size: 11.25px;">AOP</a> <a href="/tags/CAP/" style="font-size: 10px;">CAP</a> <a href="/tags/annotation/" style="font-size: 10px;">annotation</a> <a href="/tags/archsummit/" style="font-size: 10px;">archsummit</a> <a href="/tags/gc/" style="font-size: 11.25px;">gc</a> <a href="/tags/git/" style="font-size: 11.25px;">git</a> <a href="/tags/go/" style="font-size: 10px;">go</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/jackson/" style="font-size: 10px;">jackson</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/jdk8/" style="font-size: 10px;">jdk8</a> <a href="/tags/netty/" style="font-size: 11.25px;">netty</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/quartz/" style="font-size: 10px;">quartz</a> <a href="/tags/reactor/" style="font-size: 10px;">reactor</a> <a href="/tags/spring/" style="font-size: 11.25px;">spring</a> <a href="/tags/tips/" style="font-size: 10px;">tips</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/云计算/" style="font-size: 10px;">云计算</a> <a href="/tags/分布式/" style="font-size: 13.75px;">分布式</a> <a href="/tags/大数据/" style="font-size: 11.25px;">大数据</a> <a href="/tags/存储/" style="font-size: 11.25px;">存储</a> <a href="/tags/学习/" style="font-size: 10px;">学习</a> <a href="/tags/工作/" style="font-size: 18.75px;">工作</a> <a href="/tags/工具/" style="font-size: 11.25px;">工具</a> <a href="/tags/并发/" style="font-size: 12.5px;">并发</a> <a href="/tags/性能/" style="font-size: 15px;">性能</a> <a href="/tags/总结/" style="font-size: 12.5px;">总结</a> <a href="/tags/架构/" style="font-size: 13.75px;">架构</a> <a href="/tags/消息队列/" style="font-size: 10px;">消息队列</a> <a href="/tags/滴滴/" style="font-size: 11.25px;">滴滴</a> <a href="/tags/稳定性/" style="font-size: 11.25px;">稳定性</a> <a href="/tags/类冲突/" style="font-size: 10px;">类冲突</a> <a href="/tags/系统设计/" style="font-size: 16.25px;">系统设计</a> <a href="/tags/缓存/" style="font-size: 11.25px;">缓存</a> <a href="/tags/职业规划/" style="font-size: 15px;">职业规划</a> <a href="/tags/语言/" style="font-size: 10px;">语言</a> <a href="/tags/语言陷阱/" style="font-size: 11.25px;">语言陷阱</a> <a href="/tags/调度/" style="font-size: 10px;">调度</a> <a href="/tags/软件开发/" style="font-size: 17.5px;">软件开发</a> <a href="/tags/软技能/" style="font-size: 11.25px;">软技能</a> <a href="/tags/部署/" style="font-size: 10px;">部署</a> <a href="/tags/锁/" style="font-size: 10px;">锁</a> <a href="/tags/阿里/" style="font-size: 13.75px;">阿里</a> <a href="/tags/高可用/" style="font-size: 11.25px;">高可用</a> <a href="/tags/高并发/" style="font-size: 11.25px;">高并发</a>
+      <a href="/tags/ACID/" style="font-size: 10px;">ACID</a> <a href="/tags/AOP/" style="font-size: 11.25px;">AOP</a> <a href="/tags/CAP/" style="font-size: 10px;">CAP</a> <a href="/tags/annotation/" style="font-size: 10px;">annotation</a> <a href="/tags/archsummit/" style="font-size: 10px;">archsummit</a> <a href="/tags/gc/" style="font-size: 11.25px;">gc</a> <a href="/tags/git/" style="font-size: 11.25px;">git</a> <a href="/tags/go/" style="font-size: 10px;">go</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/jackson/" style="font-size: 10px;">jackson</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/jdk8/" style="font-size: 10px;">jdk8</a> <a href="/tags/netty/" style="font-size: 11.25px;">netty</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/quartz/" style="font-size: 10px;">quartz</a> <a href="/tags/reactor/" style="font-size: 10px;">reactor</a> <a href="/tags/spring/" style="font-size: 11.25px;">spring</a> <a href="/tags/tips/" style="font-size: 10px;">tips</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/云计算/" style="font-size: 10px;">云计算</a> <a href="/tags/分布式/" style="font-size: 13.75px;">分布式</a> <a href="/tags/大数据/" style="font-size: 11.25px;">大数据</a> <a href="/tags/存储/" style="font-size: 11.25px;">存储</a> <a href="/tags/学习/" style="font-size: 10px;">学习</a> <a href="/tags/工作/" style="font-size: 18.75px;">工作</a> <a href="/tags/工具/" style="font-size: 11.25px;">工具</a> <a href="/tags/并发/" style="font-size: 12.5px;">并发</a> <a href="/tags/性能/" style="font-size: 15px;">性能</a> <a href="/tags/总结/" style="font-size: 12.5px;">总结</a> <a href="/tags/投资/" style="font-size: 10px;">投资</a> <a href="/tags/架构/" style="font-size: 13.75px;">架构</a> <a href="/tags/消息队列/" style="font-size: 10px;">消息队列</a> <a href="/tags/滴滴/" style="font-size: 11.25px;">滴滴</a> <a href="/tags/稳定性/" style="font-size: 11.25px;">稳定性</a> <a href="/tags/类冲突/" style="font-size: 10px;">类冲突</a> <a href="/tags/系统设计/" style="font-size: 16.25px;">系统设计</a> <a href="/tags/缓存/" style="font-size: 11.25px;">缓存</a> <a href="/tags/职业规划/" style="font-size: 15px;">职业规划</a> <a href="/tags/语言/" style="font-size: 10px;">语言</a> <a href="/tags/语言陷阱/" style="font-size: 11.25px;">语言陷阱</a> <a href="/tags/调度/" style="font-size: 10px;">调度</a> <a href="/tags/软件开发/" style="font-size: 17.5px;">软件开发</a> <a href="/tags/软技能/" style="font-size: 11.25px;">软技能</a> <a href="/tags/部署/" style="font-size: 10px;">部署</a> <a href="/tags/锁/" style="font-size: 10px;">锁</a> <a href="/tags/阿里/" style="font-size: 13.75px;">阿里</a> <a href="/tags/高可用/" style="font-size: 11.25px;">高可用</a> <a href="/tags/高并发/" style="font-size: 11.25px;">高并发</a>
     </div>
   </div>
 
@@ -442,7 +447,7 @@
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2019 minotaur<br>
+      &copy; 2024 minotaur<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="https://github.com/minotaursu/hexo-theme-icarus">icarus</a>.
       
 <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1256401841'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s11.cnzz.com/z_stat.php%3Fid%3D1256401841%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>

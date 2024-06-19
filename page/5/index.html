@@ -82,11 +82,11 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        36
+        37
         <span>posts</span>
       </div>
       <div class="article-info-block">
-        49
+        50
         <span>tags</span>
       </div>
     </div>
@@ -115,6 +115,55 @@
 
       
       <section id="main">
+      <article id="post-一次GC耗时超长的问题排查" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/02/22/一次GC耗时超长的问题排查/">一次GC耗时超长的问题排查</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2018/02/22/一次GC耗时超长的问题排查/">
+      <time datetime="2018-02-22T03:57:06.000Z" itemprop="datePublished">2018-02-22</time>
+    </a>
+  </div>
+
+
+          
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <p><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/gc.png" alt=""></p>
+<p>2017年10月某日突然收到FullGC耗时超长的报警，排查发现应用存在周期性FULLGC耗时超长的的情况，每次FULLGC时间长达5s以上，甚至出现过10s以上的FULLGC，导致FULLGC时应用的响应全部超时。最初是怀疑系统有大量的对象没有释放导致FULLGC时间过长，第一时间dump了应用的内存，并没有发现内存泄露的情况。后面查看GC日志发现Rescan阶段weak refs processing的超时都超长，GC日志里大量可见[weak refs processing, 9.7398650 secs]，排查的方向就逐渐转向了weak refs processing 为什么会花费如此长的时间，大家在一起针对代码分析了很久，从jackson的使用，到本地缓存的使用，到NIO的影响，每个人都提出了自己的见解，但是又没有强有力的证据验证自己的结果，按照这个思路排查了一晚上也没有结果。<br>后面分析发现耗时超长的FULLGC只出现在特定的某一台服务器上，该应用的FULLGC耗时在其他服务器上都表现正常，排查发现出现GC耗时过长的服务器还部署着大数据的某个高IO类型的应用，排查的思路又转向了服务器的IO和cpu，但是并没有发现io和cpu的异常情况，排查似乎陷入了困境。<br><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/easygc.png" alt=""><br>过了几天之后找到了一个可视化的GC分析工具<a href="http://gceasy.io/" target="_blank" rel="external">gceasy.io</a> ，分析后发现一个之前一直忽略的现象，GC真实的耗时是远大于用户耗时和系统耗时的，[Times: user=2.56 sys=0.07, real=9.82 secs]。我们知道JVM本身作为一个进程也是由linux系统进行内存分配，而linux的内存空间由两部分构成，物理内存和swap空间，假如GC时有一部分内容被交换到swap，遍历到这部分的时候就需要将其交换回内存，极端情况下甚至会把整个堆分区轮流往SWAP写一遍，而磁盘交换的速度是远慢于物理内存的，如果GC和swap同时发生会导致超长时间的卡顿，通过sar -W -f 命令分析发现swap时间完全吻合发生耗时超长的GC时间，基本可以断定是系统的物理内存不够用导致系统发生swap，最终导致耗时超长的GC发生，关闭linux的swap后引用的GC时间恢复到500ms以下。<br>虽然gc耗时超长的问题得到了解决，但是仔细思考一下就会发现问题的解决完全依赖程序员的推理过程和知识储备，那么是不是可以有更简单更快速的问题排查定位手段，我认为答案是可以的，那就是更加智能化的监控，将业务指标，应用指标，系统指标打通关联，在FULLGC超时报警的时候通知告知业务开发系统发生了swap，并且能展示对订单量和GMV等指标的影响。好的基础设施就像强大的武器，虽然依赖好的枪法用手枪也能杀死敌人，但是手里有把AKM或M16还是更容易吃鸡。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://minotaursu.com/2018/02/22/一次GC耗时超长的问题排查/" data-id="clxltv4y5003hsuv1r50qjwmk" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gc/">gc</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/性能/">性能</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
       <article id="post-jackson使用setDateFormat后反序列化错误" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -153,7 +202,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2017/12/22/jackson使用setDateFormat后反序列化错误/" data-id="cjwspxs4x004i2cscxklgqrji" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2017/12/22/jackson使用setDateFormat后反序列化错误/" data-id="clxltv4yi004lsuv1j6kmjk15" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/jackson/">jackson</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/语言陷阱/">语言陷阱</a></li></ul>
@@ -224,7 +273,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2017/12/18/更换一门工作语言的成本/" data-id="cjwspxs3l00142csc3oi25wts" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.com/2017/12/18/更换一门工作语言的成本/" data-id="clxltv4x40014suv1ppf3zjla" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/go/">go</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/语言/">语言</a></li></ul>
@@ -237,69 +286,8 @@
 
 
     
-      <article id="post-archsummit2017见闻和思考" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/12/13/archsummit2017见闻和思考/">archsummit2017见闻和思考</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2017/12/13/archsummit2017见闻和思考/">
-      <time datetime="2017-12-13T10:31:39.000Z" itemprop="datePublished">2017-12-13</time>
-    </a>
-  </div>
-
-
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <p><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/archsummit.jpg" alt=""></p>
-<p>前几天参加了archsummit的北京站。2天的日程安排的十分紧凑，大多数时间同时有多场专题分享，选择想要听的专题就成了首要的事情，按照感兴趣的，可能用到的，启发思考的原则选择了几场适合自己的专题，这里记录一下大会的见闻和思考。</p>
-<h2 id="创新是人类的自信">创新是人类的自信</h2><p><strong>推荐指数：4星</strong><br>王坚博士的演讲作为archsummit的开场show拉开了archsummit的帷幕，开场就提出了一个很大的愿景:开一个会能够让50年以后的人开很多会来讨论，每天在世界上开的各种会议数以千万计，能够到达这种目标的会议真是十年难遇，显然要到达这个目标需要巨大的创新，可能是基础理论层面的创新或是定义了某些原理和标准。接下的分享主题都围绕着年轻，创新，自信，三者是相辅相成的，只有挑战离年轻人更近，未来才会离我们更近。虽然分享的时间很短，可以感受到王坚博士是一个有智慧有趣的人，以及非常的有工程师精神。</p>
-<h2 id="算法无处不在：Hulu当今和未来的技术架构">算法无处不在：Hulu当今和未来的技术架构</h2><p><strong>推荐指数：3星</strong><br>hulu讲了算法在视频广告业务的应用，算法如何带来更好的用户体验和更高的收入，接下来讲的人工智能平台是很好的工程实践，如何让算法的实现优化验证更容易，如何让更多的人员参与到这个过程，基础设施的建设能够提高工程生产力，服务于更多的场景，产生更多的价值。</p>
-<h2 id="阿里巴巴云化架构创新之路">阿里巴巴云化架构创新之路</h2><p><strong>推荐指数：4星</strong><br>目前系统架构实践层面最流行的就是微服务，而容器技术作为微服务最适合的载体，必然是构建技术大厦最基础的一环，而容器的调度和编排就是皇冠上最闪耀的明珠。从google的borg开始到k8s在开源界的一统天下，通过合理的部署调用节约资源的利用率一直就是重点的研究方向，而阿里的分享也几乎都和混合云相关，资源利用率的提示对拥有海量服务和数据的巨头意义重大，每一点带来的都是真金白银。对于缺少devOps知识的业务开发人员来说，是一个很好的科普专题。</p>
-<h2 id="高可用低延时的PayPal风控数据平台">高可用低延时的PayPal风控数据平台</h2><p><strong>推荐指数：3星</strong><br>由于下午没有抢到原本想听的专题的位置，去听了金融应用专题，个人理解金融的最重要的核心之一就是风控，虽然分享的标题中带有风控，但是这个分享和风控的关系真心不大，更多的专注于如果做好一个抽象的数据访问层，以及数据访问层相关的性能优化，分享特别提实施一个完整的性能测试是非常花时间的工作，就个人的工作经历来看也是如此，实际的代码编写在工作中所占的时间并不高，反而需求，设计，各种方面的测试，线上问题排查才是真正占用大部分时间的，如何让不懂技术的人了解，接受，支持这些非编码工作和非业务功能工作所占用的大量时间的确是一个问题。</p>
-<h2 id="陆金所金融平台的架构大升级">陆金所金融平台的架构大升级</h2><p><strong>推荐指数：2星</strong><br>分享的主题核心也和金融的关系不大，架构演进遇到的问题也是和非金融系统大部分相近，更像是一个做的业务是金融相关的系统的架构演进过程。如果能在更高的维度进行抽象，提炼出分布式系统的关键技术点可能效果会更好。</p>
-<h2 id="腾讯海外计费系统架构演进">腾讯海外计费系统架构演进</h2><p><strong>推荐指数：5星</strong><br>腾讯的国际化架构分享干货满满，很多在同一个IDC内的解决方案在，多中心的情况下都没办法采用。针对网络，部署，支付，风控等很多领域的遇到的问题和解决方案多有涉及，可以看到是一个global team在做的事情和相应的技术实力。</p>
-<h2 id="京东国际独立站系统演进">京东国际独立站系统演进</h2><p><strong>推荐指数：2星</strong><br>如果说陆金所金融平台的架构大升级是披着金融的外衣讲架构演进，那么京东国际独立站系统演进就是披着国际化的外衣讲架构演进，分享的内容更多是所做的业务是什么样的，并没有提及国际化的技术痛点，最后的性能支撑靠堆机器也是更像玩笑，在一个努力提高服务器资源利用率的时代，真的要这么诚实吗。。</p>
-<h2 id="知乎_feed_流架构演进">知乎 feed 流架构演进</h2><p><strong>推荐指数：4星</strong><br>重点在于redis module功能带来的更多可能性，IO和网络操作都变成全内存操作的确大大提高了系统的响应速度。这种底层架构选择的变革带来的收益在适合的场景下具有超高的性价比。</p>
-<h2 id="不改一行代码提升系统的性能和稳定性并支持秒杀：看分布式服务化架构关键技术">不改一行代码提升系统的性能和稳定性并支持秒杀：看分布式服务化架构关键技术</h2><p><strong>推荐指数：5星</strong><br>左耳朵耗子的分享真是人气爆棚，刚刚吃完午饭回去就已经座无虚席了，高度的抽象了系统架构领域遇到的问题，核心技术点，信息量很大，这场分享让我觉得很值得archsummit的票价。最后的不改一行代码支持秒杀也很有些诡计和魔术的意味。另外左耳朵耗子对PHP是最好的语言持有不同的看法，日常中个人也觉得java用来做需要持续迭代的业务，python用来做造测试数据和数据分析，shell用来查询线上问题是个很方便的组合。</p>
-<h2 id="Service_Mesh在华为云的实践">Service Mesh在华为云的实践</h2><p><strong>推荐指数：3星</strong><br>Service Mesh作为下一代微服务的概念被Linkerd提出，在更底层的软件架构中解决微服务的痛点，分享对比了传统的(当前的)微服务框架和service mesh的优缺点，不难想到这种底层的通用框架面临的比较大的问题就是性能和扩展性，在service mesh的发展中如何解决这2点，发挥底层框架应用透明的优势，做到多数场景的可用就是关键。service mesh不一定是下一代微服务解决方案的结果，但service mesh的思想肯定会在下一代的微服务中传承，Keep it Simple and Stupid。</p>
-<h2 id="Apollo自动驾驶及跟车方案的设计思路">Apollo自动驾驶及跟车方案的设计思路</h2><p><strong>推荐指数：4星</strong><br>对我来说有又一场科普向的分享，虽说对工作的帮助不大，但是自己还是很喜欢去听一听的，毕竟人生的一大乐趣就是做无意义的事情。<br>分享人孔旗在百度做主要做预测/决策/控制部分，分享的重点也是这些，很多自动驾驶的问题解决都是抽象出一个可解的数学问题，再对这个问题做简化和降维，得出一个局部最优解。整体听下来，自动驾驶是未来的一个必然，而真正达到L4级别的可用性并不是最近2年就可以搞定的但也不会等的特别久。而自动驾驶绝对是一个大生意，诞生出google，apple这个级别的公司也不奇怪。</p>
-<h2 id="说些什么">说些什么</h2><p>互联网的发展史， 从最初的单项传播信息的门户模式 到搜索引擎，微博这种线上双向信息互动的模式，到现在如火如荼的各类各种移动互联网，到高速发展的人工智能和云计算。整体的业务，架构越来越复杂，越来越向着技术密集，资本密集方向发展<br>。对于创业者来说，一方面要面对可能的来自BAT的业务同质化竞争威胁，一方面拥有着BAT深耕出的互联网环境带来的便利，如何找到合适的切入方向就是首要解决的问题。对于互联网研发人员说来，业务复杂度，规模与高可用带来的挑战越来越高，同时开源社区的蓬勃发展也带来了越来越多的可能性，怎样利用好开源资源解决自身的业务问题也变得更加重要。如何在一个知识大爆炸的时代保持独立思考，选择适合自己的方向终将成为重要的技能之一，乔教主的那句 Stay Hungry,Stay Foolish 也许就是最好的解答。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2017/12/13/archsummit2017见闻和思考/" data-id="cjwspxs52004v2cscln0vts98" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/archsummit/">archsummit</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/云计算/">云计算</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/架构/">架构</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/系统设计/">系统设计</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
       <nav id="page-nav">
-        <a class="extend prev" rel="prev" href="/page/4/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><a class="extend next" rel="next" href="/page/6/">Next &raquo;</a>
+        <a class="extend prev" rel="prev" href="/page/4/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" href="/page/6/">Next &raquo;</a>
       </nav>
     </section>
       
@@ -310,6 +298,24 @@
     <h3 class="widget-title">recents</h3>
     <div class="widget">
       <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2024/06/19/我对投资的看法/" class="thumbnail">
+  
+    <span style="background-image:url(https://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/invest.jpg
+)" alt="我对投资的看法" class="thumbnail-image"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"></p>
+              <p class="item-title"><a href="/2024/06/19/我对投资的看法/" class="title">我对投资的看法</a></p>
+              <p class="item-date"><time datetime="2024-06-19T12:41:25.000Z" itemprop="datePublished">2024-06-19</time></p>
+            </div>
+          </li>
         
           <li>
             
@@ -383,24 +389,6 @@
             </div>
           </li>
         
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2019/05/12/我职业生涯的几个关键点/" class="thumbnail">
-  
-    <span style="background-image:url(https://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/chance.jpg
-)" alt="我职业生涯的几个关键点" class="thumbnail-image"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"></p>
-              <p class="item-title"><a href="/2019/05/12/我职业生涯的几个关键点/" class="title">我职业生涯的几个关键点</a></p>
-              <p class="item-date"><time datetime="2019-05-12T02:25:55.000Z" itemprop="datePublished">2019-05-12</time></p>
-            </div>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -410,7 +398,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">tag cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/ACID/" style="font-size: 10px;">ACID</a> <a href="/tags/AOP/" style="font-size: 11.25px;">AOP</a> <a href="/tags/CAP/" style="font-size: 10px;">CAP</a> <a href="/tags/annotation/" style="font-size: 10px;">annotation</a> <a href="/tags/archsummit/" style="font-size: 10px;">archsummit</a> <a href="/tags/gc/" style="font-size: 11.25px;">gc</a> <a href="/tags/git/" style="font-size: 11.25px;">git</a> <a href="/tags/go/" style="font-size: 10px;">go</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/jackson/" style="font-size: 10px;">jackson</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/jdk8/" style="font-size: 10px;">jdk8</a> <a href="/tags/netty/" style="font-size: 11.25px;">netty</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/quartz/" style="font-size: 10px;">quartz</a> <a href="/tags/reactor/" style="font-size: 10px;">reactor</a> <a href="/tags/spring/" style="font-size: 11.25px;">spring</a> <a href="/tags/tips/" style="font-size: 10px;">tips</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/云计算/" style="font-size: 10px;">云计算</a> <a href="/tags/分布式/" style="font-size: 13.75px;">分布式</a> <a href="/tags/大数据/" style="font-size: 11.25px;">大数据</a> <a href="/tags/存储/" style="font-size: 11.25px;">存储</a> <a href="/tags/学习/" style="font-size: 10px;">学习</a> <a href="/tags/工作/" style="font-size: 18.75px;">工作</a> <a href="/tags/工具/" style="font-size: 11.25px;">工具</a> <a href="/tags/并发/" style="font-size: 12.5px;">并发</a> <a href="/tags/性能/" style="font-size: 15px;">性能</a> <a href="/tags/总结/" style="font-size: 12.5px;">总结</a> <a href="/tags/架构/" style="font-size: 13.75px;">架构</a> <a href="/tags/消息队列/" style="font-size: 10px;">消息队列</a> <a href="/tags/滴滴/" style="font-size: 11.25px;">滴滴</a> <a href="/tags/稳定性/" style="font-size: 11.25px;">稳定性</a> <a href="/tags/类冲突/" style="font-size: 10px;">类冲突</a> <a href="/tags/系统设计/" style="font-size: 16.25px;">系统设计</a> <a href="/tags/缓存/" style="font-size: 11.25px;">缓存</a> <a href="/tags/职业规划/" style="font-size: 15px;">职业规划</a> <a href="/tags/语言/" style="font-size: 10px;">语言</a> <a href="/tags/语言陷阱/" style="font-size: 11.25px;">语言陷阱</a> <a href="/tags/调度/" style="font-size: 10px;">调度</a> <a href="/tags/软件开发/" style="font-size: 17.5px;">软件开发</a> <a href="/tags/软技能/" style="font-size: 11.25px;">软技能</a> <a href="/tags/部署/" style="font-size: 10px;">部署</a> <a href="/tags/锁/" style="font-size: 10px;">锁</a> <a href="/tags/阿里/" style="font-size: 13.75px;">阿里</a> <a href="/tags/高可用/" style="font-size: 11.25px;">高可用</a> <a href="/tags/高并发/" style="font-size: 11.25px;">高并发</a>
+      <a href="/tags/ACID/" style="font-size: 10px;">ACID</a> <a href="/tags/AOP/" style="font-size: 11.25px;">AOP</a> <a href="/tags/CAP/" style="font-size: 10px;">CAP</a> <a href="/tags/annotation/" style="font-size: 10px;">annotation</a> <a href="/tags/archsummit/" style="font-size: 10px;">archsummit</a> <a href="/tags/gc/" style="font-size: 11.25px;">gc</a> <a href="/tags/git/" style="font-size: 11.25px;">git</a> <a href="/tags/go/" style="font-size: 10px;">go</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/jackson/" style="font-size: 10px;">jackson</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/jdk8/" style="font-size: 10px;">jdk8</a> <a href="/tags/netty/" style="font-size: 11.25px;">netty</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/quartz/" style="font-size: 10px;">quartz</a> <a href="/tags/reactor/" style="font-size: 10px;">reactor</a> <a href="/tags/spring/" style="font-size: 11.25px;">spring</a> <a href="/tags/tips/" style="font-size: 10px;">tips</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/云计算/" style="font-size: 10px;">云计算</a> <a href="/tags/分布式/" style="font-size: 13.75px;">分布式</a> <a href="/tags/大数据/" style="font-size: 11.25px;">大数据</a> <a href="/tags/存储/" style="font-size: 11.25px;">存储</a> <a href="/tags/学习/" style="font-size: 10px;">学习</a> <a href="/tags/工作/" style="font-size: 18.75px;">工作</a> <a href="/tags/工具/" style="font-size: 11.25px;">工具</a> <a href="/tags/并发/" style="font-size: 12.5px;">并发</a> <a href="/tags/性能/" style="font-size: 15px;">性能</a> <a href="/tags/总结/" style="font-size: 12.5px;">总结</a> <a href="/tags/投资/" style="font-size: 10px;">投资</a> <a href="/tags/架构/" style="font-size: 13.75px;">架构</a> <a href="/tags/消息队列/" style="font-size: 10px;">消息队列</a> <a href="/tags/滴滴/" style="font-size: 11.25px;">滴滴</a> <a href="/tags/稳定性/" style="font-size: 11.25px;">稳定性</a> <a href="/tags/类冲突/" style="font-size: 10px;">类冲突</a> <a href="/tags/系统设计/" style="font-size: 16.25px;">系统设计</a> <a href="/tags/缓存/" style="font-size: 11.25px;">缓存</a> <a href="/tags/职业规划/" style="font-size: 15px;">职业规划</a> <a href="/tags/语言/" style="font-size: 10px;">语言</a> <a href="/tags/语言陷阱/" style="font-size: 11.25px;">语言陷阱</a> <a href="/tags/调度/" style="font-size: 10px;">调度</a> <a href="/tags/软件开发/" style="font-size: 17.5px;">软件开发</a> <a href="/tags/软技能/" style="font-size: 11.25px;">软技能</a> <a href="/tags/部署/" style="font-size: 10px;">部署</a> <a href="/tags/锁/" style="font-size: 10px;">锁</a> <a href="/tags/阿里/" style="font-size: 13.75px;">阿里</a> <a href="/tags/高可用/" style="font-size: 11.25px;">高可用</a> <a href="/tags/高并发/" style="font-size: 11.25px;">高并发</a>
     </div>
   </div>
 
@@ -423,7 +411,7 @@
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2019 minotaur<br>
+      &copy; 2024 minotaur<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="https://github.com/minotaursu/hexo-theme-icarus">icarus</a>.
       
 <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1256401841'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s11.cnzz.com/z_stat.php%3Fid%3D1256401841%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
