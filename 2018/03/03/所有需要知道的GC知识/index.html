@@ -9,7 +9,7 @@
   <meta name="description" content="作为一个java语言开发的应用，为了每一个0.1%的性能提升，折腾过了网络，IO，数据库之后难免要折腾一下GC。写下这篇日志的目的是希望看完这篇日志后，关于GC的问题能从google+stackoverflow寻找答案的过程中解脱出来，99%的GC问题都能独立解决，也方便自己温故知新。日志将从JVM内存结构 - 垃圾回收器 - 一些JVM参数 - 看懂GC日志 - 实际案例 - 建议配置 这几个方">
 <meta property="og:type" content="article">
 <meta property="og:title" content="所有需要知道的GC知识">
-<meta property="og:url" content="http://minotaursu.com/2018/03/03/所有需要知道的GC知识/index.html">
+<meta property="og:url" content="http://minotaursu.github.io/2018/03/03/所有需要知道的GC知识/index.html">
 <meta property="og:site_name" content="Minotaur story">
 <meta property="og:description" content="作为一个java语言开发的应用，为了每一个0.1%的性能提升，折腾过了网络，IO，数据库之后难免要折腾一下GC。写下这篇日志的目的是希望看完这篇日志后，关于GC的问题能从google+stackoverflow寻找答案的过程中解脱出来，99%的GC问题都能独立解决，也方便自己温故知新。日志将从JVM内存结构 - 垃圾回收器 - 一些JVM参数 - 看懂GC日志 - 实际案例 - 建议配置 这几个方">
 <meta property="og:image" content="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/jvmspeed.png">
@@ -54,7 +54,7 @@
         </nav>
       
       <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit"> </button><input type="hidden" name="sitesearch" value="http://minotaursu.com"></form>
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit"> </button><input type="hidden" name="sitesearch" value="http://minotaursu.github.io"></form>
       </div>
     </div>
   </div>
@@ -67,7 +67,7 @@
           <td><a class="main-nav-link" href="/archives">Archives</a></td>
         
         <td>
-          <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><input type="hidden" name="sitesearch" value="http://minotaursu.com"></form>
+          <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><input type="hidden" name="sitesearch" value="http://minotaursu.github.io"></form>
         </td>
       </tr>
     </table>
@@ -186,7 +186,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2018/03/03/所有需要知道的GC知识/" data-id="clxltv4x8001gsuv1729ybglp" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.github.io/2018/03/03/所有需要知道的GC知识/" data-id="clxlvtyaw001gkfv1kwqbbzqf" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gc/">gc</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/性能/">性能</a></li></ul>

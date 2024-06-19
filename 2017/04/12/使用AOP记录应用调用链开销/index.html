@@ -9,7 +9,7 @@
   <meta name="description" content="最近系统出现了一次线上的性能问题，本来以为目前的QPS应该是不会出现任何问题的，结果微服务还是比较容易因为某个点的问题导致雪崩的。。。出了性能问题就要做分析，正统的思路是要不断进行压测用JProfiler进行分析。后来自己简单搞了一下使用AOP抓取调用树和开销，看起来效果还不错，加上动态开关可以偶尔在线上用一下。代码提交到了github。本身的实现类似树的深度优先遍历，一个节点有多个子节点，在进入">
 <meta property="og:type" content="article">
 <meta property="og:title" content="使用AOP记录应用调用链开销">
-<meta property="og:url" content="http://minotaursu.com/2017/04/12/使用AOP记录应用调用链开销/index.html">
+<meta property="og:url" content="http://minotaursu.github.io/2017/04/12/使用AOP记录应用调用链开销/index.html">
 <meta property="og:site_name" content="Minotaur story">
 <meta property="og:description" content="最近系统出现了一次线上的性能问题，本来以为目前的QPS应该是不会出现任何问题的，结果微服务还是比较容易因为某个点的问题导致雪崩的。。。出了性能问题就要做分析，正统的思路是要不断进行压测用JProfiler进行分析。后来自己简单搞了一下使用AOP抓取调用树和开销，看起来效果还不错，加上动态开关可以偶尔在线上用一下。代码提交到了github。本身的实现类似树的深度优先遍历，一个节点有多个子节点，在进入">
 <meta property="og:image" content="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/profiler.png">
@@ -51,7 +51,7 @@
         </nav>
       
       <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit"> </button><input type="hidden" name="sitesearch" value="http://minotaursu.com"></form>
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit"> </button><input type="hidden" name="sitesearch" value="http://minotaursu.github.io"></form>
       </div>
     </div>
   </div>
@@ -64,7 +64,7 @@
           <td><a class="main-nav-link" href="/archives">Archives</a></td>
         
         <td>
-          <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><input type="hidden" name="sitesearch" value="http://minotaursu.com"></form>
+          <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><input type="hidden" name="sitesearch" value="http://minotaursu.github.io"></form>
         </td>
       </tr>
     </table>
@@ -151,7 +151,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2017/04/12/使用AOP记录应用调用链开销/" data-id="clxltv4y10033suv12lt5l19j" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.github.io/2017/04/12/使用AOP记录应用调用链开销/" data-id="clxlvtybg0033kfv1thyib1mv" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/AOP/">AOP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/spring/">spring</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/性能/">性能</a></li></ul>

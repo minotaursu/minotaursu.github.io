@@ -3,9 +3,9 @@
   <title><![CDATA[Minotaur story]]></title>
   
   <link href="/atom.xml" rel="self"/>
-  <link href="http://minotaursu.com/"/>
+  <link href="http://minotaursu.github.io/"/>
   <updated>2024-06-19T12:46:32.928Z</updated>
-  <id>http://minotaursu.com/</id>
+  <id>http://minotaursu.github.io/</id>
   
   <author>
     <name><![CDATA[minotaur]]></name>
@@ -16,8 +16,8 @@
   
   <entry>
     <title><![CDATA[我对投资的看法]]></title>
-    <link href="http://minotaursu.com/2024/06/19/%E6%88%91%E5%AF%B9%E6%8A%95%E8%B5%84%E7%9A%84%E7%9C%8B%E6%B3%95/"/>
-    <id>http://minotaursu.com/2024/06/19/我对投资的看法/</id>
+    <link href="http://minotaursu.github.io/2024/06/19/%E6%88%91%E5%AF%B9%E6%8A%95%E8%B5%84%E7%9A%84%E7%9C%8B%E6%B3%95/"/>
+    <id>http://minotaursu.github.io/2024/06/19/我对投资的看法/</id>
     <published>2024-06-19T12:41:25.000Z</published>
     <updated>2024-06-19T12:46:32.928Z</updated>
     <content type="html"><![CDATA[<p><img src="https://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/invest.jpg" alt=""><br>在NVDA市值登顶的这一天，我觉得有必要谈谈未来可能会带来的变化。我们正面临着可能是第四次工业革命的时代，这可能会全面改变世界，也可能只是在某些领域大幅提高效率，却同时取代更多的人力工作，使世界变得更加单调乏味。至于未来的走向，我无法做出准确预测，但NVDA市值的暴涨无疑让部分人获得了巨大的财富。</p>
@@ -40,14 +40,14 @@
     <![CDATA[<p><img src="https://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/invest.jpg" alt=""><br>在NVDA市值登顶的这一天，我觉得有必要谈谈未来]]>
     </summary>
     
-      <category term="投资" scheme="http://minotaursu.com/tags/%E6%8A%95%E8%B5%84/"/>
+      <category term="投资" scheme="http://minotaursu.github.io/tags/%E6%8A%95%E8%B5%84/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[我对未来技术趋势的一些看法]]></title>
-    <link href="http://minotaursu.com/2019/07/16/%E6%88%91%E5%AF%B9%E6%9C%AA%E6%9D%A5%E6%8A%80%E6%9C%AF%E8%B6%8B%E5%8A%BF%E7%9A%84%E4%B8%80%E4%BA%9B%E7%9C%8B%E6%B3%95/"/>
-    <id>http://minotaursu.com/2019/07/16/我对未来技术趋势的一些看法/</id>
+    <link href="http://minotaursu.github.io/2019/07/16/%E6%88%91%E5%AF%B9%E6%9C%AA%E6%9D%A5%E6%8A%80%E6%9C%AF%E8%B6%8B%E5%8A%BF%E7%9A%84%E4%B8%80%E4%BA%9B%E7%9C%8B%E6%B3%95/"/>
+    <id>http://minotaursu.github.io/2019/07/16/我对未来技术趋势的一些看法/</id>
     <published>2019-07-16T09:40:27.000Z</published>
     <updated>2019-06-08T01:49:04.321Z</updated>
     <content type="html"><![CDATA[<p><img src="https://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/skycity.jpg" alt=""><br>预测未来的技术发展方向是件有趣又有意义的事情，正确的判断技术发展方向对于技术选型，业务发展和职业规划都起着至关重要的作用。日常的需求沟通，项目管理，设计编码，运维部署工作能带给我们满足感和安全感，但是在脚踩大地之外偶尔也需要仰望一下星空，看看未来是什么样子，这里就神棍一把，说一下我对未来技术发展趋势的一些看法。</p>
@@ -100,18 +100,18 @@
     <![CDATA[<p><img src="https://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/skycity.jpg" alt=""><br>预测未来的技术发展方向是件有趣又有意义的事情，]]>
     </summary>
     
-      <category term="架构" scheme="http://minotaursu.com/tags/%E6%9E%B6%E6%9E%84/"/>
+      <category term="架构" scheme="http://minotaursu.github.io/tags/%E6%9E%B6%E6%9E%84/"/>
     
-      <category term="职业规划" scheme="http://minotaursu.com/tags/%E8%81%8C%E4%B8%9A%E8%A7%84%E5%88%92/"/>
+      <category term="职业规划" scheme="http://minotaursu.github.io/tags/%E8%81%8C%E4%B8%9A%E8%A7%84%E5%88%92/"/>
     
-      <category term="软件开发" scheme="http://minotaursu.com/tags/%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91/"/>
+      <category term="软件开发" scheme="http://minotaursu.github.io/tags/%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[如何成为高效学习的程序员]]></title>
-    <link href="http://minotaursu.com/2019/06/24/%E5%A6%82%E4%BD%95%E6%88%90%E4%B8%BA%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%9A%84%E7%A8%8B%E5%BA%8F%E5%91%98/"/>
-    <id>http://minotaursu.com/2019/06/24/如何成为高效学习的程序员/</id>
+    <link href="http://minotaursu.github.io/2019/06/24/%E5%A6%82%E4%BD%95%E6%88%90%E4%B8%BA%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%9A%84%E7%A8%8B%E5%BA%8F%E5%91%98/"/>
+    <id>http://minotaursu.github.io/2019/06/24/如何成为高效学习的程序员/</id>
     <published>2019-06-24T09:01:16.000Z</published>
     <updated>2019-06-08T01:48:49.616Z</updated>
     <content type="html"><![CDATA[<h1 id="为什么需要学习">为什么需要学习</h1><h3 id="学习的重要性">学习的重要性</h3><p>在当前这个时代信息的传播效率大幅提升，知识的获取成本大幅降低，互联网在改变着世界的同时，行业本身也在快速的发生变化，不断的有新的工具，框架，语言，解决方案产生，甚至架构思路和模式都会和几年前不同，行业发展得太快，纯靠经验积累行不通，变化的速度远大于经验积累的速度。快速的找到所需要的知识并能高效学习，对于程序员越来越重要，是最核心的能力之一。</p>
@@ -147,21 +147,21 @@
     <![CDATA[<h1 id="为什么需要学习">为什么需要学习</h1><h3 id="学习的重要性">学习的重要性</h3><p>在当前这个时代信息的传播效率大幅提升，知识的获取成本大幅降低，互联网在改变着世界的同时，行业本身也在快速的发生变化，不断的有新的工具，框架，语言，解决方案产生，甚]]>
     </summary>
     
-      <category term="学习" scheme="http://minotaursu.com/tags/%E5%AD%A6%E4%B9%A0/"/>
+      <category term="学习" scheme="http://minotaursu.github.io/tags/%E5%AD%A6%E4%B9%A0/"/>
     
-      <category term="职业规划" scheme="http://minotaursu.com/tags/%E8%81%8C%E4%B8%9A%E8%A7%84%E5%88%92/"/>
+      <category term="职业规划" scheme="http://minotaursu.github.io/tags/%E8%81%8C%E4%B8%9A%E8%A7%84%E5%88%92/"/>
     
-      <category term="软技能" scheme="http://minotaursu.com/tags/%E8%BD%AF%E6%8A%80%E8%83%BD/"/>
+      <category term="软技能" scheme="http://minotaursu.github.io/tags/%E8%BD%AF%E6%8A%80%E8%83%BD/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[再谈稳定性工作]]></title>
-    <link href="http://minotaursu.com/2019/06/11/%E5%86%8D%E8%B0%88%E7%A8%B3%E5%AE%9A%E6%80%A7/"/>
-    <id>http://minotaursu.com/2019/06/11/再谈稳定性/</id>
+    <link href="http://minotaursu.github.io/2019/06/11/%E5%86%8D%E8%B0%88%E7%A8%B3%E5%AE%9A%E6%80%A7/"/>
+    <id>http://minotaursu.github.io/2019/06/11/再谈稳定性/</id>
     <published>2019-06-11T08:33:17.000Z</published>
     <updated>2019-06-08T01:46:58.395Z</updated>
-    <content type="html"><![CDATA[<p>之前也写过一篇稳定性工作的总结-<a href="http://minotaursu.com/2018/03/12/%E5%A6%82%E4%BD%95%E4%BF%9D%E9%9A%9C%E9%AB%98%E5%B9%B6%E5%8F%91%E7%B3%BB%E7%BB%9F%E7%9A%84%E7%A8%B3%E5%AE%9A%E6%80%A7%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/">如何保障高并发系统的稳定性与高可用</a>，但更多的是从系统开发者的角度说明如何保障单一系统的稳定性，做好自己负责系统的稳定性建设更多的是依赖知识和经验，是个技术活。负责了一整年的业务线稳定性建设之后，对于如何保障几十个系统的稳定性，协同几十人做好稳定性相关工作有了更多的思考和实践，又有了些新的体会，更需要科学的工程管理，涉及到多个方面。</p>
+    <content type="html"><![CDATA[<p>之前也写过一篇稳定性工作的总结-<a href="http://minotaursu.com/2018/03/12/%E5%A6%82%E4%BD%95%E4%BF%9D%E9%9A%9C%E9%AB%98%E5%B9%B6%E5%8F%91%E7%B3%BB%E7%BB%9F%E7%9A%84%E7%A8%B3%E5%AE%9A%E6%80%A7%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/" target="_blank" rel="external">如何保障高并发系统的稳定性与高可用</a>，但更多的是从系统开发者的角度说明如何保障单一系统的稳定性，做好自己负责系统的稳定性建设更多的是依赖知识和经验，是个技术活。负责了一整年的业务线稳定性建设之后，对于如何保障几十个系统的稳定性，协同几十人做好稳定性相关工作有了更多的思考和实践，又有了些新的体会，更需要科学的工程管理，涉及到多个方面。</p>
 <h2 id="方向">方向</h2><ol>
 <li>高可用<br>高可用要求系统有比较高的风险防范应对能力，把因软件/硬件/人为造成的故障对业务的影响降低到最小程度。系统能够对外提供有效服务的时间大于99.9%，99.99%，甚至是99.999%。 </li>
 <li>零资损<br>高可用强调的是对外稳定服务，零资损强调的是内部资金安全。减少软件/硬件/人为的因素导致的资金损失风险。特别是计费，交易，营销这些和钱相关的系统。</li>
@@ -197,22 +197,22 @@
     <![CDATA[<p>之前也写过一篇稳定性工作的总结-<a href="http://minotaursu.com/2018/03/12/%E5%A6%82%E4%BD%95%E4%BF%9D%E9%9A%9C%E9%AB%98%E5%B9%B6%E5%8F%91%E7%B3%BB%E7%BB%]]>
     </summary>
     
-      <category term="工作" scheme="http://minotaursu.com/tags/%E5%B7%A5%E4%BD%9C/"/>
+      <category term="工作" scheme="http://minotaursu.github.io/tags/%E5%B7%A5%E4%BD%9C/"/>
     
-      <category term="性能" scheme="http://minotaursu.com/tags/%E6%80%A7%E8%83%BD/"/>
+      <category term="性能" scheme="http://minotaursu.github.io/tags/%E6%80%A7%E8%83%BD/"/>
     
-      <category term="稳定性" scheme="http://minotaursu.com/tags/%E7%A8%B3%E5%AE%9A%E6%80%A7/"/>
+      <category term="稳定性" scheme="http://minotaursu.github.io/tags/%E7%A8%B3%E5%AE%9A%E6%80%A7/"/>
     
-      <category term="高可用" scheme="http://minotaursu.com/tags/%E9%AB%98%E5%8F%AF%E7%94%A8/"/>
+      <category term="高可用" scheme="http://minotaursu.github.io/tags/%E9%AB%98%E5%8F%AF%E7%94%A8/"/>
     
-      <category term="高并发" scheme="http://minotaursu.com/tags/%E9%AB%98%E5%B9%B6%E5%8F%91/"/>
+      <category term="高并发" scheme="http://minotaursu.github.io/tags/%E9%AB%98%E5%B9%B6%E5%8F%91/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[浅谈Lambda架构和Kappa架构]]></title>
-    <link href="http://minotaursu.com/2019/05/31/%E6%B5%85%E8%B0%88Lambda%E6%9E%B6%E6%9E%84%E5%92%8CKappa%E6%9E%B6%E6%9E%84/"/>
-    <id>http://minotaursu.com/2019/05/31/浅谈Lambda架构和Kappa架构/</id>
+    <link href="http://minotaursu.github.io/2019/05/31/%E6%B5%85%E8%B0%88Lambda%E6%9E%B6%E6%9E%84%E5%92%8CKappa%E6%9E%B6%E6%9E%84/"/>
+    <id>http://minotaursu.github.io/2019/05/31/浅谈Lambda架构和Kappa架构/</id>
     <published>2019-05-31T13:17:38.000Z</published>
     <updated>2019-05-31T13:23:50.669Z</updated>
     <content type="html"><![CDATA[<h1 id="数据系统的本质">数据系统的本质</h1><p>query = function(all data)，对于数据系统的本质Marz提出了一个简单的公式。在大部分情况，在数据集上执行查询函数立即就能获得结果，但是当数据量到达一定量级时，function则需要变的更加复杂。针对OLTP场景的解决方案通常是shard（pre-sharding和auto-sharding ），针对OLAP场景的解决方案通常则是lambda架构和kappa架构。</p>
@@ -245,20 +245,20 @@
     <![CDATA[<h1 id="数据系统的本质">数据系统的本质</h1><p>query = function(all data)，对于数据系统的本质Marz提出了一个简单的公式。在大部分情况，在数据集上执行查询函数立即就能获得结果，但是当数据量到达一定量级时，function则需要变的更加复]]>
     </summary>
     
-      <category term="大数据" scheme="http://minotaursu.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+      <category term="大数据" scheme="http://minotaursu.github.io/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
     
-      <category term="存储" scheme="http://minotaursu.com/tags/%E5%AD%98%E5%82%A8/"/>
+      <category term="存储" scheme="http://minotaursu.github.io/tags/%E5%AD%98%E5%82%A8/"/>
     
-      <category term="架构" scheme="http://minotaursu.com/tags/%E6%9E%B6%E6%9E%84/"/>
+      <category term="架构" scheme="http://minotaursu.github.io/tags/%E6%9E%B6%E6%9E%84/"/>
     
-      <category term="系统设计" scheme="http://minotaursu.com/tags/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/"/>
+      <category term="系统设计" scheme="http://minotaursu.github.io/tags/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[我职业生涯的几个关键点]]></title>
-    <link href="http://minotaursu.com/2019/05/12/%E6%88%91%E8%81%8C%E4%B8%9A%E7%94%9F%E6%B6%AF%E7%9A%84%E5%87%A0%E4%B8%AA%E5%85%B3%E9%94%AE%E7%82%B9/"/>
-    <id>http://minotaursu.com/2019/05/12/我职业生涯的几个关键点/</id>
+    <link href="http://minotaursu.github.io/2019/05/12/%E6%88%91%E8%81%8C%E4%B8%9A%E7%94%9F%E6%B6%AF%E7%9A%84%E5%87%A0%E4%B8%AA%E5%85%B3%E9%94%AE%E7%82%B9/"/>
+    <id>http://minotaursu.github.io/2019/05/12/我职业生涯的几个关键点/</id>
     <published>2019-05-12T02:25:55.000Z</published>
     <updated>2019-06-12T04:13:27.059Z</updated>
     <content type="html"><![CDATA[<p><img src="https://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/chance.jpg" alt=""></p>
@@ -293,16 +293,16 @@
 <h1 id="关于原则">关于原则</h1>]]>
     </summary>
     
-      <category term="职业规划" scheme="http://minotaursu.com/tags/%E8%81%8C%E4%B8%9A%E8%A7%84%E5%88%92/"/>
+      <category term="职业规划" scheme="http://minotaursu.github.io/tags/%E8%81%8C%E4%B8%9A%E8%A7%84%E5%88%92/"/>
     
-      <category term="软技能" scheme="http://minotaursu.com/tags/%E8%BD%AF%E6%8A%80%E8%83%BD/"/>
+      <category term="软技能" scheme="http://minotaursu.github.io/tags/%E8%BD%AF%E6%8A%80%E8%83%BD/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[数据存储系统的选择]]></title>
-    <link href="http://minotaursu.com/2019/05/08/%E6%95%B0%E6%8D%AE%E5%AD%98%E5%82%A8%E7%B3%BB%E7%BB%9F%E7%9A%84%E9%80%89%E6%8B%A9/"/>
-    <id>http://minotaursu.com/2019/05/08/数据存储系统的选择/</id>
+    <link href="http://minotaursu.github.io/2019/05/08/%E6%95%B0%E6%8D%AE%E5%AD%98%E5%82%A8%E7%B3%BB%E7%BB%9F%E7%9A%84%E9%80%89%E6%8B%A9/"/>
+    <id>http://minotaursu.github.io/2019/05/08/数据存储系统的选择/</id>
     <published>2019-05-08T01:39:02.000Z</published>
     <updated>2019-06-08T01:40:11.089Z</updated>
     <content type="html"><![CDATA[<p>数据库作为应用系统中最重要的基础设施，承载着通过数据访问接口<br>存储和查询用户信息的功能，当今的互联网业务场景越来越丰富和复杂，并且数据库作为有状态服务扩展成本高昂，选择适合业务场景的数据变的十分重要。本文分别对比一些常用的数据库（包括mysql，redis，mongodb，hbase，elasticsearch，influxdb，rocksdb），通过简要分析其中的原理确定每种数据库适合场景和优缺点。</p>
@@ -325,18 +325,18 @@
     <![CDATA[<p>数据库作为应用系统中最重要的基础设施，承载着通过数据访问接口<br>存储和查询用户信息的功能，当今的互联网业务场景越来越丰富和复杂，并且数据库作为有状态服务扩展成本高昂，选择适合业务场景的数据变的十分重要。本文分别对比一些常用的数据库（包括mysql，redis，mongo]]>
     </summary>
     
-      <category term="分布式" scheme="http://minotaursu.com/tags/%E5%88%86%E5%B8%83%E5%BC%8F/"/>
+      <category term="分布式" scheme="http://minotaursu.github.io/tags/%E5%88%86%E5%B8%83%E5%BC%8F/"/>
     
-      <category term="大数据" scheme="http://minotaursu.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+      <category term="大数据" scheme="http://minotaursu.github.io/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
     
-      <category term="存储" scheme="http://minotaursu.com/tags/%E5%AD%98%E5%82%A8/"/>
+      <category term="存储" scheme="http://minotaursu.github.io/tags/%E5%AD%98%E5%82%A8/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[java保留小数点后2位格式化问题]]></title>
-    <link href="http://minotaursu.com/2019/04/29/java%E4%BF%9D%E7%95%99%E5%B0%8F%E6%95%B0%E7%82%B9%E5%90%8E2%E4%BD%8D%E6%A0%BC%E5%BC%8F%E5%8C%96%E9%97%AE%E9%A2%98/"/>
-    <id>http://minotaursu.com/2019/04/29/java保留小数点后2位格式化问题/</id>
+    <link href="http://minotaursu.github.io/2019/04/29/java%E4%BF%9D%E7%95%99%E5%B0%8F%E6%95%B0%E7%82%B9%E5%90%8E2%E4%BD%8D%E6%A0%BC%E5%BC%8F%E5%8C%96%E9%97%AE%E9%A2%98/"/>
+    <id>http://minotaursu.github.io/2019/04/29/java保留小数点后2位格式化问题/</id>
     <published>2019-04-29T06:07:43.000Z</published>
     <updated>2019-05-20T03:17:42.263Z</updated>
     <content type="html"><![CDATA[<p>最近在做应用的jdk7升级8和核心类库升级的工作。发现一个把Double格式化成String的函数并不是每次都按照4舍5入进行格式化，例如1.325的运行结果是1.32，而12.345的运行结果则是12.35。这个问题是因为在二进制中并没有一个值能准确的表示这个十进制的小数值，只是非常接近这个十进制数值。</p>
@@ -347,20 +347,20 @@
     <![CDATA[<p>最近在做应用的jdk7升级8和核心类库升级的工作。发现一个把Double格式化成String的函数并不是每次都按照4舍5入进行格式化，例如1.325的运行结果是1.32，而12.345的运行结果则是12.35。这个问题是因为在二进制中并没有一个值能准确的表示这个十进制的小数]]>
     </summary>
     
-      <category term="java" scheme="http://minotaursu.com/tags/java/"/>
+      <category term="java" scheme="http://minotaursu.github.io/tags/java/"/>
     
-      <category term="jdk8" scheme="http://minotaursu.com/tags/jdk8/"/>
+      <category term="jdk8" scheme="http://minotaursu.github.io/tags/jdk8/"/>
     
-      <category term="语言陷阱" scheme="http://minotaursu.com/tags/%E8%AF%AD%E8%A8%80%E9%99%B7%E9%98%B1/"/>
+      <category term="语言陷阱" scheme="http://minotaursu.github.io/tags/%E8%AF%AD%E8%A8%80%E9%99%B7%E9%98%B1/"/>
     
-      <category term="软件开发" scheme="http://minotaursu.com/tags/%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91/"/>
+      <category term="软件开发" scheme="http://minotaursu.github.io/tags/%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[我的类库选择]]></title>
-    <link href="http://minotaursu.com/2019/02/18/%E6%88%91%E7%9A%84%E7%B1%BB%E5%BA%93%E9%80%89%E6%8B%A9/"/>
-    <id>http://minotaursu.com/2019/02/18/我的类库选择/</id>
+    <link href="http://minotaursu.github.io/2019/02/18/%E6%88%91%E7%9A%84%E7%B1%BB%E5%BA%93%E9%80%89%E6%8B%A9/"/>
+    <id>http://minotaursu.github.io/2019/02/18/我的类库选择/</id>
     <published>2019-02-18T08:14:43.000Z</published>
     <updated>2019-05-20T03:20:16.457Z</updated>
     <content type="html"><![CDATA[<p>好的类库可以提升简化代码，提高开发效率，这里列出一些我常用的类库。</p>
@@ -388,18 +388,18 @@
 <li>json相关<br>fastjson，jackson。fastjson偏重的是简单和快速，内部实现有很多的hack。而jackson偏重的是标准和强大。国内项目使用fastjson]]>
     </summary>
     
-      <category term="java" scheme="http://minotaursu.com/tags/java/"/>
+      <category term="java" scheme="http://minotaursu.github.io/tags/java/"/>
     
-      <category term="工作" scheme="http://minotaursu.com/tags/%E5%B7%A5%E4%BD%9C/"/>
+      <category term="工作" scheme="http://minotaursu.github.io/tags/%E5%B7%A5%E4%BD%9C/"/>
     
-      <category term="软件开发" scheme="http://minotaursu.com/tags/%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91/"/>
+      <category term="软件开发" scheme="http://minotaursu.github.io/tags/%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[如何保障高并发系统的稳定性与高可用]]></title>
-    <link href="http://minotaursu.com/2018/03/12/%E5%A6%82%E4%BD%95%E4%BF%9D%E9%9A%9C%E9%AB%98%E5%B9%B6%E5%8F%91%E7%B3%BB%E7%BB%9F%E7%9A%84%E7%A8%B3%E5%AE%9A%E6%80%A7%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/"/>
-    <id>http://minotaursu.com/2018/03/12/如何保障高并发系统的稳定性与高可用/</id>
+    <link href="http://minotaursu.github.io/2018/03/12/%E5%A6%82%E4%BD%95%E4%BF%9D%E9%9A%9C%E9%AB%98%E5%B9%B6%E5%8F%91%E7%B3%BB%E7%BB%9F%E7%9A%84%E7%A8%B3%E5%AE%9A%E6%80%A7%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/"/>
+    <id>http://minotaursu.github.io/2018/03/12/如何保障高并发系统的稳定性与高可用/</id>
     <published>2018-03-12T10:49:33.000Z</published>
     <updated>2019-05-20T03:24:45.927Z</updated>
     <content type="html"><![CDATA[<p>要论如何搞垮一家互联网公司，速度最快的不是产品经理的胡乱决策，运营的无休止的烧钱，客服人员对客户的冷漠，一定是系统核心功能持续的不可用，一次大规模的故障可能造成几千万的损失，市值大量蒸发，PR风险，甚至工信部的约谈。<br><img src="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/kdn.png" alt=""></p>
@@ -431,15 +431,15 @@
     <![CDATA[<p>要论如何搞垮一家互联网公司，速度最快的不是产品经理的胡乱决策，运营的无休止的烧钱，客服人员对客户的冷漠，一定是系统核心功能持续的不可用，一次大规模的故障可能造成几千万的损失，市值大量蒸发，PR风险，甚至工信部的约谈。<br><img src="http://raw.gith]]>
     </summary>
     
-      <category term="工作" scheme="http://minotaursu.com/tags/%E5%B7%A5%E4%BD%9C/"/>
+      <category term="工作" scheme="http://minotaursu.github.io/tags/%E5%B7%A5%E4%BD%9C/"/>
     
-      <category term="性能" scheme="http://minotaursu.com/tags/%E6%80%A7%E8%83%BD/"/>
+      <category term="性能" scheme="http://minotaursu.github.io/tags/%E6%80%A7%E8%83%BD/"/>
     
-      <category term="稳定性" scheme="http://minotaursu.com/tags/%E7%A8%B3%E5%AE%9A%E6%80%A7/"/>
+      <category term="稳定性" scheme="http://minotaursu.github.io/tags/%E7%A8%B3%E5%AE%9A%E6%80%A7/"/>
     
-      <category term="高可用" scheme="http://minotaursu.com/tags/%E9%AB%98%E5%8F%AF%E7%94%A8/"/>
+      <category term="高可用" scheme="http://minotaursu.github.io/tags/%E9%AB%98%E5%8F%AF%E7%94%A8/"/>
     
-      <category term="高并发" scheme="http://minotaursu.com/tags/%E9%AB%98%E5%B9%B6%E5%8F%91/"/>
+      <category term="高并发" scheme="http://minotaursu.github.io/tags/%E9%AB%98%E5%B9%B6%E5%8F%91/"/>
     
   </entry>
   

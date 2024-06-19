@@ -2,350 +2,350 @@
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
     <url>
-        <loc>http://minotaursu.com/tags/%E6%BB%B4%E6%BB%B4/</loc>
+        <loc>http://minotaursu.github.io/tags/%E6%BB%B4%E6%BB%B4/</loc>
         <lastmod>2019-02-01T09:02:25.324Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>http://minotaursu.com/tags/%E6%80%BB%E7%BB%93/</loc>
+        <loc>http://minotaursu.github.io/tags/%E6%80%BB%E7%BB%93/</loc>
         <lastmod>2019-02-01T09:02:25.324Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>http://minotaursu.com/tags/%E9%94%81/</loc>
+        <loc>http://minotaursu.github.io/tags/%E9%94%81/</loc>
         <lastmod>2019-02-01T09:02:25.330Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>http://minotaursu.com/tags/jdk/</loc>
+        <loc>http://minotaursu.github.io/tags/jdk/</loc>
         <lastmod>2019-02-01T09:02:25.331Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>http://minotaursu.com/tags/annotation/</loc>
+        <loc>http://minotaursu.github.io/tags/annotation/</loc>
         <lastmod>2019-02-01T09:02:25.333Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>http://minotaursu.com/tags/AOP/</loc>
+        <loc>http://minotaursu.github.io/tags/AOP/</loc>
         <lastmod>2019-02-01T09:02:25.334Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>http://minotaursu.com/tags/spring/</loc>
+        <loc>http://minotaursu.github.io/tags/spring/</loc>
         <lastmod>2019-02-01T09:02:25.334Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>http://minotaursu.com/tags/%E5%B9%B6%E5%8F%91/</loc>
+        <loc>http://minotaursu.github.io/tags/%E5%B9%B6%E5%8F%91/</loc>
         <lastmod>2019-02-01T09:02:25.336Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>http://minotaursu.com/tags/%E7%BC%93%E5%AD%98/</loc>
+        <loc>http://minotaursu.github.io/tags/%E7%BC%93%E5%AD%98/</loc>
         <lastmod>2019-02-01T09:02:25.336Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>http://minotaursu.com/tags/gc/</loc>
+        <loc>http://minotaursu.github.io/tags/gc/</loc>
         <lastmod>2019-02-01T09:02:25.338Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>http://minotaursu.com/tags/%E4%BA%8B%E5%8A%A1/</loc>
+        <loc>http://minotaursu.github.io/tags/%E4%BA%8B%E5%8A%A1/</loc>
         <lastmod>2019-02-01T09:02:25.345Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>http://minotaursu.com/tags/ACID/</loc>
+        <loc>http://minotaursu.github.io/tags/ACID/</loc>
         <lastmod>2019-02-01T09:02:25.345Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>http://minotaursu.com/tags/CAP/</loc>
+        <loc>http://minotaursu.github.io/tags/CAP/</loc>
         <lastmod>2019-02-01T09:02:25.345Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>http://minotaursu.com/tags/%E8%B0%83%E5%BA%A6/</loc>
+        <loc>http://minotaursu.github.io/tags/%E8%B0%83%E5%BA%A6/</loc>
         <lastmod>2019-02-01T09:02:25.348Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>http://minotaursu.com/tags/quartz/</loc>
+        <loc>http://minotaursu.github.io/tags/quartz/</loc>
         <lastmod>2019-02-01T09:02:25.348Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>http://minotaursu.com/tags/%E8%AF%AD%E8%A8%80/</loc>
+        <loc>http://minotaursu.github.io/tags/%E8%AF%AD%E8%A8%80/</loc>
         <lastmod>2019-02-01T09:02:25.349Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>http://minotaursu.com/tags/python/</loc>
+        <loc>http://minotaursu.github.io/tags/python/</loc>
         <lastmod>2019-02-01T09:02:25.349Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>http://minotaursu.com/tags/go/</loc>
+        <loc>http://minotaursu.github.io/tags/go/</loc>
         <lastmod>2019-02-01T09:02:25.349Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>http://minotaursu.com/tags/archsummit/</loc>
+        <loc>http://minotaursu.github.io/tags/archsummit/</loc>
         <lastmod>2019-05-17T09:55:51.864Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>http://minotaursu.com/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/</loc>
+        <loc>http://minotaursu.github.io/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/</loc>
         <lastmod>2019-05-17T09:55:51.864Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>http://minotaursu.com/tags/git/</loc>
+        <loc>http://minotaursu.github.io/tags/git/</loc>
         <lastmod>2019-05-17T10:00:02.393Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>http://minotaursu.com/tags/%E5%B7%A5%E5%85%B7/</loc>
+        <loc>http://minotaursu.github.io/tags/%E5%B7%A5%E5%85%B7/</loc>
         <lastmod>2019-05-17T10:00:02.393Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>http://minotaursu.com/tags/jackson/</loc>
+        <loc>http://minotaursu.github.io/tags/jackson/</loc>
         <lastmod>2019-05-17T10:02:36.753Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>http://minotaursu.com/tags/%E7%B1%BB%E5%86%B2%E7%AA%81/</loc>
+        <loc>http://minotaursu.github.io/tags/%E7%B1%BB%E5%86%B2%E7%AA%81/</loc>
         <lastmod>2019-05-17T10:03:53.492Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>http://minotaursu.com/tags/%E9%83%A8%E7%BD%B2/</loc>
+        <loc>http://minotaursu.github.io/tags/%E9%83%A8%E7%BD%B2/</loc>
         <lastmod>2019-05-17T10:03:53.492Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>http://minotaursu.com/tags/%E8%AF%AD%E8%A8%80%E9%99%B7%E9%98%B1/</loc>
+        <loc>http://minotaursu.github.io/tags/%E8%AF%AD%E8%A8%80%E9%99%B7%E9%98%B1/</loc>
         <lastmod>2019-05-20T03:17:42.263Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>http://minotaursu.com/tags/jdk8/</loc>
+        <loc>http://minotaursu.github.io/tags/jdk8/</loc>
         <lastmod>2019-05-20T03:17:42.263Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>http://minotaursu.com/tags/nio/</loc>
+        <loc>http://minotaursu.github.io/tags/nio/</loc>
         <lastmod>2019-05-20T03:18:35.473Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>http://minotaursu.com/tags/java/</loc>
+        <loc>http://minotaursu.github.io/tags/java/</loc>
         <lastmod>2019-05-20T03:20:51.236Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>http://minotaursu.com/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/</loc>
+        <loc>http://minotaursu.github.io/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/</loc>
         <lastmod>2019-05-20T03:22:16.536Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>http://minotaursu.com/tags/%E9%98%BF%E9%87%8C/</loc>
+        <loc>http://minotaursu.github.io/tags/%E9%98%BF%E9%87%8C/</loc>
         <lastmod>2019-05-20T03:22:29.684Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>http://minotaursu.com/tags/tips/</loc>
+        <loc>http://minotaursu.github.io/tags/tips/</loc>
         <lastmod>2019-05-20T03:24:29.415Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>http://minotaursu.com/tags/netty/</loc>
+        <loc>http://minotaursu.github.io/tags/netty/</loc>
         <lastmod>2019-05-20T03:28:28.719Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>http://minotaursu.com/tags/io/</loc>
+        <loc>http://minotaursu.github.io/tags/io/</loc>
         <lastmod>2019-05-20T03:28:28.719Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>http://minotaursu.com/tags/reactor/</loc>
+        <loc>http://minotaursu.github.io/tags/reactor/</loc>
         <lastmod>2019-05-20T03:28:28.719Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>http://minotaursu.com/tags/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/</loc>
+        <loc>http://minotaursu.github.io/tags/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/</loc>
         <lastmod>2019-05-31T13:23:50.669Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>http://minotaursu.com/tags/%E5%88%86%E5%B8%83%E5%BC%8F/</loc>
+        <loc>http://minotaursu.github.io/tags/%E5%88%86%E5%B8%83%E5%BC%8F/</loc>
         <lastmod>2019-06-08T01:40:11.089Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>http://minotaursu.com/tags/%E5%AD%98%E5%82%A8/</loc>
+        <loc>http://minotaursu.github.io/tags/%E5%AD%98%E5%82%A8/</loc>
         <lastmod>2019-06-08T01:40:11.089Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>http://minotaursu.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/</loc>
+        <loc>http://minotaursu.github.io/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/</loc>
         <lastmod>2019-06-08T01:40:11.089Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>http://minotaursu.com/tags/%E5%B7%A5%E4%BD%9C/</loc>
+        <loc>http://minotaursu.github.io/tags/%E5%B7%A5%E4%BD%9C/</loc>
         <lastmod>2019-06-08T01:46:58.395Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>http://minotaursu.com/tags/%E6%80%A7%E8%83%BD/</loc>
+        <loc>http://minotaursu.github.io/tags/%E6%80%A7%E8%83%BD/</loc>
         <lastmod>2019-06-08T01:46:58.395Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>http://minotaursu.com/tags/%E9%AB%98%E5%8F%AF%E7%94%A8/</loc>
+        <loc>http://minotaursu.github.io/tags/%E9%AB%98%E5%8F%AF%E7%94%A8/</loc>
         <lastmod>2019-06-08T01:46:58.395Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>http://minotaursu.com/tags/%E7%A8%B3%E5%AE%9A%E6%80%A7/</loc>
+        <loc>http://minotaursu.github.io/tags/%E7%A8%B3%E5%AE%9A%E6%80%A7/</loc>
         <lastmod>2019-06-08T01:46:58.395Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>http://minotaursu.com/tags/%E9%AB%98%E5%B9%B6%E5%8F%91/</loc>
+        <loc>http://minotaursu.github.io/tags/%E9%AB%98%E5%B9%B6%E5%8F%91/</loc>
         <lastmod>2019-06-08T01:46:58.395Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>http://minotaursu.com/tags/%E5%AD%A6%E4%B9%A0/</loc>
+        <loc>http://minotaursu.github.io/tags/%E5%AD%A6%E4%B9%A0/</loc>
         <lastmod>2019-06-08T01:48:49.616Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>http://minotaursu.com/tags/%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91/</loc>
+        <loc>http://minotaursu.github.io/tags/%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91/</loc>
         <lastmod>2019-06-08T01:49:04.321Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>http://minotaursu.com/tags/%E6%9E%B6%E6%9E%84/</loc>
+        <loc>http://minotaursu.github.io/tags/%E6%9E%B6%E6%9E%84/</loc>
         <lastmod>2019-06-08T01:49:04.321Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>http://minotaursu.com/tags/%E8%81%8C%E4%B8%9A%E8%A7%84%E5%88%92/</loc>
+        <loc>http://minotaursu.github.io/tags/%E8%81%8C%E4%B8%9A%E8%A7%84%E5%88%92/</loc>
         <lastmod>2019-06-12T04:13:27.059Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>http://minotaursu.com/tags/%E8%BD%AF%E6%8A%80%E8%83%BD/</loc>
+        <loc>http://minotaursu.github.io/tags/%E8%BD%AF%E6%8A%80%E8%83%BD/</loc>
         <lastmod>2019-06-12T04:13:27.059Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>http://minotaursu.com/tags/%E6%8A%95%E8%B5%84/</loc>
+        <loc>http://minotaursu.github.io/tags/%E6%8A%95%E8%B5%84/</loc>
         <lastmod>2024-06-19T12:46:32.928Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>

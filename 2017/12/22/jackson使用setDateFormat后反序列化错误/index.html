@@ -9,7 +9,7 @@
   <meta name="description" content="最近marketing-activity系统在接入降级服务，出现启动时可以正确获取到降级配置，系统运行一段时间后修改降级策略不生效的问题，之前订单系统，用户系统和其他系统的接入都没问题出现这个问题，肯定是触发了某种特定的case。营销的同学联系我进行排查，排查日志发现是降级服务反序列化Date类型异常，接收到的数据格式是yyyy-MM-dd HH:mm:ss，并不在jackson支持的反序列化格式">
 <meta property="og:type" content="article">
 <meta property="og:title" content="jackson使用setDateFormat后反序列化错误">
-<meta property="og:url" content="http://minotaursu.com/2017/12/22/jackson使用setDateFormat后反序列化错误/index.html">
+<meta property="og:url" content="http://minotaursu.github.io/2017/12/22/jackson使用setDateFormat后反序列化错误/index.html">
 <meta property="og:site_name" content="Minotaur story">
 <meta property="og:description" content="最近marketing-activity系统在接入降级服务，出现启动时可以正确获取到降级配置，系统运行一段时间后修改降级策略不生效的问题，之前订单系统，用户系统和其他系统的接入都没问题出现这个问题，肯定是触发了某种特定的case。营销的同学联系我进行排查，排查日志发现是降级服务反序列化Date类型异常，接收到的数据格式是yyyy-MM-dd HH:mm:ss，并不在jackson支持的反序列化格式">
 <meta property="og:image" content="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/jackson.png">
@@ -53,7 +53,7 @@
         </nav>
       
       <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit"> </button><input type="hidden" name="sitesearch" value="http://minotaursu.com"></form>
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit"> </button><input type="hidden" name="sitesearch" value="http://minotaursu.github.io"></form>
       </div>
     </div>
   </div>
@@ -66,7 +66,7 @@
           <td><a class="main-nav-link" href="/archives">Archives</a></td>
         
         <td>
-          <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><input type="hidden" name="sitesearch" value="http://minotaursu.com"></form>
+          <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><input type="hidden" name="sitesearch" value="http://minotaursu.github.io"></form>
         </td>
       </tr>
     </table>
@@ -156,7 +156,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2017/12/22/jackson使用setDateFormat后反序列化错误/" data-id="clxltv4yi004lsuv1j6kmjk15" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.github.io/2017/12/22/jackson使用setDateFormat后反序列化错误/" data-id="clxlvtyby004lkfv1s0i4fxhy" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/jackson/">jackson</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/语言陷阱/">语言陷阱</a></li></ul>

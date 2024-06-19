@@ -9,7 +9,7 @@
   <meta name="description" content="2017年10月某日突然收到FullGC耗时超长的报警，排查发现应用存在周期性FULLGC耗时超长的的情况，每次FULLGC时间长达5s以上，甚至出现过10s以上的FULLGC，导致FULLGC时应用的响应全部超时。最初是怀疑系统有大量的对象没有释放导致FULLGC时间过长，第一时间dump了应用的内存，并没有发现内存泄露的情况。后面查看GC日志发现Rescan阶段weak refs proces">
 <meta property="og:type" content="article">
 <meta property="og:title" content="一次GC耗时超长的问题排查">
-<meta property="og:url" content="http://minotaursu.com/2018/02/22/一次GC耗时超长的问题排查/index.html">
+<meta property="og:url" content="http://minotaursu.github.io/2018/02/22/一次GC耗时超长的问题排查/index.html">
 <meta property="og:site_name" content="Minotaur story">
 <meta property="og:description" content="2017年10月某日突然收到FullGC耗时超长的报警，排查发现应用存在周期性FULLGC耗时超长的的情况，每次FULLGC时间长达5s以上，甚至出现过10s以上的FULLGC，导致FULLGC时应用的响应全部超时。最初是怀疑系统有大量的对象没有释放导致FULLGC时间过长，第一时间dump了应用的内存，并没有发现内存泄露的情况。后面查看GC日志发现Rescan阶段weak refs proces">
 <meta property="og:image" content="http://raw.githubusercontent.com/minotaursu/minotaursu.github.io/source/images/gc.png">
@@ -52,7 +52,7 @@
         </nav>
       
       <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit"> </button><input type="hidden" name="sitesearch" value="http://minotaursu.com"></form>
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit"> </button><input type="hidden" name="sitesearch" value="http://minotaursu.github.io"></form>
       </div>
     </div>
   </div>
@@ -65,7 +65,7 @@
           <td><a class="main-nav-link" href="/archives">Archives</a></td>
         
         <td>
-          <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><input type="hidden" name="sitesearch" value="http://minotaursu.com"></form>
+          <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><input type="hidden" name="sitesearch" value="http://minotaursu.github.io"></form>
         </td>
       </tr>
     </table>
@@ -153,7 +153,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2018/02/22/一次GC耗时超长的问题排查/" data-id="clxltv4y5003hsuv1r50qjwmk" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.github.io/2018/02/22/一次GC耗时超长的问题排查/" data-id="clxlvtybk003hkfv1cbpt7wde" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gc/">gc</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/性能/">性能</a></li></ul>

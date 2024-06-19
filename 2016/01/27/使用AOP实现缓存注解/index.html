@@ -9,7 +9,7 @@
   <meta name="description" content="为何重造轮子半年前写了一个注解驱动的缓存，最近提交到了github。缓存大量的被使用在应用中的多个地方，简单的使用方式就是代码先查询缓存中是否存在数据，如果不存在或者缓存过期再查询数据库，并将查询的结果缓存一段时间，缓存key通常是入参的对象或者入参对象的某些属性，有些时候还需要按照某种条件判断是否缓存。可以看到这种功能性代码和具体的业务代码混合在一起的实现方式有很大的代码冗余，即不便于维护也不灵">
 <meta property="og:type" content="article">
 <meta property="og:title" content="使用AOP实现缓存注解">
-<meta property="og:url" content="http://minotaursu.com/2016/01/27/使用AOP实现缓存注解/index.html">
+<meta property="og:url" content="http://minotaursu.github.io/2016/01/27/使用AOP实现缓存注解/index.html">
 <meta property="og:site_name" content="Minotaur story">
 <meta property="og:description" content="为何重造轮子半年前写了一个注解驱动的缓存，最近提交到了github。缓存大量的被使用在应用中的多个地方，简单的使用方式就是代码先查询缓存中是否存在数据，如果不存在或者缓存过期再查询数据库，并将查询的结果缓存一段时间，缓存key通常是入参的对象或者入参对象的某些属性，有些时候还需要按照某种条件判断是否缓存。可以看到这种功能性代码和具体的业务代码混合在一起的实现方式有很大的代码冗余，即不便于维护也不灵">
 <meta property="og:updated_time" content="2019-02-01T09:02:25.333Z">
@@ -50,7 +50,7 @@
         </nav>
       
       <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit"> </button><input type="hidden" name="sitesearch" value="http://minotaursu.com"></form>
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit"> </button><input type="hidden" name="sitesearch" value="http://minotaursu.github.io"></form>
       </div>
     </div>
   </div>
@@ -63,7 +63,7 @@
           <td><a class="main-nav-link" href="/archives">Archives</a></td>
         
         <td>
-          <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><input type="hidden" name="sitesearch" value="http://minotaursu.com"></form>
+          <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><input type="hidden" name="sitesearch" value="http://minotaursu.github.io"></form>
         </td>
       </tr>
     </table>
@@ -172,7 +172,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://minotaursu.com/2016/01/27/使用AOP实现缓存注解/" data-id="clxltv4y2003asuv1z5whtjfe" class="article-share-link">Share</a>
+      <a data-url="http://minotaursu.github.io/2016/01/27/使用AOP实现缓存注解/" data-id="clxlvtybi003akfv15n68rr5z" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/AOP/">AOP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/annotation/">annotation</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/spring/">spring</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/缓存/">缓存</a></li></ul>
