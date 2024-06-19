@@ -245,6 +245,13 @@
     </url>
 
     <url>
+        <loc>http://minotaursu.github.io/2014/12/30/2014%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/</loc>
+        <lastmod>2019-02-01T09:02:25.324Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+    </url>
+
+    <url>
         <loc>http://minotaursu.github.io/2018/02/22/2017%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/</loc>
         <lastmod>2019-02-01T09:02:25.324Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -253,13 +260,6 @@
 
     <url>
         <loc>http://minotaursu.github.io/2017/04/06/2016%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/</loc>
-        <lastmod>2019-02-01T09:02:25.324Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-    </url>
-
-    <url>
-        <loc>http://minotaursu.github.io/2014/12/30/2014%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/</loc>
         <lastmod>2019-02-01T09:02:25.324Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
