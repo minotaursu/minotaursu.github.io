@@ -16,7 +16,8 @@ language: en
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: http://minotaursu.com
+#url: http://minotaursu.com
+url: http://minotaursu.github.io
 root: /
 permalink: :year/:month/:day/:title/
 permalink_defaults:
@@ -101,6 +102,6 @@ exclude_generator:
 deploy:
     type: git
     message: mamimamihong
-    repo: https://github.com/minotaursu/minotaursu.github.io.git 
+    repo: git@github.com:minotaursu/minotaursu.github.io.git
     branch: master 
 ##gitcafe: git@gitcafe.com:minotaursu/minotaursu.git,gitcafe-pages
